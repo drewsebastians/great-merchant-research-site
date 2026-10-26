@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172b33">
+  <meta name="description" content="Password-unlocked, evidence-led Korean GeoSang research encyclopedia.">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Great Merchant Research</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script>window.GMR_ENCRYPTED_MODE = true;</script>
+</head>
+<body>
+  <section class="auth-screen" id="auth-screen" hidden aria-labelledby="auth-title">
+    <div class="auth-brand" aria-hidden="true">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span class="brand-copy"><strong>GMR</strong><small>RESEARCH / v4.3</small></span>
+    </div>
+    <div class="auth-card">
+      <div class="auth-kicker">ENCRYPTED KNOWLEDGE BASE</div>
+      <h1 id="auth-title">Enter your password</h1>
+      <p>Use the owner password to unlock the research library in this browser.</p>
+      <form id="auth-form">
+        <label for="owner-password">Site password</label>
+        <input id="owner-password" name="password" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+        <button class="auth-submit" type="submit">Unlock research</button>
+        <p class="auth-feedback" id="auth-feedback" role="status" aria-live="polite"></p>
+      </form>
+      <div class="auth-foot">Research records decrypt only in this browser session.</div>
+    </div>
+    <div class="auth-caption">GREAT MERCHANT RESEARCH · OWNER ACCESS</div>
+  </section>
+  <div class="app-frame" id="app-frame">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Great Merchant Research home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand-copy"><strong>GMR</strong><small>Research / v4.3</small></span>
+      </a>
+      <div class="topbar-center"><span class="breadcrumb">THE GREAT MERCHANT <span>/</span> KOREA RESEARCH</span></div>
+      <div class="topbar-right"><span class="privacy-pill"><i></i> OWNER-ONLY SITE</span><button class="lock-button" id="logout-button" type="button" aria-label="Lock research site" hidden>Lock</button><button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">◐</button></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="side-label">WORKSPACE</div>
+        <nav class="nav-list">
+          <button class="nav-item active" data-page="overview"><span class="nav-icon">⌂</span><span>Overview</span><kbd>01</kbd></button>
+          <button class="nav-item" data-page="articles"><span class="nav-icon">▤</span><span>Encyclopedia</span><kbd>02</kbd></button>
+          <button class="nav-item" data-page="entities"><span class="nav-icon">◈</span><span>Entities</span><kbd>03</kbd></button>
+          <button class="nav-item" data-page="sources"><span class="nav-icon">↗</span><span>Sources</span><kbd>04</kbd></button>
+          <button class="nav-item" data-page="evidence"><span class="nav-icon">⌕</span><span>Claims & evidence</span><kbd>05</kbd></button>
+          <button class="nav-item" data-page="gaps"><span class="nav-icon">⚑</span><span>Gaps & conflicts</span><kbd>06</kbd></button>
+          <button class="nav-item" data-page="audio"><span class="nav-icon">♫</span><span>Audio catalog</span><kbd>07</kbd></button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="side-label">PROJECT STATUS</div>
+          <div class="side-status"><span class="status-dot amber"></span><div><strong>Research active</strong><small>Coverage baseline unknown</small></div></div>
+          <div class="side-footer">Korea canonical · Links only<br>Media stored: 0 files</div>
+        </div>
+      </aside>
+      <main class="main-area">
+        <div class="content-topline">
+          <div class="crumb-mobile">GMR <span>/</span> PRIVATE ENCYCLOPEDIA</div>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="Search Korean names, guides, claims…" autocomplete="off"><kbd>⌘ K</kbd></label>
+          <div class="date-mark"><span class="date-dot"></span> UPDATED <strong id="updated-date">—</strong></div>
+        </div>
+        <div id="app" aria-live="polite"><div class="loading">Loading research records…</div></div>
+        <footer class="site-footer"><span>GREAT MERCHANT RESEARCH / v4.3</span><span>Evidence before certainty · Korea is the canonical version</span></footer>
+      </main>
+    </div>
+  </div>
+  <script src="./assets/app.js" defer></script>
+</body>
+</html>
