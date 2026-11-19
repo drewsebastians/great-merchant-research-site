@@ -37,6 +37,8 @@ function savedState() { return JSON.parse(storage.get("wayfarers-ledger:v5:save"
 function click(button) {
   const target = { closest(selector) {
     if (selector === '[data-action^="onboarding-"]') return button?.dataset?.action?.startsWith("onboarding-") ? button : null;
+    if (selector === ".guide-backdrop") return button?.backdrop ? button : null;
+    if (selector === ".guide-dialog") return button?.insideGuide ? button : null;
     if (selector === "[data-formation-front]") return button?.dataset?.formationFront ? button : null;
     if (selector === "[data-route]") return button?.dataset?.route ? button : null;
     if (selector === "[data-target]") return button?.dataset?.target ? button : null;
@@ -49,7 +51,8 @@ function click(button) {
 test("route board and rendered journey flow select the distinct quarry encounter", () => {
   assert.match(element("#guide-layer").innerHTML, /FIELD GUIDE/);
   assert.match(element("#guide-layer").innerHTML, /Start from Hearthcross/);
-  click({ dataset: { action: "onboarding-close" } });
+  assert.match(element("#guide-layer").innerHTML, /CLICK OUTSIDE TO CLOSE/);
+  click({ backdrop: true, dataset: {} });
   assert.equal(savedState().onboardingSeen, true);
   assert.equal(element("#guide-layer").innerHTML, "");
 
