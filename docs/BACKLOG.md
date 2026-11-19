@@ -16,6 +16,7 @@ Plan: Development Plan v5.0
 
 ## Priority 1 — next playable improvements
 
+- [ ] Review each screen against confirmed high-level interface patterns and implement the highest-impact layout or interaction gaps while keeping all artwork original.
 - [x] Add a second route with a distinct encounter and an optional route choice.
 - [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
 - [x] Make crew formation affect turn order and protection.
@@ -28,6 +29,9 @@ Plan: Development Plan v5.0
 
 - [x] Add a data-driven route/map catalog and accessible travel screen.
 - [x] Add a quest and progression schema with entry conditions, ordered objectives, one-time rewards and unlocks; connect the first errand and quarry gate.
+- [x] Compare static PWA, Tauri and Electron options; select and document the PWA path for the current static game.
+- [x] Add install metadata, original Windows app icons, and offline app-shell caching with a tested network fallback.
+- [ ] Verify PWA install and offline launch on Windows Edge after the online cache fill.
 - [x] Add versioned save migrations for route progress, onboarding and formation preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.
 - [x] Add content validation for IDs, item references, balances and missing assets.

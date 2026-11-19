@@ -45,6 +45,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
 - A data-driven quest catalog with stable IDs, entry conditions, ordered objectives, one-time completion rewards, prerequisites and unlocks; the first errand's objective counter and quarry gate read from this catalog.
 - A content-validation pass for item/route/quest/recipe IDs, references, route and quest rewards, prerequisite cycles, map positions, encounter data and referenced art files.
+- An installable Windows PWA shell with original app icons, a repository-subdirectory-aware manifest, and a same-origin service worker that supports offline game loading after its first online cache fill.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -65,7 +66,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 | Content | game/data.mjs | Original item, route, quest, route-connection and recipe catalogs, guide copy, starting state and encounter definitions |
 | Rules | game/engine.mjs, game/quests.mjs | State transitions for hiring, trade, production, supplies, combat and route rewards; quest stages, entry gates and unlock evaluation |
 | Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
-| Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
+| Presentation | game/app.mjs, game/index.html, game/styles.css, game/manifest.webmanifest, game/sw.js | Screen rendering, input handling, responsive layout, accessibility, install metadata and offline caching |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
 | Verification | tests/*.test.mjs, game/validation.mjs, scripts/validate-game-content.mjs | Node tests for rules, quests, save migrations and rendered flow, plus ID/reference/balance/asset checks |
 
@@ -95,6 +96,7 @@ The first slice is complete when a new player can:
 18. Select routes from the regional map or route cards and hear whether a location is open, selected, cleared or locked.
 19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
 20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
+21. Install the game from the production URL as an Edge PWA, load the saved app shell offline after the initial online cache fill, and retain the same origin-scoped local save.
 
 ## Release guardrails
 
