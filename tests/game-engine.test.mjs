@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, hireScout, performAction, recoverInTown, returnToTown, sellItem, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, startRoute, useTonic } from "../game/engine.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -33,6 +33,24 @@ test("route gates require a scout and one ration", () => {
   const noRation = preparedState();
   noRation.inventory.ration = 0;
   assert.equal(startRoute(noRation).phase, "town");
+});
+test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward", () => {
+  let state = preparedState();
+  assert.equal(selectRoute(state, "amber-quarry").selectedRoute, "mosswind");
+  state = startRoute(state);
+  while (state.phase === "battle") state = performAction(state, "strike");
+  state = returnToTown(state);
+  assert.ok(state.completedRoutes.includes("mosswind"));
+  state = selectRoute(state, "amber-quarry");
+  assert.equal(state.selectedRoute, "amber-quarry");
+  state = startRoute(state);
+  assert.equal(state.battle.routeId, "amber-quarry");
+  assert.equal(state.battle.enemies.length, 1);
+  assert.equal(state.battle.enemies[0].id, "warden");
+  while (state.phase === "battle") state = performAction(state, "strike");
+  assert.equal(state.inventory.fittings, 1);
+  assert.equal(state.reputation, 3);
+  assert.ok(state.completedRoutes.includes("amber-quarry"));
 });
 test("the encounter can be won, returned from and traded for a net gain", () => {
   let state = startRoute(preparedState());

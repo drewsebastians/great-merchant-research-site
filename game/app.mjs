@@ -1,5 +1,5 @@
-import { ITEMS, PARTY_LIMIT, SCOUT_COST, createInitialState } from "./data.mjs";
-import { buyItem, changeTab, hireScout, performAction, recoverInTown, resetJourney, returnToTown, sellItem, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { ITEMS, PARTY_LIMIT, ROUTES, SCOUT_COST, createInitialState, findRoute } from "./data.mjs";
+import { buyItem, changeTab, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
 let state = loadGame() || createInitialState();
@@ -14,7 +14,7 @@ function safe(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 }
 function portrait(id) {
-  const assets = { mara: "assets/wayfarer.svg", scout: "assets/scout.svg", lookout: "assets/raider.svg", skirmisher: "assets/skirmisher.svg" };
+  const assets = { mara: "assets/wayfarer.svg", scout: "assets/scout.svg", lookout: "assets/raider.svg", skirmisher: "assets/skirmisher.svg", warden: "assets/quarry-warden.svg" };
   return "./" + (assets[id] || "assets/mark.svg");
 }
 function bar(value, max, tone) {
@@ -36,13 +36,14 @@ function renderSide() {
   const complete = state.phase === "victory" || (state.phase === "town" && state.routeCleared);
   const returned = state.phase === "town" && state.routeCleared;
   const hasScout = state.party.some((unit) => unit.id === "scout");
+  const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
   $("#objective-step").textContent = returned ? "ERRAND DELIVERED" : complete ? "PARCEL RECOVERED" : hasScout ? "READY FOR THE ROAD" : "PREPARE YOUR CREW";
   $("#objective-count").textContent = returned ? "3 / 3" : complete ? "2 / 3" : hasScout ? "1 / 3" : "0 / 3";
   $("#objective-progress").style.width = (returned ? 100 : complete ? 78 : hasScout ? 34 : 12) + "%";
-  $("#objective-title").textContent = complete && !returned ? "Parcel recovered" : "The courier's mark";
-  $("#objective-copy").textContent = returned ? "Parcel delivered. Trade the recovered cargo or set out again with a fresh ration." :
+  $("#objective-title").textContent = returned ? route.name + " complete" : complete ? route.name + " cleared" : route.title;
+  $("#objective-copy").textContent = returned ? route.name + " cleared. Trade the recovered cargo or set out again with a fresh ration." :
     complete ? "The route is clear. Return to Hearthcross to close the errand and collect your reputation." :
-    "Hire a trail scout, pack a ration, then recover a sealed parcel from the ridge road.";
+    hasScout ? route.summary + " Pack a ration, then set out." : "Hire a trail scout, pack a ration, then choose a route from the board.";
 }
 function setHeader(tab, phase) {
   const names = {
@@ -55,8 +56,9 @@ function setHeader(tab, phase) {
   const current = names[tab] || names.journey;
   eyebrow.textContent = current[0];
   title.textContent = current[1];
+  const route = findRoute(state.activeRoute || state.selectedRoute);
   phaseLabel.innerHTML = '<span class="status-pip ' + (phase === "battle" ? "danger-pip" : "") + '"></span>' +
-    (phase === "battle" ? "MOSSWIND ROAD · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
+    (phase === "battle" ? safe(route.name.toUpperCase()) + " · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
 }
 function navState() {
   document.querySelectorAll("[data-tab]").forEach((button) => {
@@ -69,13 +71,23 @@ function navState() {
 }
 function renderTown() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
-  const canSetOut = hasScout && state.inventory.ration > 0;
-  const subtitle = state.routeCleared ? "A familiar road, another day's work." : "A missing parcel is waiting beyond the ridge.";
+  const route = findRoute(state.selectedRoute);
+  const unlocked = isRouteUnlocked(state, route.id);
+  const completed = (state.completedRoutes || []).includes(route.id);
+  const canSetOut = hasScout && state.inventory.ration > 0 && unlocked;
+  const subtitle = completed ? "A familiar road, another day's work." : route.summary;
   return '<section class="landscape town-scene" aria-label="Illustrated view of Hearthcross market town"><div class="scene-vignette"></div>' +
     '<div class="scene-label"><span class="location-pin">⌖</span><div><small>HOME BASE · DAY ' + String(state.day).padStart(2, "0") + '</small><strong>Hearthcross</strong></div></div><div class="scene-coordinate">NORTH GATE <span>·</span> MARKET WARD</div>' +
-    '<div class="scene-bottom"><div><small>THE MORNING ROUTE</small><h2>' + subtitle + '</h2><p>Prepare at the exchange, check your crew, then follow Mosswind Road to the ridge.</p></div>' +
-    '<button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + (state.routeCleared ? "SET OUT AGAIN" : "BEGIN THE ERRAND") + '</span><b>→</b></button></div></section>' +
-    '<section class="chapter-strip"><div class="chapter-icon">01</div><div class="chapter-copy"><small>OPEN ERRAND</small><strong>The Courier&#39;s Mark</strong><span>Find the sealed parcel on Mosswind Road and bring it home.</span></div><div class="chapter-status"><span class="status-pill">' + (state.routeCleared ? "READY TO REPLAY" : hasScout ? "CREW READY" : "CREW NEEDED") + '</span><span class="chapter-arrow">↗</span></div></section>' +
+    '<div class="scene-bottom"><div><small>SELECTED ROUTE · ' + safe(route.name.toUpperCase()) + '</small><h2>' + safe(subtitle) + '</h2><p>Prepare at the exchange, check your crew, then choose a road from the route board.</p></div>' +
+    '<button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + (completed ? "SET OUT AGAIN" : "BEGIN THE JOURNEY") + '</span><b>→</b></button></div></section>' +
+    '<section class="chapter-strip"><div class="chapter-icon">0' + (ROUTES.findIndex((entry) => entry.id === route.id) + 1) + '</div><div class="chapter-copy"><small>SELECTED ROUTE · ' + safe(route.terrain) + '</small><strong>' + safe(route.title) + '</strong><span>' + safe(route.summary) + '</span></div><div class="chapter-status"><span class="status-pill">' + (completed ? "COMPLETED" : unlocked ? hasScout ? "CREW READY" : "CREW NEEDED" : "LOCKED") + '</span><span class="chapter-arrow">↗</span></div></section>' +
+    '<section class="route-board panel"><div class="panel-head"><div><small>TRAVEL BOARD · ' + (state.completedRoutes || []).length + ' ROUTE' + ((state.completedRoutes || []).length === 1 ? "" : "S") + ' CLEARED</small><h2>Choose today&#39;s route</h2></div><span class="status-pill">' + ROUTES.filter((entry) => isRouteUnlocked(state, entry.id)).length + ' AVAILABLE</span></div><div class="route-options">' +
+    ROUTES.map((entry, index) => {
+      const available = isRouteUnlocked(state, entry.id);
+      const selected = route.id === entry.id;
+      const routeDone = (state.completedRoutes || []).includes(entry.id);
+      return '<button type="button" class="route-card ' + (selected ? "selected" : "") + (!available ? " locked" : "") + '" data-route="' + entry.id + '" aria-pressed="' + selected + '" ' + (!available ? "disabled" : "") + '><span class="route-number">0' + (index + 1) + '</span><span class="route-card-copy"><small>' + safe(entry.terrain) + '</small><strong>' + safe(entry.name) + '</strong><span>' + safe(entry.summary) + '</span></span><span class="route-card-status">' + (!available ? "LOCKED" : routeDone ? "CLEARED" : selected ? "SELECTED" : "OPEN") + '</span></button>';
+    }).join("") + '</div></section>' +
     '<div class="lower-grid"><section class="panel prep-panel"><div class="panel-head"><div><small>BEFORE YOU LEAVE</small><h2>Pack for the road</h2></div><button type="button" data-tab="inventory" class="text-button">OPEN PACK →</button></div>' +
     '<div class="prep-grid"><div class="prep-item"><span class="item-glyph ration-glyph">R</span><div><strong>Trail Rations</strong><small>' + state.inventory.ration + ' in pack · 1 required</small></div><span class="check-mark ' + (state.inventory.ration > 0 ? "ready" : "") + '">' + (state.inventory.ration > 0 ? "✓" : "·") + '</span></div>' +
     '<div class="prep-item"><span class="item-glyph tonic-glyph">+</span><div><strong>Field Tonic</strong><small>' + state.inventory.tonic + ' in pack · restores vitality</small></div><button type="button" class="tiny-button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button></div></div></section>' +
@@ -85,31 +97,38 @@ function renderTown() {
 }
 function renderBattle() {
   const battle = state.battle;
+  const route = findRoute(battle.routeId || state.activeRoute);
   const enemies = battle.enemies.map((enemy) => {
     const selected = battle.targetId === enemy.id;
     const hp = Math.max(0, enemy.hp);
     return '<button type="button" class="enemy-card ' + (selected ? "selected" : "") + (hp === 0 ? " defeated" : "") + '" data-target="' + enemy.id + '" ' + (hp === 0 ? "disabled" : "") + '><img src="./' + portrait(enemy.id) + '" alt="">' +
       '<span class="enemy-name">' + safe(enemy.name) + '</span><span class="enemy-state">' + (hp === 0 ? "DOWN" : selected ? "TARGET" : "SELECT") + '</span>' + bar(hp, enemy.maxHp, "enemy-health") + '<small>' + hp + ' / ' + enemy.maxHp + ' VITALITY</small></button>';
   }).join("");
-  return '<section class="landscape road-scene battle-scene" aria-label="Illustrated encounter on Mosswind Road"><div class="scene-vignette"></div>' +
-    '<div class="scene-label"><span class="location-pin">⌖</span><div><small>MOSSWIND ROAD · TURN ' + String(battle.turn).padStart(2, "0") + '</small><strong>Ridge Ambush</strong></div></div><div class="scene-coordinate">SELECT A TARGET <span>·</span> ISSUE AN ORDER</div>' +
+  return '<section class="landscape road-scene battle-scene ' + (route.id === "amber-quarry" ? "quarry-scene" : "") + '" aria-label="Illustrated encounter on ' + safe(route.name) + '"><div class="scene-vignette"></div>' +
+    '<div class="scene-label"><span class="location-pin">⌖</span><div><small>' + safe(route.name.toUpperCase()) + ' · TURN ' + String(battle.turn).padStart(2, "0") + '</small><strong>' + safe(route.encounter) + '</strong></div></div><div class="scene-coordinate">' + safe(route.coordinate) + ' <span>·</span> ISSUE AN ORDER</div>' +
     '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span></div>').join("") + '</div><div class="battle-enemies">' +
     battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
     '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
-    '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>Ridge raiders</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
-    '<div class="enemy-row">' + enemies + '</div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>Keyboard: 1 · 2 · 3</span></div>' +
+    '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
+    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>Keyboard: 1 · 2 · 3</span></div>' +
     '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal damage · gain 1 focus</small></span><b>↗</b></button>' +
     '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
     '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
     '<button class="supply-action" type="button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE FIELD TONIC <span>' + state.inventory.tonic + ' IN PACK</span></button></section>';
 }
 function renderVictory() {
-  return '<section class="result-card victory-card"><div class="result-emblem">✓</div><small>ROUTE CLEARED · REWARD SECURED</small><h2>The parcel is yours.</h2><p>The ridge is quiet again. Your crew recovered a sealed parcel and two Amber Tea Bricks.</p><div class="reward-row"><span><i>＋</i>18 marks</span><span><i>T</i>2 tea bricks</span><span><i>✦</i>1 reputation</span></div>' +
+  const route = findRoute(state.activeRoute);
+  const cargo = Object.entries(route.reward.items).map(([itemId, quantity]) => {
+    const item = ITEMS.find((entry) => entry.id === itemId);
+    return '<span><i>' + safe(item?.glyph || "◆") + '</i>' + quantity + ' ' + safe(item?.name || itemId) + '</span>';
+  }).join("");
+  return '<section class="result-card victory-card"><div class="result-emblem">✓</div><small>ROUTE CLEARED · REWARD SECURED</small><h2>' + safe(route.victoryTitle) + '</h2><p>' + safe(route.victoryCopy) + '</p><div class="reward-row"><span><i>＋</i>' + route.reward.coin + ' marks</span>' + cargo + '<span><i>✦</i>' + route.reward.reputation + ' reputation</span></div>' +
     '<button class="primary-button" type="button" data-action="return-town"><span>RETURN TO HEARTHCROSS</span><b>→</b></button></section><section class="panel result-notes"><div class="panel-head"><div><small>FIELD NOTES</small><h2>Close the errand</h2></div><span class="round-seal">01</span></div><p>Visit the Town Exchange to sell the recovered cargo, or review the crew and pack before another journey.</p><div class="mini-log">' +
     state.log.slice(0, 2).map((entry) => '<span>· ' + safe(entry) + '</span>').join("") + '</div></section>';
 }
 function renderDefeat() {
-  return '<section class="result-card defeat-card"><div class="result-emblem">↶</div><small>ROUTE INTERRUPTED</small><h2>The crew falls back.</h2><p>No parcel was recovered. Rest in Hearthcross, replace the ration, then try the ridge again.</p><button class="primary-button" type="button" data-action="recover"><span>RECOVER IN HEARTHCROSS</span><b>→</b></button></section>';
+  const route = findRoute(state.activeRoute);
+  return '<section class="result-card defeat-card"><div class="result-emblem">↶</div><small>ROUTE INTERRUPTED</small><h2>The crew falls back.</h2><p>No reward was recovered from ' + safe(route.name) + '. Rest in Hearthcross, replace the ration, then choose your route again.</p><button class="primary-button" type="button" data-action="recover"><span>RECOVER IN HEARTHCROSS</span><b>→</b></button></section>';
 }
 function renderJourney() {
   if (state.phase === "battle") return renderBattle();
@@ -164,6 +183,8 @@ function render() {
 function transition(next) { state = next; render(); }
 
 document.addEventListener("click", (event) => {
+  const routeButton = event.target.closest("[data-route]");
+  if (routeButton) { transition(selectRoute(state, routeButton.dataset.route)); return; }
   const targetButton = event.target.closest("[data-target]");
   if (targetButton) { transition(setTarget(state, targetButton.dataset.target)); return; }
   const button = event.target.closest("button");

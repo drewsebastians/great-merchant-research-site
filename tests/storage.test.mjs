@@ -35,6 +35,25 @@ test("malformed or outdated local saves are ignored", () => {
   });
 });
 
+test("version 1 saves migrate without losing the existing journey", () => {
+  withMemoryStorage((store) => {
+    const oldSave = createInitialState();
+    oldSave.saveVersion = 1;
+    delete oldSave.selectedRoute;
+    delete oldSave.activeRoute;
+    delete oldSave.completedRoutes;
+    oldSave.coin = 41;
+    oldSave.party[0].hp = 53;
+    store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
+    const migrated = loadGame();
+    assert.equal(migrated.saveVersion, 2);
+    assert.equal(migrated.coin, 41);
+    assert.equal(migrated.party[0].hp, 53);
+    assert.equal(migrated.selectedRoute, "mosswind");
+    assert.deepEqual(migrated.completedRoutes, []);
+  });
+});
+
 test("storage denial falls back without crashing the game", () => {
   const previous = globalThis.window;
   globalThis.window = { localStorage: { setItem() { throw new Error("blocked"); }, getItem() { throw new Error("blocked"); }, removeItem() { throw new Error("blocked"); } } };

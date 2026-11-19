@@ -1,4 +1,4 @@
-import { createEncounter, createInitialState, findItem, PARTY_LIMIT, SCOUT_COST } from "./data.mjs";
+import { createEncounter, createInitialState, findItem, findRoute, PARTY_LIMIT, ROUTES, SCOUT_COST } from "./data.mjs";
 
 function copy(state) { return JSON.parse(JSON.stringify(state)); }
 function record(state, message) {
@@ -15,20 +15,27 @@ function reject(state, message) {
 function livingEnemies(state) { return state.battle.enemies.filter((enemy) => enemy.hp > 0); }
 function livingParty(state) { return state.party.filter((unit) => unit.hp > 0); }
 function firstLivingEnemy(state) { return livingEnemies(state)[0] || null; }
+export function isRouteUnlocked(state, routeId) {
+  const route = ROUTES.find((entry) => entry.id === routeId);
+  return Boolean(route && (!route.requiresRoute || (state.completedRoutes || []).includes(route.requiresRoute)));
+}
 function hitEnemy(enemy, amount) {
   const actual = Math.min(enemy.hp, amount);
   enemy.hp = Math.max(0, enemy.hp - amount);
   return actual;
 }
 function finishVictory(state) {
+  const route = findRoute(state.activeRoute || state.battle?.routeId);
   state.phase = "victory";
-  state.coin += 18;
-  state.inventory.tea += 2;
-  state.inventory.seal += 1;
-  state.reputation += 1;
+  state.coin += route.reward.coin;
+  for (const [itemId, quantity] of Object.entries(route.reward.items)) {
+    state.inventory[itemId] = (state.inventory[itemId] || 0) + quantity;
+  }
+  state.reputation += route.reward.reputation;
   state.routeCleared = true;
+  state.completedRoutes = Array.from(new Set([...(state.completedRoutes || []), route.id]));
   state.routeRuns += 1;
-  return record(state, "The road is clear. You recover the sealed parcel and two Amber Tea Bricks.");
+  return record(state, route.recovery);
 }
 function enemyPhase(state) {
   const attackers = livingEnemies(state);
@@ -93,6 +100,15 @@ export function changeTab(state, tab) {
   next.activeTab = tab;
   return next;
 }
+export function selectRoute(state, routeId) {
+  if (state.phase !== "town") return reject(state, "Choose a route from Hearthcross before setting out.");
+  if (!ROUTES.some((route) => route.id === routeId)) return reject(state, "That route is not on the board.");
+  if (!isRouteUnlocked(state, routeId)) return reject(state, "Complete the Courier's Mark on Mosswind Road to unlock Amber Quarry.");
+  const next = copy(state);
+  next.selectedRoute = routeId;
+  next.routeCleared = false;
+  return record(next, findRoute(routeId).name + " selected for the next journey.");
+}
 export function hireScout(state) {
   if (state.phase !== "town") return reject(state, "Crew changes are available in Hearthcross.");
   if (state.party.some((unit) => unit.id === "scout")) return reject(state, "Tarin is already in your crew.");
@@ -136,14 +152,18 @@ export function setTarget(state, targetId) {
 }
 export function startRoute(state) {
   if (state.phase !== "town") return reject(state, "Finish the current encounter before setting out again.");
+  if (!isRouteUnlocked(state, state.selectedRoute || "mosswind")) return reject(state, "That route is still locked.");
   if (!state.party.some((unit) => unit.id === "scout")) return reject(state, "Hire a trail scout in Crew before taking the ridge road.");
   if ((state.inventory.ration || 0) < 1) return reject(state, "Pack at least one Trail Ration before setting out.");
   const next = copy(state);
   next.inventory.ration -= 1;
+  next.activeRoute = next.selectedRoute || "mosswind";
+  next.routeCleared = false;
   next.phase = "battle";
   next.activeTab = "journey";
-  next.battle = createEncounter();
-  return record(next, "You set out on Mosswind Road. A lookout steps from the ridge.");
+  next.battle = createEncounter(next.activeRoute);
+  const route = findRoute(next.activeRoute);
+  return record(next, "You set out for " + route.name + ". " + route.opening);
 }
 export function performAction(state, kind) {
   if (state.phase !== "battle" || !state.battle) return reject(state, "There is no active encounter.");
