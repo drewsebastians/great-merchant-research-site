@@ -67,6 +67,15 @@ test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward"
   assert.equal(state.inventory.fittings, 1);
   assert.equal(state.reputation, 3);
   assert.ok(state.completedRoutes.includes("amber-quarry"));
+  state = returnToTown(state);
+  assert.deepEqual(state.lastSettlement, {
+    routeId: "amber-quarry", rationCost: 6, rewardCoin: 27, cargoValue: 22,
+    cargoSoldRevenue: 0, cargoCount: 1, cargoSoldCount: 0, netProceeds: 21
+  });
+  state = sellItem(state, "fittings", 1);
+  assert.equal(state.lastSettlement.cargoSoldRevenue, 22);
+  assert.equal(state.lastSettlement.cargoSoldCount, 1);
+  assert.equal(state.lastSettlement.netProceeds, 43);
 });
 test("the encounter can be won, returned from and traded for a net gain", () => {
   let state = startRoute(preparedState());
@@ -77,10 +86,17 @@ test("the encounter can be won, returned from and traded for a net gain", () => 
   assert.equal(state.inventory.seal, 1);
   state = returnToTown(state);
   assert.equal(state.phase, "town");
+  assert.deepEqual(state.lastSettlement, {
+    routeId: "mosswind", rationCost: 6, rewardCoin: 18, cargoValue: 26,
+    cargoSoldRevenue: 0, cargoCount: 2, cargoSoldCount: 0, netProceeds: 12
+  });
   const beforeSale = state.coin;
   state = sellItem(state, "tea", 2);
   assert.equal(state.coin, beforeSale + 26);
   assert.equal(state.inventory.tea, 0);
+  assert.equal(state.lastSettlement.cargoSoldRevenue, 26);
+  assert.equal(state.lastSettlement.cargoSoldCount, 2);
+  assert.equal(state.lastSettlement.netProceeds, 38);
 });
 test("tonics heal a damaged unit without exceeding maximum vitality", () => {
   let state = preparedState();

@@ -26,6 +26,8 @@ function hitEnemy(enemy, amount) {
 }
 function finishVictory(state) {
   const route = findRoute(state.activeRoute || state.battle?.routeId);
+  const unsoldCargo = Object.fromEntries(Object.entries(route.reward.items).filter(([itemId]) => findItem(itemId)?.sellPrice !== null));
+  const cargoValue = Object.entries(unsoldCargo).reduce((sum, [itemId, quantity]) => sum + findItem(itemId).sellPrice * quantity, 0);
   state.phase = "victory";
   state.coin += route.reward.coin;
   for (const [itemId, quantity] of Object.entries(route.reward.items)) {
@@ -35,6 +37,15 @@ function finishVictory(state) {
   state.routeCleared = true;
   state.completedRoutes = Array.from(new Set([...(state.completedRoutes || []), route.id]));
   state.routeRuns += 1;
+  state.tripLedger = {
+    ...(state.tripLedger || { routeId: route.id, rationCost: findItem("ration").buyPrice, cargoSoldRevenue: 0, cargoSoldCount: 0 }),
+    routeId: route.id,
+    rewardCoin: route.reward.coin,
+    cargoValue,
+    cargoCount: Object.values(unsoldCargo).reduce((sum, quantity) => sum + quantity, 0),
+    cargoEarned: { ...route.reward.items },
+    unsoldCargo
+  };
   return record(state, route.recovery);
 }
 function enemyPhase(state) {
@@ -184,6 +195,15 @@ export function sellItem(state, itemId, quantity = 1) {
   next.inventory[itemId] -= quantity;
   const value = item.sellPrice * quantity;
   next.coin += value;
+  const unsoldFromTrip = Math.min(quantity, next.tripLedger?.unsoldCargo?.[itemId] || 0);
+  if (unsoldFromTrip > 0 && next.lastSettlement?.routeId === next.tripLedger.routeId) {
+    next.tripLedger.unsoldCargo[itemId] -= unsoldFromTrip;
+    next.tripLedger.cargoSoldRevenue += item.sellPrice * unsoldFromTrip;
+    next.tripLedger.cargoSoldCount += unsoldFromTrip;
+    next.lastSettlement.cargoSoldRevenue += item.sellPrice * unsoldFromTrip;
+    next.lastSettlement.cargoSoldCount += unsoldFromTrip;
+    next.lastSettlement.netProceeds = next.lastSettlement.rewardCoin + next.lastSettlement.cargoSoldRevenue - next.lastSettlement.rationCost;
+  }
   return record(next, "Sold " + quantity + " × " + item.name + " for " + value + " marks.");
 }
 export function setTarget(state, targetId) {
@@ -200,6 +220,17 @@ export function startRoute(state) {
   if ((state.inventory.ration || 0) < 1) return reject(state, "Pack at least one Trail Ration before setting out.");
   const next = copy(state);
   next.inventory.ration -= 1;
+  next.tripLedger = {
+    routeId: state.selectedRoute || "mosswind",
+    rationCost: findItem("ration").buyPrice,
+    rewardCoin: 0,
+    cargoValue: 0,
+    cargoSoldRevenue: 0,
+    cargoCount: 0,
+    cargoSoldCount: 0,
+    cargoEarned: {},
+    unsoldCargo: {}
+  };
   next.activeRoute = next.selectedRoute || "mosswind";
   next.routeCleared = false;
   next.phase = "battle";
@@ -234,6 +265,18 @@ export function returnToTown(state) {
   next.activeTab = "journey";
   next.day += 1;
   next.battle = null;
+  if (next.tripLedger) {
+    next.lastSettlement = {
+      routeId: next.tripLedger.routeId,
+      rationCost: next.tripLedger.rationCost,
+      rewardCoin: next.tripLedger.rewardCoin,
+      cargoValue: next.tripLedger.cargoValue,
+      cargoSoldRevenue: next.tripLedger.cargoSoldRevenue,
+      cargoCount: next.tripLedger.cargoCount,
+      cargoSoldCount: next.tripLedger.cargoSoldCount,
+      netProceeds: next.tripLedger.rewardCoin + next.tripLedger.cargoSoldRevenue - next.tripLedger.rationCost
+    };
+  }
   return record(next, "Back in Hearthcross, you deliver the parcel and update the ledger.");
 }
 export function recoverInTown(state) {
@@ -244,6 +287,7 @@ export function recoverInTown(state) {
   next.activeTab = "journey";
   next.day += 1;
   next.battle = null;
+  next.tripLedger = null;
   return record(next, "The crew recovers in Hearthcross. No route reward was collected.");
 }
 export function resetJourney() { return createInitialState(); }

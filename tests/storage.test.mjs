@@ -51,7 +51,7 @@ test("version 1 saves migrate without losing the existing journey", () => {
     oldSave.party[0].hp = 53;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 5);
+    assert.equal(migrated.saveVersion, 6);
     assert.equal(migrated.coin, 41);
     assert.equal(migrated.party[0].hp, 53);
     assert.equal(migrated.selectedRoute, "mosswind");
@@ -75,7 +75,7 @@ test("version 2 saves keep route progress during the onboarding migration", () =
     oldSave.coin = 74;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 5);
+    assert.equal(migrated.saveVersion, 6);
     assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
     assert.equal(migrated.selectedRoute, "amber-quarry");
     assert.equal(migrated.coin, 74);
@@ -96,7 +96,7 @@ test("version 3 saves keep onboarding preference and route progress", () => {
     delete oldSave.inventory.edge;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 5);
+    assert.equal(migrated.saveVersion, 6);
     assert.equal(migrated.onboardingSeen, true);
     assert.equal(migrated.formationFrontId, "mara");
     assert.deepEqual(migrated.equipment, { weapon: null });
@@ -115,11 +115,37 @@ test("version 4 saves preserve formation and onboarding while adding an empty ge
     delete oldSave.inventory.edge;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 5);
+    assert.equal(migrated.saveVersion, 6);
     assert.equal(migrated.onboardingSeen, true);
     assert.equal(migrated.formationFrontId, "scout");
     assert.deepEqual(migrated.equipment, { weapon: null });
     assert.equal(migrated.inventory.edge, 0);
+    assert.equal(migrated.tripLedger, null);
+    assert.equal(migrated.lastSettlement, null);
+  });
+});
+
+test("version 5 saves preserve crew, equipment and route progress while adding settlement fields", () => {
+  withMemoryStorage((store) => {
+    const oldSave = hireScout(createInitialState());
+    oldSave.saveVersion = 5;
+    oldSave.formationFrontId = "scout";
+    oldSave.completedRoutes = ["mosswind"];
+    oldSave.selectedRoute = "amber-quarry";
+    oldSave.equipment = { weapon: "edge" };
+    oldSave.inventory.edge = 0;
+    delete oldSave.tripLedger;
+    delete oldSave.lastSettlement;
+    store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
+    const migrated = loadGame();
+    assert.equal(migrated.saveVersion, 6);
+    assert.equal(migrated.party.length, 2);
+    assert.equal(migrated.formationFrontId, "scout");
+    assert.deepEqual(migrated.equipment, { weapon: "edge" });
+    assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
+    assert.equal(migrated.selectedRoute, "amber-quarry");
+    assert.equal(migrated.tripLedger, null);
+    assert.equal(migrated.lastSettlement, null);
   });
 });
 

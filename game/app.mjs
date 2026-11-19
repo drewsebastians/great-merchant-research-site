@@ -97,6 +97,7 @@ function renderTown() {
       const routeDone = (state.completedRoutes || []).includes(entry.id);
       return '<button type="button" class="route-card ' + (selected ? "selected" : "") + (!available ? " locked" : "") + '" data-route="' + entry.id + '" aria-pressed="' + selected + '" ' + (!available ? "disabled" : "") + '><span class="route-number">0' + (index + 1) + '</span><span class="route-card-copy"><small>' + safe(entry.terrain) + '</small><strong>' + safe(entry.name) + '</strong><span>' + safe(entry.summary) + '</span></span><span class="route-card-status">' + (!available ? "LOCKED" : routeDone ? "CLEARED" : selected ? "SELECTED" : "OPEN") + '</span></button>';
     }).join("") + '</div></section>' +
+    renderSettlement() +
     '<div class="lower-grid"><section class="panel prep-panel"><div class="panel-head"><div><small>BEFORE YOU LEAVE</small><h2>Pack for the road</h2></div><button type="button" data-tab="inventory" class="text-button">OPEN PACK →</button></div>' +
     '<div class="prep-grid"><div class="prep-item"><span class="item-glyph ration-glyph">R</span><div><strong>Trail Rations</strong><small>' + state.inventory.ration + ' in pack · 1 required</small></div><span class="check-mark ' + (state.inventory.ration > 0 ? "ready" : "") + '">' + (state.inventory.ration > 0 ? "✓" : "·") + '</span></div>' +
     '<div class="prep-item"><span class="item-glyph tonic-glyph">+</span><div><strong>Field Tonic</strong><small>' + state.inventory.tonic + ' in pack · restores vitality</small></div><button type="button" class="tiny-button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button></div></div></section>' +
@@ -154,7 +155,7 @@ function renderMarket() {
     tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote">' + item.buyPrice + '<small> M</small></span><span class="quote">' + item.sellPrice + '<small> M</small></span><span class="pack-count">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
     '<button type="button" data-action="buy" data-item="' + item.id + '" aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
     '</div><div class="market-foot"><span>Original prototype quotes; not copied from any live game.</span><span>Held: ' + state.inventory.tea + ' tea · ' + state.inventory.fittings + ' fittings</span></div></section>' +
-    '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>';
+    '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();
 }
 function renderRoster() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
@@ -183,9 +184,18 @@ function renderInventory() {
     (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
 }
 function renderJournal() {
-  return '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' +
+  return renderSettlement() + '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' +
     '<section class="panel journal-panel"><div class="panel-head"><div><small>RECENT ENTRIES</small><h2>Ledger</h2></div><span class="status-pill">' + state.log.length + ' NOTES</span></div><div class="journal-list">' +
     state.log.map((entry, index) => '<article><span class="journal-index">' + String(state.log.length - index).padStart(2, "0") + '</span><i></i><p>' + safe(entry) + '</p></article>').join("") + '</div></section>';
+}
+function renderSettlement() {
+  const ledger = state.lastSettlement;
+  if (!ledger) return "";
+  const route = findRoute(ledger.routeId);
+  const remaining = Math.max(0, ledger.cargoValue - ledger.cargoSoldRevenue);
+  const progress = ledger.cargoValue > 0 ? Math.min(100, Math.round((ledger.cargoSoldRevenue / ledger.cargoValue) * 100)) : 0;
+  return '<section class="panel settlement-panel"><div class="panel-head"><div><small>LAST TRIP · ' + safe(route.name.toUpperCase()) + '</small><h2>Settlement ledger</h2></div><span class="status-pill">' + ledger.cargoSoldCount + ' / ' + ledger.cargoCount + ' CARGO SOLD</span></div><div class="settlement-grid">' +
+    '<div class="settlement-cell"><small>TRIP COST</small><strong>−' + ledger.rationCost + ' M</strong><span>1 ration used</span></div><div class="settlement-cell"><small>ROUTE REWARD</small><strong>+' + ledger.rewardCoin + ' M</strong><span>reward currency</span></div><div class="settlement-cell"><small>CARGO VALUE</small><strong>' + ledger.cargoValue + ' M</strong><span>full resale value</span></div><div class="settlement-cell"><small>CARGO SOLD</small><strong>+' + ledger.cargoSoldRevenue + ' M</strong><span>' + remaining + ' M remaining</span></div><div class="settlement-cell settlement-net"><small>NET PROCEEDS</small><strong>' + (ledger.netProceeds >= 0 ? "+" : "") + ledger.netProceeds + ' M</strong><span>reward + sold cargo − ration</span></div></div><div class="settlement-progress"><span style="width:' + progress + '%"></span></div><p class="settlement-foot">Cargo value excludes quest items. Only cargo sold from this trip changes the net proceeds.</p></section>';
 }
 function renderGuide() {
   const topbar = document.querySelector(".topbar");

@@ -82,7 +82,16 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.equal(savedState().phase, "victory");
   click({ dataset: { action: "return-town" } });
   assert.equal(savedState().phase, "town");
+  assert.equal(savedState().lastSettlement.netProceeds, 12);
+  click({ dataset: { tab: "market" } });
+  assert.match(element("#game-content").innerHTML, /Settlement ledger/);
+  assert.match(element("#game-content").innerHTML, /NET PROCEEDS/);
+  click({ dataset: { action: "sell", item: "tea" } });
+  click({ dataset: { action: "sell", item: "tea" } });
+  assert.equal(savedState().lastSettlement.cargoSoldRevenue, 26);
+  assert.equal(savedState().lastSettlement.netProceeds, 38);
 
+  click({ dataset: { tab: "journey" } });
   click({ dataset: { route: "amber-quarry" } });
   assert.equal(savedState().selectedRoute, "amber-quarry");
   assert.match(element("#game-content").innerHTML, /SELECTED/);

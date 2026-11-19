@@ -9,6 +9,16 @@ function validSave(state) {
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
   if (typeof state.onboardingSeen !== "boolean") return false;
   if (!state.equipment || ![null, "edge"].includes(state.equipment.weapon)) return false;
+  if (state.tripLedger !== null && state.tripLedger !== undefined) {
+    const ledger = state.tripLedger;
+    if (!ROUTE_IDS.includes(ledger.routeId) || !["rationCost", "rewardCoin", "cargoValue", "cargoSoldRevenue", "cargoCount", "cargoSoldCount"].every((key) => Number.isSafeInteger(ledger[key]) && ledger[key] >= 0) ||
+      !ledger.unsoldCargo || Object.values(ledger.unsoldCargo).some((count) => !Number.isInteger(count) || count < 0)) return false;
+  }
+  if (state.lastSettlement !== null && state.lastSettlement !== undefined) {
+    const settlement = state.lastSettlement;
+    if (!ROUTE_IDS.includes(settlement.routeId) || !["rationCost", "rewardCoin", "cargoValue", "cargoSoldRevenue", "cargoCount", "cargoSoldCount"].every((key) => Number.isSafeInteger(settlement[key]) && settlement[key] >= 0) ||
+      !Number.isSafeInteger(settlement.netProceeds)) return false;
+  }
   if (!Array.isArray(state.party) || state.party.length < 1 || state.party.length > 3) return false;
   if (!["mara", "scout"].includes(state.formationFrontId)) return false;
   if (!state.party.some((unit) => unit.id === state.formationFrontId)) return false;
@@ -29,12 +39,15 @@ function migrateToLatest(state, additions = {}) {
     ...additions,
     saveVersion: SAVE_VERSION,
     inventory: { ...state.inventory, edge: state.inventory?.edge ?? 0 },
-    equipment: state.equipment || { weapon: null }
+    equipment: state.equipment || { weapon: null },
+    tripLedger: state.tripLedger || null,
+    lastSettlement: state.lastSettlement || null
   };
 }
 
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
+  if (state.saveVersion === 5) return migrateToLatest(state);
   if (state.saveVersion === 4) return migrateToLatest(state);
   if (state.saveVersion === 3) return migrateToLatest(state, { formationFrontId: state.formationFrontId || "mara" });
   if (state.saveVersion === 2) return migrateToLatest(state, { onboardingSeen: state.onboardingSeen ?? false, formationFrontId: "mara" });
