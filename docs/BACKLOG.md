@@ -21,7 +21,7 @@ Plan: Development Plan v5.0
 - [x] Make crew formation affect turn order and protection.
 - [x] Add an equipment slot and one original upgrade with a visible effect.
 - [x] Add a settlement ledger showing trip cost, cargo value and net proceeds.
-- [ ] Add a small production recipe that converts gathered materials into a trade item.
+- [x] Add a small production recipe that converts gathered materials into a trade item.
 - [ ] Add language and input preferences that persist locally.
 
 ## Priority 2 — broader game architecture

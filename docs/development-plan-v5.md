@@ -30,7 +30,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 ### Included in the first playable slice
 
 - Static, dependency-free web app under /game/.
-- A version 6 local save with migrations from versions 1–5 and a fresh-journey reset.
+- A version 7 local save with migrations from versions 1–6 and a fresh-journey reset.
 - Hearthcross as a town hub with a short errand and journey status.
 - A four-step optional field guide that can be skipped, dismissed and replayed.
 - A compact crew board; hiring a trail scout is required before the route.
@@ -40,6 +40,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - A selectable crew front member that changes the action opening, first target and rear-line damage protection.
 - One original weapon with an equipment slot, local equip/unequip and a visible +3 Strike effect.
 - A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
+- A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -48,7 +49,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 
 - Full map traversal, pathfinding, online services, multiplayer, accounts and server saves.
 - Source-game names, exact unit/stat/item data, exact prices, drop odds or formulas.
-- Long-form quest chains, production professions, crafting and advanced promotion.
+- Long-form quest chains, production professions, multi-step crafting and advanced promotion.
 - Imported screenshots, client files, music, copyrighted sprites or guide images.
 - User data collection; the save stays in this browser's local storage.
 
@@ -56,9 +57,9 @@ The research corpus contains version-scoped and community-reported findings. Cur
 
 | Layer | Files | Responsibility |
 | --- | --- | --- |
-| Content | game/data.mjs | Original item and route catalogs, guide copy, starting state and encounter definitions |
-| Rules | game/engine.mjs | Pure state transitions for hiring, trade, supplies, combat and route rewards |
-| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v5 migrations and safe fallback |
+| Content | game/data.mjs | Original item, route and recipe catalogs, guide copy, starting state and encounter definitions |
+| Rules | game/engine.mjs | Pure state transitions for hiring, trade, production, supplies, combat and route rewards |
+| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v6 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
 | Verification | tests/*.test.mjs | Node built-in tests for the engine, save migrations and rendered app flow |
@@ -84,6 +85,7 @@ The first slice is complete when a new player can:
 13. Change the front member and see the action order, first target and rear protection change in combat.
 14. Buy, equip and unequip an original weapon; see its damage effect in the crew, pack and combat UI.
 15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.
+16. Convert a route material at the workbench, see its output and resale value, and sell the crafted good.
 
 ## Release guardrails
 
