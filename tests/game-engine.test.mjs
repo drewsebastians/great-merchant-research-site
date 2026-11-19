@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, startRoute, useTonic } from "../game/engine.mjs";
+import { getQuestProgress, isQuestComplete, isQuestUnlocked } from "../game/quests.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -102,8 +103,9 @@ test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward"
   while (state.phase === "battle") state = performAction(state, "strike");
   assert.equal(state.inventory.fittings, 1);
   assert.equal(state.reputation, 3);
-  assert.ok(state.completedRoutes.includes("amber-quarry"));
+  assert.equal(state.completedRoutes.includes("amber-quarry"), false);
   state = returnToTown(state);
+  assert.ok(state.completedRoutes.includes("amber-quarry"));
   assert.deepEqual(state.lastSettlement, {
     routeId: "amber-quarry", rationCost: 6, rewardCoin: 27, cargoValue: 22,
     cargoSoldRevenue: 0, cargoCount: 1, cargoSoldCount: 0, netProceeds: 21
@@ -113,15 +115,37 @@ test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward"
   assert.equal(state.lastSettlement.cargoSoldCount, 1);
   assert.equal(state.lastSettlement.netProceeds, 43);
 });
+test("the Courier's Mark stages drive progress, completion and the next quest unlock", () => {
+  let state = createInitialState();
+  assert.equal(getQuestProgress(state, "courier-mark").completedCount, 0);
+  assert.equal(isQuestUnlocked(state, "quarry-ledger"), false);
+  state = hireScout(state);
+  assert.equal(getQuestProgress(state, "courier-mark").completedCount, 1);
+  state = startRoute(state);
+  while (state.phase === "battle") state = performAction(state, "strike");
+  assert.equal(getQuestProgress(state, "courier-mark").completedCount, 2);
+  assert.equal(isQuestComplete(state, "courier-mark"), false);
+  state = returnToTown(state);
+  assert.equal(getQuestProgress(state, "courier-mark").completedCount, 3);
+  assert.equal(isQuestComplete(state, "courier-mark"), true);
+  assert.equal(state.inventory.seal, 1);
+  assert.equal(isQuestUnlocked(state, "quarry-ledger"), true);
+  state = selectRoute(state, "mosswind");
+  state = startRoute(state);
+  while (state.phase === "battle") state = performAction(state, "strike");
+  state = returnToTown(state);
+  assert.equal(state.inventory.seal, 1);
+});
 test("the encounter can be won, returned from and traded for a net gain", () => {
   let state = startRoute(preparedState());
   assert.equal(state.inventory.ration, 1);
   while (state.phase === "battle") state = performAction(state, "strike");
   assert.equal(state.phase, "victory");
   assert.equal(state.inventory.tea, 2);
-  assert.equal(state.inventory.seal, 1);
+  assert.equal(state.inventory.seal, 0);
   state = returnToTown(state);
   assert.equal(state.phase, "town");
+  assert.equal(state.inventory.seal, 1);
   assert.deepEqual(state.lastSettlement, {
     routeId: "mosswind", rationCost: 6, rewardCoin: 18, cargoValue: 26,
     cargoSoldRevenue: 0, cargoCount: 2, cargoSoldCount: 0, netProceeds: 12

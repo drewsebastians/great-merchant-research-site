@@ -1,6 +1,7 @@
 import { ITEMS, PARTY_LIMIT, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
+import { getQuestProgress } from "./quests.mjs";
 
 let state = loadGame() || createInitialState();
 const content = document.querySelector("#game-content");
@@ -100,17 +101,18 @@ function renderSide() {
   $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
   $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
   $("#log-summary").innerHTML = localizeUI(state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(entry) + '</span></div>').join(""));
-  const complete = state.phase === "victory" || (state.phase === "town" && state.routeCleared);
-  const returned = state.phase === "town" && state.routeCleared;
-  const hasScout = state.party.some((unit) => unit.id === "scout");
   const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
-  $("#objective-step").textContent = localizeUI(returned ? "ERRAND DELIVERED" : complete ? "PARCEL RECOVERED" : hasScout ? "READY FOR THE ROAD" : "PREPARE YOUR CREW");
-  $("#objective-count").textContent = returned ? "3 / 3" : complete ? "2 / 3" : hasScout ? "1 / 3" : "0 / 3";
-  $("#objective-progress").style.width = (returned ? 100 : complete ? 78 : hasScout ? 34 : 12) + "%";
-  $("#objective-title").textContent = localizeUI(returned ? route.name + " complete" : complete ? route.name + " cleared" : route.title);
-  $("#objective-copy").textContent = localizeUI(returned ? route.name + " cleared. Trade the recovered cargo or set out again with a fresh ration." :
-    complete ? "The route is clear. Return to Hearthcross to close the errand and collect your reputation." :
-    hasScout ? route.summary + " Pack a ration, then set out." : "Hire a trail scout, pack a ration, then choose a route from the board.");
+  const questProgress = getQuestProgress(state, route.questId);
+  const quest = questProgress?.quest;
+  const total = questProgress?.totalStages || 0;
+  const completed = questProgress?.completedCount || 0;
+  const returned = questProgress?.complete || false;
+  const stageLabel = questProgress?.currentStage?.label || (returned ? "ERRAND DELIVERED" : "PREPARE YOUR CREW");
+  $("#objective-step").textContent = localizeUI(stageLabel);
+  $("#objective-count").textContent = completed + " / " + total;
+  $("#objective-progress").style.width = (total ? Math.round((completed / total) * 100) : 0) + "%";
+  $("#objective-title").textContent = localizeUI(quest?.title || route.title);
+  $("#objective-copy").textContent = localizeUI(quest?.summary || route.summary);
 }
 function setHeader(tab, phase) {
   const names = {

@@ -6,6 +6,7 @@ export const PARTY_LIMIT = 3;
 export const ROUTES = [
   {
     id: "mosswind",
+    questId: "courier-mark",
     name: "Mosswind Road",
     title: "The Courier's Mark",
     summary: "Find the sealed parcel on Mosswind Road and bring it home.",
@@ -19,7 +20,7 @@ export const ROUTES = [
     victoryTitle: "The parcel is yours.",
     victoryCopy: "The ridge is quiet again. Your crew recovered a sealed parcel and two Amber Tea Bricks.",
     recovery: "The road is clear. You recover the sealed parcel and two Amber Tea Bricks.",
-    reward: { coin: 18, reputation: 1, items: { tea: 2, seal: 1 } },
+    reward: { coin: 18, reputation: 1, items: { tea: 2 } },
     enemies: [
       { id: "lookout", name: "Ridge Lookout", hp: 27, damage: 6, portrait: "assets/raider.svg" },
       { id: "skirmisher", name: "Road Skirmisher", hp: 24, damage: 5, portrait: "assets/skirmisher.svg" }
@@ -27,6 +28,7 @@ export const ROUTES = [
   },
   {
     id: "amber-quarry",
+    questId: "quarry-ledger",
     name: "Amber Quarry",
     title: "The Quarry Ledger",
     summary: "Clear the old workings and bring a set of bronze fittings home.",
@@ -40,7 +42,6 @@ export const ROUTES = [
     victoryTitle: "The cut is yours again.",
     victoryCopy: "The keeper leaves the old workings. Your crew salvages a crate of Bronze Fittings.",
     recovery: "The quarry is open again. You salvage a crate of Bronze Fittings.",
-    requiresRoute: "mosswind",
     reward: { coin: 27, reputation: 2, items: { fittings: 1 } },
     enemies: [
       { id: "warden", name: "Quarry Warden", hp: 54, damage: 8, portrait: "assets/quarry-warden.svg" }
@@ -48,8 +49,50 @@ export const ROUTES = [
   }
 ];
 
+export const QUESTS = [
+  {
+    id: "courier-mark",
+    routeId: "mosswind",
+    title: "The Courier's Mark",
+    summary: "Hire a trail scout, recover the sealed parcel, and bring it back to Hearthcross.",
+    entryConditions: [
+      { type: "crew-member", memberId: "scout" },
+      { type: "inventory-minimum", itemId: "ration", quantity: 1 }
+    ],
+    rewards: { coin: 0, reputation: 0, items: { seal: 1 } },
+    stages: [
+      { id: "recruit", label: "Hire a trail scout", type: "crew-member", memberId: "scout" },
+      { id: "recover", label: "Clear Mosswind Road", type: "route-cleared", routeId: "mosswind" },
+      { id: "return", label: "Return to Hearthcross", type: "returned-home", routeId: "mosswind" }
+    ],
+    rewardRouteId: "mosswind",
+    requiresQuests: [],
+    unlocks: ["quarry-ledger"]
+  },
+  {
+    id: "quarry-ledger",
+    routeId: "amber-quarry",
+    title: "The Quarry Ledger",
+    summary: "Clear the old workings, salvage the fittings, and deliver them to Hearthcross.",
+    entryConditions: [
+      { type: "crew-member", memberId: "scout" },
+      { type: "inventory-minimum", itemId: "ration", quantity: 1 }
+    ],
+    rewards: { coin: 0, reputation: 0, items: {} },
+    stages: [
+      { id: "crew", label: "Bring a trail scout", type: "crew-member", memberId: "scout" },
+      { id: "salvage", label: "Clear Amber Quarry", type: "route-cleared", routeId: "amber-quarry" },
+      { id: "return", label: "Return to Hearthcross", type: "returned-home", routeId: "amber-quarry" }
+    ],
+    rewardRouteId: "amber-quarry",
+    requiresQuests: ["courier-mark"],
+    unlocks: []
+  }
+];
+
 export const ROUTE_IDS = ROUTES.map((route) => route.id);
 export function findRoute(id) { return ROUTES.find((route) => route.id === id) || ROUTES[0]; }
+export function findQuest(id) { return QUESTS.find((quest) => quest.id === id) || null; }
 export const ROUTE_LINKS = [{ from: "mosswind", to: "amber-quarry", label: "Ridge path" }];
 
 export const RECIPES = [

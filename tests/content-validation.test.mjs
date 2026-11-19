@@ -1,27 +1,43 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { ITEMS, RECIPES, ROUTE_LINKS, ROUTES } from "../game/data.mjs";
+import { ITEMS, QUESTS, RECIPES, ROUTE_LINKS, ROUTES } from "../game/data.mjs";
 import { validateGameContent } from "../game/validation.mjs";
 
-test("the shipped item, route, recipe and map catalogs pass content validation", () => {
+test("the shipped item, route, quest, recipe and map catalogs pass content validation", () => {
   assert.deepEqual(validateGameContent(), []);
 });
 
 test("content validation reports broken references and invalid quantities", () => {
   const routes = [{
     ...ROUTES[0],
-    requiresRoute: "missing-route",
+    questId: "missing-quest",
     mapPosition: { x: 120, y: -4 },
     reward: { coin: -1, reputation: 0, items: { "missing-item": 0 } }
+  }];
+  const quests = [{
+    ...QUESTS[0],
+    id: "broken-quest",
+    routeId: "missing-route",
+    rewardRouteId: "another-missing-route",
+    rewards: { coin: -1, reputation: 0, items: { "missing-quest-item": 0 } },
+    stages: [{ id: "broken-stage", label: "Bad stage", type: "route-cleared", routeId: "missing-stage-route" }],
+    requiresQuests: ["missing-prerequisite"],
+    unlocks: ["missing-unlock"]
   }];
   const recipes = [{
     ...RECIPES[0],
     inputs: { "missing-input": 0 },
     output: { itemId: "missing-output", quantity: 0 }
   }];
-  const errors = validateGameContent({ items: ITEMS, routes, recipes, routeLinks: [{ from: "ghost", to: "ghost", label: "" }] });
+  const errors = validateGameContent({ items: ITEMS, routes, quests, recipes, routeLinks: [{ from: "ghost", to: "ghost", label: "" }] });
   const message = errors.join("\n");
-  assert.match(message, /requires unknown route/);
+  assert.match(message, /references unknown quest/);
+  assert.match(message, /references unknown route/);
+  assert.match(message, /requires unknown quest/);
+  assert.match(message, /unlocks unknown quest/);
+  assert.match(message, /references unknown route 'missing-stage-route'/);
+  assert.match(message, /rewards unknown item 'missing-quest-item'/);
+  assert.match(message, /invalid reward quantity/);
   assert.match(message, /map coordinates from 0 to 100/);
   assert.match(message, /invalid coin or reputation rewards/);
   assert.match(message, /rewards unknown item/);
@@ -32,13 +48,14 @@ test("content validation reports broken references and invalid quantities", () =
   assert.match(message, /needs a label/);
 });
 
-test("content validation detects duplicate IDs and route prerequisite cycles", () => {
+test("content validation detects duplicate IDs and quest prerequisite cycles", () => {
   const duplicateItems = [...ITEMS, { ...ITEMS[0] }];
-  const cyclicRoutes = ROUTES.map((route) => ({
-    ...route,
-    requiresRoute: route.id === "mosswind" ? "amber-quarry" : "mosswind"
+  const cyclicQuests = QUESTS.map((quest) => ({
+    ...quest,
+    requiresQuests: [quest.id === "courier-mark" ? "quarry-ledger" : "courier-mark"],
+    unlocks: [quest.id === "courier-mark" ? "quarry-ledger" : "courier-mark"]
   }));
-  const errors = validateGameContent({ items: duplicateItems, routes: cyclicRoutes, recipes: RECIPES, routeLinks: ROUTE_LINKS });
+  const errors = validateGameContent({ items: duplicateItems, routes: ROUTES, quests: cyclicQuests, recipes: RECIPES, routeLinks: ROUTE_LINKS });
   assert.ok(errors.some((error) => error.includes("duplicate ID 'ration'")));
   assert.ok(errors.some((error) => error.includes("prerequisites contain a cycle")));
 });
