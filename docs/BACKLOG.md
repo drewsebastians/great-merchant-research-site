@@ -30,7 +30,7 @@ Plan: Development Plan v5.0
 - [ ] Add a quest and progression schema with conditions, rewards and unlocks.
 - [x] Add versioned save migrations for route progress, onboarding and formation preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.
-- [ ] Add content validation for IDs, item references, balances and missing assets.
+- [x] Add content validation for IDs, item references, balances and missing assets.
 - [ ] Research and design the offline-first Windows packaging path after the browser game loop matures.
 
 ## Deferred pending evidence, rights or scope

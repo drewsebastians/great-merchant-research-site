@@ -43,6 +43,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
 - Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
 - An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
+- A content-validation pass for item/route/recipe IDs, references, route rewards and unlock chains, map positions, encounter data and referenced art files.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -65,7 +66,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 | Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
-| Verification | tests/*.test.mjs | Node built-in tests for the engine, save migrations and rendered app flow |
+| Verification | tests/*.test.mjs, game/validation.mjs, scripts/validate-game-content.mjs | Node tests for rules, save migrations and rendered flow, plus ID/reference/balance/asset checks |
 
 No runtime library or build step is required. The game module is isolated under /game/ so the existing encrypted research library and its files remain unchanged.
 
@@ -91,6 +92,7 @@ The first slice is complete when a new player can:
 16. Convert a route material at the workbench, see its output and resale value, and sell the crafted good.
 17. Choose English or Indonesian for common interface labels, switch combat number shortcuts off/on, and keep both settings across reloads.
 18. Select routes from the regional map or route cards and hear whether a location is open, selected, cleared or locked.
+19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
 
 ## Release guardrails
 
