@@ -17,7 +17,7 @@ Plan: Development Plan v5.0
 ## Priority 1 — next playable improvements
 
 - [x] Add a second route with a distinct encounter and an optional route choice.
-- [ ] Add a short onboarding overlay that can be dismissed and replayed.
+- [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
 - [ ] Make crew formation affect turn order and protection.
 - [ ] Add an equipment slot and one original upgrade with a visible effect.
 - [ ] Add a settlement ledger showing trip cost, cargo value and net proceeds.
@@ -28,7 +28,7 @@ Plan: Development Plan v5.0
 
 - [ ] Add a data-driven route/map catalog and accessible travel screen.
 - [ ] Add a quest and progression schema with conditions, rewards and unlocks.
-- [x] Add a versioned save migration for the route expansion.
+- [x] Add versioned save migrations for route progress and onboarding preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.
 - [ ] Add content validation for IDs, item references, balances and missing assets.
 - [ ] Research and design the offline-first Windows packaging path after the browser game loop matures.
