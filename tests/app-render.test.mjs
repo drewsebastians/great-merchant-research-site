@@ -118,4 +118,18 @@ test("route board and rendered journey flow select the distinct quarry encounter
   keyHandlers.at(-1)({ key: "Escape", preventDefault() {} });
   assert.equal(element("#guide-layer").innerHTML, "");
   assert.equal(savedState().onboardingSeen, true);
+
+  for (let turn = 0; turn < 3; turn += 1) click({ dataset: { action: "strike" } });
+  assert.equal(savedState().phase, "victory");
+  click({ dataset: { action: "return-town" } });
+  click({ dataset: { tab: "market" } });
+  assert.match(element("#game-content").innerHTML, /Make for the caravan/);
+  assert.match(element("#game-content").innerHTML, /1 × Bronze Fittings/);
+  click({ dataset: { action: "craft", recipe: "quarry-roll" } });
+  assert.equal(savedState().inventory.fittings, 0);
+  assert.equal(savedState().inventory["tool-roll"], 1);
+  assert.equal(savedState().lastSettlement.cargoValue, 28);
+  click({ dataset: { action: "sell", item: "tool-roll" } });
+  assert.equal(savedState().lastSettlement.cargoSoldRevenue, 28);
+  assert.equal(savedState().lastSettlement.netProceeds, 49);
 });

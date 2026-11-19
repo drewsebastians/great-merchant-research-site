@@ -1,4 +1,4 @@
-import { createEncounter, createInitialState, findItem, findRoute, PARTY_LIMIT, ROUTES, SCOUT_COST } from "./data.mjs";
+import { createEncounter, createInitialState, findItem, findRecipe, findRoute, PARTY_LIMIT, ROUTES, SCOUT_COST } from "./data.mjs";
 
 function copy(state) { return JSON.parse(JSON.stringify(state)); }
 function record(state, message) {
@@ -165,6 +165,38 @@ export function buyItem(state, itemId, quantity = 1) {
   next.coin -= cost;
   next.inventory[itemId] = (next.inventory[itemId] || 0) + quantity;
   return record(next, "Bought " + quantity + " × " + item.name + " for " + cost + " marks.");
+}
+export function craftRecipe(state, recipeId) {
+  if (state.phase !== "town") return reject(state, "Production is available at the Hearthcross workbench.");
+  const recipe = findRecipe(recipeId);
+  if (!recipe) return reject(state, "That recipe is not on the workbench.");
+  const missing = Object.entries(recipe.inputs).find(([itemId, quantity]) => (state.inventory[itemId] || 0) < quantity);
+  if (missing) return reject(state, "You need " + missing[1] + " × " + (findItem(missing[0])?.name || missing[0]) + " to make that.");
+  const next = copy(state);
+  for (const [itemId, quantity] of Object.entries(recipe.inputs)) next.inventory[itemId] -= quantity;
+  next.inventory[recipe.output.itemId] = (next.inventory[recipe.output.itemId] || 0) + recipe.output.quantity;
+
+  // Keep route cargo value aligned when this trip's tracked material is converted one-for-one.
+  const outputItem = findItem(recipe.output.itemId);
+  let trackedUnits = 0;
+  if (next.tripLedger?.routeId === next.lastSettlement?.routeId) {
+    for (const [inputId, quantity] of Object.entries(recipe.inputs)) {
+      const tracked = Math.min(quantity, next.tripLedger.unsoldCargo?.[inputId] || 0);
+      if (tracked > 0) {
+        const inputItem = findItem(inputId);
+        next.tripLedger.unsoldCargo[inputId] -= tracked;
+        next.tripLedger.cargoValue -= (inputItem?.sellPrice || 0) * tracked;
+        trackedUnits += tracked;
+      }
+    }
+    if (trackedUnits > 0 && outputItem?.sellPrice !== null) {
+      next.tripLedger.unsoldCargo[recipe.output.itemId] = (next.tripLedger.unsoldCargo[recipe.output.itemId] || 0) + trackedUnits;
+      next.tripLedger.cargoValue += outputItem.sellPrice * trackedUnits;
+      next.lastSettlement.cargoValue = next.tripLedger.cargoValue;
+      next.lastSettlement.netProceeds = next.lastSettlement.rewardCoin + next.lastSettlement.cargoSoldRevenue - next.lastSettlement.rationCost;
+    }
+  }
+  return record(next, "Made " + recipe.output.quantity + " × " + outputItem.name + " from " + Object.entries(recipe.inputs).map(([itemId, quantity]) => quantity + " × " + findItem(itemId).name).join(" and ") + ".");
 }
 export function equipItem(state, itemId) {
   if (state.phase !== "town") return reject(state, "Equipment can only be changed in Hearthcross.");

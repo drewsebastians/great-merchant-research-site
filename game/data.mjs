@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 export const STORAGE_KEY = "wayfarers-ledger:v5:save";
 export const SCOUT_COST = 22;
 export const PARTY_LIMIT = 3;
@@ -49,11 +49,23 @@ export const ROUTES = [
 export const ROUTE_IDS = ROUTES.map((route) => route.id);
 export function findRoute(id) { return ROUTES.find((route) => route.id === id) || ROUTES[0]; }
 
+export const RECIPES = [
+  {
+    id: "quarry-roll",
+    name: "Quarry Tool Roll",
+    detail: "Pack one crate of Bronze Fittings into a field-ready trade bundle.",
+    inputs: { fittings: 1 },
+    output: { itemId: "tool-roll", quantity: 1 }
+  }
+];
+export function findRecipe(id) { return RECIPES.find((recipe) => recipe.id === id) || null; }
+
 export const ITEMS = [
   { id: "ration", name: "Trail Ration", detail: "A day's food for the road. One ration is used when you set out.", glyph: "R", buyPrice: 6, sellPrice: 2, kind: "supply" },
   { id: "tonic", name: "Field Tonic", detail: "Restores 22 vitality to the crew member who needs it most.", glyph: "+", buyPrice: 16, sellPrice: 7, kind: "healing", healing: 22 },
   { id: "tea", name: "Amber Tea Brick", detail: "A compact trade good. The ridge courier's parcel contains two bricks.", glyph: "T", buyPrice: 10, sellPrice: 13, kind: "trade" },
   { id: "fittings", name: "Bronze Fittings", detail: "Useful hardware traded by the town's caravaners.", glyph: "B", buyPrice: 18, sellPrice: 22, kind: "trade" },
+  { id: "tool-roll", name: "Quarry Tool Roll", detail: "A compact bundle of quarry tools, prepared from Bronze Fittings.", glyph: "K", buyPrice: null, sellPrice: 28, kind: "trade" },
   { id: "edge", name: "Wayfarer's Edge", detail: "A balanced field blade. Adds 3 damage to Mara's Strike while equipped.", glyph: "⚔", buyPrice: 34, sellPrice: 14, kind: "equipment", strikeBonus: 3 },
   { id: "seal", name: "Courier's Seal", detail: "Proof that the missing parcel reached Hearthcross.", glyph: "S", buyPrice: null, sellPrice: null, kind: "quest" }
 ];
@@ -72,7 +84,7 @@ export function createInitialState() {
     onboardingSeen: false,
     formationFrontId: "mara",
     party: [{ id: "mara", name: "Mara Venn", role: "Wayfarer", hp: 64, maxHp: 64, focus: 2, maxFocus: 3, portrait: "assets/wayfarer.svg" }],
-    inventory: { ration: 2, tonic: 1, tea: 0, fittings: 0, edge: 0, seal: 0 },
+    inventory: { ration: 2, tonic: 1, tea: 0, fittings: 0, "tool-roll": 0, edge: 0, seal: 0 },
     equipment: { weapon: null },
     tripLedger: null,
     lastSettlement: null,

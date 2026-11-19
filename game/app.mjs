@@ -1,5 +1,5 @@
-import { ITEMS, PARTY_LIMIT, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
-import { buyItem, changeTab, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { ITEMS, PARTY_LIMIT, RECIPES, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
 let state = loadGame() || createInitialState();
@@ -149,13 +149,21 @@ function renderJourney() {
   return renderTown();
 }
 function renderMarket() {
-  const tradeItems = ITEMS.filter((item) => item.buyPrice !== null);
+  const tradeItems = ITEMS.filter((item) => item.buyPrice !== null || item.sellPrice !== null);
   return '<section class="market-banner"><div><small>HEARTHCROSS · MARKET WARD</small><h2>Good routes begin with good terms.</h2><p>Buy the supplies you need. Sell trade goods after your return.</p></div><span class="market-stamp">LOCAL<br>EXCHANGE</span></section>' +
     '<section class="panel market-panel"><div class="panel-head"><div><small>DAILY BOARD · PROTOTYPE QUOTES</small><h2>Available goods</h2></div><span class="status-pill">MARKS ' + state.coin + '</span></div><div class="market-table"><div class="market-header"><span>GOOD</span><span>BUY</span><span>SELL</span><span>PACK</span><span></span></div>' +
-    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote">' + item.buyPrice + '<small> M</small></span><span class="quote">' + item.sellPrice + '<small> M</small></span><span class="pack-count">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
-    '<button type="button" data-action="buy" data-item="' + item.id + '" aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
+    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
+    '<button type="button" data-action="buy" data-item="' + item.id + '" ' + (item.buyPrice === null ? "disabled" : "") + ' aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
     '</div><div class="market-foot"><span>Original prototype quotes; not copied from any live game.</span><span>Held: ' + state.inventory.tea + ' tea · ' + state.inventory.fittings + ' fittings</span></div></section>' +
-    '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();
+    renderProduction() + '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();
+}
+function renderProduction() {
+  return '<section class="panel production-panel"><div class="panel-head"><div><small>HEARTHCROSS · WORKBENCH</small><h2>Make for the caravan</h2></div><span class="status-pill">ORIGINAL RECIPE</span></div><div class="recipe-list">' + RECIPES.map((recipe) => {
+    const output = findItem(recipe.output.itemId);
+    const materials = Object.entries(recipe.inputs).map(([itemId, quantity]) => quantity + ' × ' + safe(findItem(itemId)?.name || itemId)).join(' + ');
+    const available = Object.entries(recipe.inputs).every(([itemId, quantity]) => (state.inventory[itemId] || 0) >= quantity);
+    return '<article class="recipe-card"><div class="recipe-glyph">⚒</div><div class="recipe-copy"><strong>' + safe(recipe.name) + '</strong><small>' + materials + ' → ' + recipe.output.quantity + ' × ' + safe(output.name) + '</small><span>Sell value: ' + output.sellPrice + ' marks · Materials in pack: ' + Object.entries(recipe.inputs).map(([itemId]) => (state.inventory[itemId] || 0) + ' ' + safe(findItem(itemId)?.name || itemId)).join(', ') + '</span></div><button type="button" class="tiny-button" data-action="craft" data-recipe="' + recipe.id + '" ' + (!available || state.phase !== "town" ? "disabled" : "") + '>MAKE</button></article>';
+  }).join("") + '</div></section>';
 }
 function renderRoster() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
@@ -246,6 +254,7 @@ document.addEventListener("click", (event) => {
   if (action === "start") transition(startRoute(state));
   else if (action === "hire") transition(hireScout(state));
   else if (action === "buy") transition(buyItem(state, button.dataset.item));
+  else if (action === "craft") transition(craftRecipe(state, button.dataset.recipe));
   else if (action === "equip") transition(equipItem(state, button.dataset.item));
   else if (action === "unequip") transition(equipItem(state, null));
   else if (action === "sell") transition(sellItem(state, button.dataset.item));

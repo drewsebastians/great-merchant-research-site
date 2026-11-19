@@ -3,7 +3,7 @@ import { ROUTE_IDS, SAVE_VERSION, STORAGE_KEY } from "./data.mjs";
 function validSave(state) {
   const tabs = ["journey", "market", "roster", "inventory", "journal"];
   const unitIds = ["mara", "scout"];
-  const itemIds = ["ration", "tonic", "tea", "fittings", "edge", "seal"];
+  const itemIds = ["ration", "tonic", "tea", "fittings", "tool-roll", "edge", "seal"];
   if (!state || state.saveVersion !== SAVE_VERSION || !tabs.includes(state.activeTab)) return false;
   if (!ROUTE_IDS.includes(state.selectedRoute) || !ROUTE_IDS.includes(state.activeRoute) || !Array.isArray(state.completedRoutes) ||
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
@@ -38,7 +38,7 @@ function migrateToLatest(state, additions = {}) {
     ...state,
     ...additions,
     saveVersion: SAVE_VERSION,
-    inventory: { ...state.inventory, edge: state.inventory?.edge ?? 0 },
+    inventory: { ...state.inventory, edge: state.inventory?.edge ?? 0, "tool-roll": state.inventory?.["tool-roll"] ?? 0 },
     equipment: state.equipment || { weapon: null },
     tripLedger: state.tripLedger || null,
     lastSettlement: state.lastSettlement || null
@@ -47,6 +47,7 @@ function migrateToLatest(state, additions = {}) {
 
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
+  if (state.saveVersion === 6) return migrateToLatest(state);
   if (state.saveVersion === 5) return migrateToLatest(state);
   if (state.saveVersion === 4) return migrateToLatest(state);
   if (state.saveVersion === 3) return migrateToLatest(state, { formationFrontId: state.formationFrontId || "mara" });

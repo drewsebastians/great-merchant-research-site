@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -19,6 +19,32 @@ test("market purchase and sale update currency and inventory", () => {
   const sold = sellItem(bought, "ration", 1);
   assert.equal(sold.coin, 50);
   assert.equal(sold.inventory.ration, 3);
+});
+test("the workbench converts route fittings into a trade item and updates the linked settlement", () => {
+  let state = startRoute(preparedState());
+  while (state.phase === "battle") state = performAction(state, "strike");
+  state = returnToTown(state);
+  state = selectRoute(state, "amber-quarry");
+  state = startRoute(state);
+  while (state.phase === "battle") state = performAction(state, "strike");
+  state = returnToTown(state);
+  assert.equal(state.inventory.fittings, 1);
+  assert.equal(state.lastSettlement.cargoValue, 22);
+  state = craftRecipe(state, "quarry-roll");
+  assert.equal(state.inventory.fittings, 0);
+  assert.equal(state.inventory["tool-roll"], 1);
+  assert.equal(state.lastSettlement.cargoValue, 28);
+  assert.equal(state.lastSettlement.cargoCount, 1);
+  state = sellItem(state, "tool-roll", 1);
+  assert.equal(state.lastSettlement.cargoSoldRevenue, 28);
+  assert.equal(state.lastSettlement.cargoSoldCount, 1);
+  assert.equal(state.lastSettlement.netProceeds, 49);
+});
+test("the workbench rejects recipes without their required materials", () => {
+  const rejected = craftRecipe(createInitialState(), "quarry-roll");
+  assert.equal(rejected.inventory.fittings, 0);
+  assert.equal(rejected.inventory["tool-roll"], 0);
+  assert.match(rejected.notice, /Bronze Fittings/);
 });
 test("Wayfarer's Edge can be bought, equipped, unequipped and increases Strike damage", () => {
   let state = buyItem(preparedState(), "edge");
