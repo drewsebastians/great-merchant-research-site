@@ -81,11 +81,15 @@ test("a rejected purchase leaves balance and pack unchanged", () => {
   assert.match(failed.notice, /Not enough marks/);
 });
 test("route gates require a scout and one ration", () => {
-  assert.equal(startRoute(createInitialState()).phase, "town");
+  const noScout = startRoute(createInitialState());
+  assert.equal(noScout.phase, "town");
+  assert.match(noScout.notice, /required crew member/);
   assert.equal(startRoute(preparedState()).phase, "battle");
   const noRation = preparedState();
   noRation.inventory.ration = 0;
-  assert.equal(startRoute(noRation).phase, "town");
+  const rejected = startRoute(noRation);
+  assert.equal(rejected.phase, "town");
+  assert.match(rejected.notice, /Trail Ration/);
 });
 test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward", () => {
   let state = preparedState();

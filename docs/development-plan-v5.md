@@ -30,7 +30,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 ### Included in the first playable slice
 
 - Static, dependency-free web app under /game/.
-- A version 7 local save with migrations from versions 1–6 and a fresh-journey reset.
+- A version 8 local save with migrations from versions 1–7 and a fresh-journey reset.
 - Hearthcross as a town hub with a short errand and journey status.
 - A four-step optional field guide that can be skipped, dismissed and replayed.
 - A compact crew board; hiring a trail scout is required before the route.
@@ -43,7 +43,8 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
 - Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
 - An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
-- A content-validation pass for item/route/recipe IDs, references, route rewards and unlock chains, map positions, encounter data and referenced art files.
+- A data-driven quest catalog with stable IDs, entry conditions, ordered objectives, one-time completion rewards, prerequisites and unlocks; the first errand's objective counter and quarry gate read from this catalog.
+- A content-validation pass for item/route/quest/recipe IDs, references, route and quest rewards, prerequisite cycles, map positions, encounter data and referenced art files.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -61,12 +62,12 @@ The research corpus contains version-scoped and community-reported findings. Cur
 
 | Layer | Files | Responsibility |
 | --- | --- | --- |
-| Content | game/data.mjs | Original item, route, route-connection and recipe catalogs, guide copy, starting state and encounter definitions |
-| Rules | game/engine.mjs | Pure state transitions for hiring, trade, production, supplies, combat and route rewards |
+| Content | game/data.mjs | Original item, route, quest, route-connection and recipe catalogs, guide copy, starting state and encounter definitions |
+| Rules | game/engine.mjs, game/quests.mjs | State transitions for hiring, trade, production, supplies, combat and route rewards; quest stages, entry gates and unlock evaluation |
 | Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
-| Verification | tests/*.test.mjs, game/validation.mjs, scripts/validate-game-content.mjs | Node tests for rules, save migrations and rendered flow, plus ID/reference/balance/asset checks |
+| Verification | tests/*.test.mjs, game/validation.mjs, scripts/validate-game-content.mjs | Node tests for rules, quests, save migrations and rendered flow, plus ID/reference/balance/asset checks |
 
 No runtime library or build step is required. The game module is isolated under /game/ so the existing encrypted research library and its files remain unchanged.
 
@@ -93,6 +94,7 @@ The first slice is complete when a new player can:
 17. Choose English or Indonesian for common interface labels, switch combat number shortcuts off/on, and keep both settings across reloads.
 18. Select routes from the regional map or route cards and hear whether a location is open, selected, cleared or locked.
 19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
+20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
 
 ## Release guardrails
 
