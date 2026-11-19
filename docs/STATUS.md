@@ -1,13 +1,13 @@
 # Development Status
 
 Updated: 19 November 2026  
-Task: V5-008 — language and combat input preferences
+Task: V5-009 — region map and accessible route selection
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Deployed game code:** commit `3d04e9f34d659cf31c0bf25855b0a852b51b1898` from `main`.
+**Deployed game code:** commit `b2510d03ef776d5fd4f46e378c9e2f61edc37e09` from `main`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
@@ -23,14 +23,15 @@ Plan: Development Plan v5.0
 - Hearthcross workbench recipe converts one trip-earned Bronze Fittings into a Quarry Tool Roll. The output stays sellable, and the latest trip ledger reprices linked cargo from 22 to 28 marks.
 - Preferences screen switches common interface labels between English and Indonesian and persists the choice; narrative and item descriptions stay English.
 - Combat number shortcuts can be disabled/re-enabled from Preferences, including during an encounter.
+- Original region map draws route positions and connections from the data catalog, marks locked/selected/cleared locations, and supports the same accessible route action as the existing cards.
 - Version 8 local saves migrate v1–v7 data while preserving journey progress, equipment, settlement, language and input settings.
 - Public plan, status, backlog and handoff documents.
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **27/27 pass**, including workbench creation and sale, English/Indonesian UI labels, live keyboard shortcut toggling and v1–v7 save migration.
+- `node --test tests/*.test.mjs`: **27/27 pass**, including workbench creation and sale, English/Indonesian UI labels, live keyboard shortcut toggling, accessible map state and v1–v7 save migration.
 - JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
-- Production `index.html`, `app.mjs`, `data.mjs`, `engine.mjs`, `storage.mjs` and `styles.css` returned HTTP 200 and contained preferences/version markers.
+- Production `index.html`, `app.mjs`, `data.mjs` and `styles.css` returned HTTP 200 and contained accessible-map markers.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Earlier live-browser smoke test completed Mosswind, returned to town, sold cargo and confirmed the saved balance/day after reload.
 
@@ -40,4 +41,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-Continue with the highest-priority unchecked item in `docs/BACKLOG.md`: add an original, data-driven region map with accessible route selection, locked-route state and clear location context.
+Continue with the highest-priority unchecked item in `docs/BACKLOG.md`: validate catalog IDs, references, rewards, map positions and recipe inputs so content additions fail early and clearly.

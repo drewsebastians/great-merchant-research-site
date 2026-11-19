@@ -42,6 +42,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
 - Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
+- An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -59,7 +60,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 
 | Layer | Files | Responsibility |
 | --- | --- | --- |
-| Content | game/data.mjs | Original item, route and recipe catalogs, guide copy, starting state and encounter definitions |
+| Content | game/data.mjs | Original item, route, route-connection and recipe catalogs, guide copy, starting state and encounter definitions |
 | Rules | game/engine.mjs | Pure state transitions for hiring, trade, production, supplies, combat and route rewards |
 | Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
@@ -89,6 +90,7 @@ The first slice is complete when a new player can:
 15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.
 16. Convert a route material at the workbench, see its output and resale value, and sell the crafted good.
 17. Choose English or Indonesian for common interface labels, switch combat number shortcuts off/on, and keep both settings across reloads.
+18. Select routes from the regional map or route cards and hear whether a location is open, selected, cleared or locked.
 
 ## Release guardrails
 

@@ -26,7 +26,7 @@ Plan: Development Plan v5.0
 
 ## Priority 2 — broader game architecture
 
-- [ ] Add a data-driven route/map catalog and accessible travel screen.
+- [x] Add a data-driven route/map catalog and accessible travel screen.
 - [ ] Add a quest and progression schema with conditions, rewards and unlocks.
 - [x] Add versioned save migrations for route progress, onboarding and formation preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.
