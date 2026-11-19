@@ -87,7 +87,7 @@ The first slice is complete when a new player can:
 9. Complete the same loop on a narrow mobile layout.
 10. Verify that the public build contains no private research records or unauthorized assets.
 11. Choose between routes, unlock the second route and play its distinct encounter.
-12. Skip or complete the field guide, replay it later and keep that choice across reloads.
+12. Skip or complete the field guide, replay it later, dismiss it with Escape or an outside click, and keep that choice across reloads.
 13. Change the front member and see the action order, first target and rear protection change in combat.
 14. Buy, equip and unequip an original weapon; see its damage effect in the crew, pack and combat UI.
 15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.

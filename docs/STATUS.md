@@ -1,13 +1,13 @@
 # Development Status
 
 Updated: 19 November 2026  
-Task: V5-012 — installable offline PWA
+Task: V5-013 — first-run guide click recovery
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Deployed game code:** commit `cae09495b4f3da2ecdc2acd501f7e020f86851ea` from `main`.
+**Deployed game code:** commit `7e1cb98ea467ed95d47df31a0eebfc0971881c25` from `main`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
@@ -26,6 +26,7 @@ Plan: Development Plan v5.0
 - Original region map draws route positions and connections from the data catalog, marks locked/selected/cleared locations, and supports the same accessible route action as the existing cards.
 - A quest catalog drives entry requirements, ordered objective progress, first-completion rewards and route unlocks. The Courier's Mark completes on return to Hearthcross, grants its Courier's Seal once, and unlocks the Quarry Ledger; replaying a completed route does not duplicate the quest reward.
 - The game is installable as a Windows PWA from Edge. Its game-scoped manifest and service worker cache the app shell and original assets; the worker refreshes on successful online requests and serves the saved shell when offline.
+- The first-run guide still opens on a new save, but tapping outside its dialog now closes it, records the choice and releases the page controls. Escape, the close button and Skip Guide remain available.
 - `docs/windows-offline-packaging.md` records the PWA recommendation, trade-offs against Tauri and Electron, setup limits and release checks.
 - Catalog validation checks duplicate IDs, item/route/quest/recipe references, prices and rewards, quest prerequisite cycles, recipe quantities, map coordinates, enemy stats and scene/portrait asset paths. `node scripts/validate-game-content.mjs` gives a clear nonzero failure on invalid content.
 - Version 8 local saves migrate v1–v7 data while preserving journey progress, equipment, settlement, language and input settings.
@@ -33,10 +34,10 @@ Plan: Development Plan v5.0
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **33/33 pass**, including quest stage progression, one-time quest reward, PWA manifest and precache checks, offline navigation fallback and scope boundaries, negative content-validation cases, workbench creation and sale, English/Indonesian UI labels, live shortcut toggling, accessible map state and v1–v7 save migration.
+- `node --test tests/*.test.mjs`: **33/33 pass**, including outside-click guide dismissal and subsequent page navigation, quest stage progression, one-time quest reward, PWA manifest and precache checks, offline navigation fallback and scope boundaries, negative content-validation cases, workbench creation and sale, English/Indonesian UI labels, live shortcut toggling, accessible map state and v1–v7 save migration.
 - `node scripts/validate-game-content.mjs`: catalog checks pass; seven route/party scene and portrait paths exist.
 - JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
-- GitHub Pages deployment workflow for commit `cae09495b4f3da2ecdc2acd501f7e020f86851ea` completed successfully. The production game remains at the URL above.
+- GitHub Pages deployment workflow for commit `7e1cb98ea467ed95d47df31a0eebfc0971881c25` completed successfully. The production game remains at the URL above.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Earlier live-browser smoke test completed Mosswind, returned to town, sold cargo and confirmed the saved balance/day after reload.
 

@@ -10,6 +10,7 @@ Plan: Development Plan v5.0
 - [x] Build town, hiring, market, pack, journal and crew screens.
 - [x] Build repeatable turn-based encounters with target selection and combat orders.
 - [x] Connect victory, route rewards, return-to-town, selling and local save.
+- [x] Let the first-run guide close from an outside click so page controls are reachable if the modal is blocking navigation.
 - [x] Hand-author original scene art and portraits.
 - [x] Add automated engine, save and rendered-flow checks.
 - [x] Deploy and verify the playable route at the production URL.
@@ -35,7 +36,7 @@ Plan: Development Plan v5.0
 - [x] Add versioned save migrations for route progress, onboarding and formation preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.
 - [x] Add content validation for IDs, item references, balances and missing assets.
-- [ ] Research and design the offline-first Windows packaging path after the browser game loop matures.
+- [x] Research and design the offline-first Windows packaging path; PWA selected for the current static game.
 
 ## Deferred pending evidence, rights or scope
 
