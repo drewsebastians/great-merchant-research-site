@@ -20,6 +20,7 @@
       <div class="topbar-tools">
         <span class="save-state" id="save-state"><span class="save-dot"></span> SAVED HERE</span>
         <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small>MARKS</small></span>
+        <button class="guide-replay" type="button" data-action="onboarding-replay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b>HOW TO PLAY</b></button>
         <button class="icon-button" type="button" data-action="reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
       </div>
     </header>
@@ -52,6 +53,7 @@
         <div class="side-foot"><span class="seal-icon">◈</span><span>Progress saves on this device.<br>Prototype values are not source-game balance.</span></div>
       </aside>
     </main>
+    <div id="guide-layer"></div>
   </div>
   <script type="module" src="./app.mjs"></script>
 </body>

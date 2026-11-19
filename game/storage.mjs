@@ -7,6 +7,7 @@ function validSave(state) {
   if (!state || state.saveVersion !== SAVE_VERSION || !tabs.includes(state.activeTab)) return false;
   if (!ROUTE_IDS.includes(state.selectedRoute) || !ROUTE_IDS.includes(state.activeRoute) || !Array.isArray(state.completedRoutes) ||
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
+  if (typeof state.onboardingSeen !== "boolean") return false;
   if (!Array.isArray(state.party) || state.party.length < 1 || state.party.length > 3) return false;
   if (state.party.some((unit) => !unitIds.includes(unit.id) || typeof unit.name !== "string" || typeof unit.role !== "string" ||
     !Number.isInteger(unit.hp) || !Number.isInteger(unit.maxHp) || unit.maxHp < 1 || unit.hp < 0 || unit.hp > unit.maxHp ||
@@ -21,15 +22,17 @@ function validSave(state) {
 
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
-  if (state.saveVersion !== 1) return state;
-  return {
+  if (state.saveVersion === 2) return { ...state, saveVersion: SAVE_VERSION, onboardingSeen: false };
+  if (state.saveVersion === 1) return {
     ...state,
     saveVersion: SAVE_VERSION,
     selectedRoute: "mosswind",
     activeRoute: "mosswind",
     completedRoutes: state.phase === "town" && state.routeCleared ? ["mosswind"] : [],
+    onboardingSeen: false,
     battle: state.battle ? { ...state.battle, routeId: "mosswind" } : null
   };
+  return state;
 }
 
 export function loadGame() {

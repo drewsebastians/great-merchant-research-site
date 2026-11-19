@@ -8,7 +8,16 @@ const notice = document.querySelector("#notice");
 const title = document.querySelector("#screen-title");
 const eyebrow = document.querySelector("#screen-eyebrow");
 const phaseLabel = document.querySelector("#phase-label");
+const guideLayer = document.querySelector("#guide-layer");
 const $ = (selector) => document.querySelector(selector);
+let guideOpen = !state.onboardingSeen;
+let guideStep = 0;
+const GUIDE_STEPS = [
+  { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
+  { kicker: "02 · PICK A ROAD", title: "Choose a route.", copy: "Select an open card on the travel board. Clear the Courier's Mark on Mosswind Road to open Amber Quarry." },
+  { kicker: "03 · DIRECT THE CREW", title: "Choose a target, then act.", copy: "Strike builds focus, Brace softens the next blow, and Wayfarer's Arc spends two focus to hit every foe. A Field Tonic uses your turn." },
+  { kicker: "04 · CLOSE THE LEDGER", title: "Bring your gains home.", copy: "After victory, return to Hearthcross to recover. Sell trade cargo, prepare again and continue. Your journey saves on this device." }
+];
 
 function safe(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -168,6 +177,23 @@ function renderJournal() {
     '<section class="panel journal-panel"><div class="panel-head"><div><small>RECENT ENTRIES</small><h2>Ledger</h2></div><span class="status-pill">' + state.log.length + ' NOTES</span></div><div class="journal-list">' +
     state.log.map((entry, index) => '<article><span class="journal-index">' + String(state.log.length - index).padStart(2, "0") + '</span><i></i><p>' + safe(entry) + '</p></article>').join("") + '</div></section>';
 }
+function renderGuide() {
+  const topbar = document.querySelector(".topbar");
+  const gameLayout = document.querySelector(".game-layout");
+  topbar.inert = guideOpen;
+  gameLayout.inert = guideOpen;
+  if (!guideOpen) {
+    guideLayer.innerHTML = "";
+    return;
+  }
+  const step = GUIDE_STEPS[guideStep];
+  const last = guideStep === GUIDE_STEPS.length - 1;
+  guideLayer.innerHTML = '<div class="guide-backdrop"><section class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guide-title" aria-describedby="guide-copy"><button type="button" class="guide-close" data-action="onboarding-close" aria-label="Close quick guide">×</button><div class="guide-emblem"><span>W</span><i>✦</i></div><small class="guide-kicker">FIELD GUIDE · ' + step.kicker + '</small><h2 id="guide-title">' + safe(step.title) + '</h2><p id="guide-copy">' + safe(step.copy) + '</p><div class="guide-progress" aria-label="Step ' + (guideStep + 1) + ' of ' + GUIDE_STEPS.length + '">' + GUIDE_STEPS.map((_, index) => '<i class="' + (index === guideStep ? "current" : index < guideStep ? "passed" : "") + '"></i>').join("") + '<span>' + (guideStep + 1) + ' / ' + GUIDE_STEPS.length + '</span></div><div class="guide-actions">' +
+    (guideStep > 0 ? '<button type="button" class="guide-back-button" data-action="onboarding-back">← BACK</button>' : '<button type="button" class="guide-back-button" data-action="onboarding-close">SKIP GUIDE</button>') +
+    '<button type="button" class="guide-next" data-action="' + (last ? "onboarding-close" : "onboarding-next") + '" data-guide-next>' + (last ? "FINISH GUIDE" : "CONTINUE") + '<span>→</span></button></div><div class="guide-note">YOU CAN REPLAY THIS GUIDE FROM THE TOP BAR</div></section></div>';
+  const next = guideLayer.querySelector?.("[data-guide-next]");
+  next?.focus();
+}
 function render() {
   setHeader(state.activeTab, state.phase);
   navState();
@@ -176,6 +202,7 @@ function render() {
   notice.classList.toggle("show", Boolean(state.notice));
   const renderers = { journey: renderJourney, market: renderMarket, roster: renderRoster, inventory: renderInventory, journal: renderJournal };
   content.innerHTML = renderers[state.activeTab]();
+  renderGuide();
   const saved = saveGame(state);
   $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + (saved ? " SAVED HERE" : " SESSION ONLY");
   document.body.dataset.phase = state.phase;
@@ -183,6 +210,8 @@ function render() {
 function transition(next) { state = next; render(); }
 
 document.addEventListener("click", (event) => {
+  const guideAction = event.target.closest('[data-action^="onboarding-"]');
+  if (guideOpen && !guideAction) return;
   const routeButton = event.target.closest("[data-route]");
   if (routeButton) { transition(selectRoute(state, routeButton.dataset.route)); return; }
   const targetButton = event.target.closest("[data-target]");
@@ -200,13 +229,28 @@ document.addEventListener("click", (event) => {
   else if (["strike", "brace", "technique"].includes(action)) transition(performAction(state, action));
   else if (action === "return-town") transition(returnToTown(state));
   else if (action === "recover") transition(recoverInTown(state));
+  else if (action === "onboarding-replay") { guideStep = 0; guideOpen = true; render(); }
+  else if (action === "onboarding-next") { guideStep = Math.min(guideStep + 1, GUIDE_STEPS.length - 1); render(); }
+  else if (action === "onboarding-back") { guideStep = Math.max(guideStep - 1, 0); render(); }
+  else if (action === "onboarding-close") { guideOpen = false; guideStep = 0; state = { ...state, onboardingSeen: true }; render(); }
   else if (action === "reset" && window.confirm("Start a fresh journey? This clears only this game's save on this device.")) {
     clearGame();
     state = resetJourney();
+    guideStep = 0;
+    guideOpen = true;
     render();
   }
 });
 document.addEventListener("keydown", (event) => {
+  if (guideOpen && event.key === "Escape") {
+    event.preventDefault();
+    guideOpen = false;
+    guideStep = 0;
+    state = { ...state, onboardingSeen: true };
+    render();
+    return;
+  }
+  if (guideOpen) return;
   if (state.phase !== "battle" || event.altKey || event.ctrlKey || event.metaKey) return;
   const orders = { "1": "strike", "2": "brace", "3": "technique" };
   if (!orders[event.key]) return;

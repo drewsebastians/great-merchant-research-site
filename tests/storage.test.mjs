@@ -42,15 +42,35 @@ test("version 1 saves migrate without losing the existing journey", () => {
     delete oldSave.selectedRoute;
     delete oldSave.activeRoute;
     delete oldSave.completedRoutes;
+    delete oldSave.onboardingSeen;
     oldSave.coin = 41;
     oldSave.party[0].hp = 53;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 2);
+    assert.equal(migrated.saveVersion, 3);
     assert.equal(migrated.coin, 41);
     assert.equal(migrated.party[0].hp, 53);
     assert.equal(migrated.selectedRoute, "mosswind");
     assert.deepEqual(migrated.completedRoutes, []);
+    assert.equal(migrated.onboardingSeen, false);
+  });
+});
+
+test("version 2 saves keep route progress during the onboarding migration", () => {
+  withMemoryStorage((store) => {
+    const oldSave = createInitialState();
+    oldSave.saveVersion = 2;
+    delete oldSave.onboardingSeen;
+    oldSave.completedRoutes = ["mosswind"];
+    oldSave.selectedRoute = "amber-quarry";
+    oldSave.coin = 74;
+    store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
+    const migrated = loadGame();
+    assert.equal(migrated.saveVersion, 3);
+    assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
+    assert.equal(migrated.selectedRoute, "amber-quarry");
+    assert.equal(migrated.coin, 74);
+    assert.equal(migrated.onboardingSeen, false);
   });
 });
 
