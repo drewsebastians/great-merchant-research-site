@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -77,6 +77,18 @@ test("town-only screens stay locked during an encounter", () => {
   const state = startRoute(preparedState());
   assert.equal(changeTab(state, "market").activeTab, "journey");
   assert.equal(changeTab(state, "inventory").activeTab, "inventory");
+});
+test("front formation changes the opening order and screens the rear", () => {
+  let state = preparedState();
+  state = setFormationFront(state, "scout");
+  assert.equal(state.formationFrontId, "scout");
+  state = startRoute(state);
+  const result = performAction(state, "strike");
+  assert.equal(result.battle.enemies[0].hp, 7);
+  assert.equal(result.party.find((unit) => unit.id === "scout").hp, 40);
+  assert.equal(result.party.find((unit) => unit.id === "mara").hp, 61);
+  assert.ok(result.log.some((entry) => /screens Mara Venn, softening the hit by 2/.test(entry)));
+  assert.equal(setFormationFront(result, "mara").formationFrontId, "scout");
 });
 test("Brace softens the next incoming hit", () => {
   const state = startRoute(preparedState());

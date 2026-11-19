@@ -35,6 +35,7 @@ function savedState() { return JSON.parse(storage.get("wayfarers-ledger:v5:save"
 function click(button) {
   const target = { closest(selector) {
     if (selector === '[data-action^="onboarding-"]') return button?.dataset?.action?.startsWith("onboarding-") ? button : null;
+    if (selector === "[data-formation-front]") return button?.dataset?.formationFront ? button : null;
     if (selector === "[data-route]") return button?.dataset?.route ? button : null;
     if (selector === "[data-target]") return button?.dataset?.target ? button : null;
     if (selector === "button") return button || null;
@@ -55,6 +56,11 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(element("#game-content").innerHTML, /LOCKED/);
 
   click({ dataset: { action: "hire" } });
+  click({ dataset: { formationFront: "scout" } });
+  assert.equal(savedState().formationFrontId, "scout");
+  click({ dataset: { formationFront: "mara" } });
+  assert.equal(savedState().formationFrontId, "mara");
+  click({ dataset: { tab: "journey" } });
   click({ dataset: { action: "start" } });
   for (let turn = 0; turn < 3; turn += 1) click({ dataset: { action: "strike" } });
   assert.equal(savedState().phase, "victory");

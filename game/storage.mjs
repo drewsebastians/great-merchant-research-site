@@ -9,6 +9,8 @@ function validSave(state) {
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
   if (typeof state.onboardingSeen !== "boolean") return false;
   if (!Array.isArray(state.party) || state.party.length < 1 || state.party.length > 3) return false;
+  if (!["mara", "scout"].includes(state.formationFrontId)) return false;
+  if (!state.party.some((unit) => unit.id === state.formationFrontId)) return false;
   if (state.party.some((unit) => !unitIds.includes(unit.id) || typeof unit.name !== "string" || typeof unit.role !== "string" ||
     !Number.isInteger(unit.hp) || !Number.isInteger(unit.maxHp) || unit.maxHp < 1 || unit.hp < 0 || unit.hp > unit.maxHp ||
     !Number.isInteger(unit.focus) || !Number.isInteger(unit.maxFocus) || unit.focus < 0 || unit.focus > unit.maxFocus)) return false;
@@ -22,7 +24,8 @@ function validSave(state) {
 
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
-  if (state.saveVersion === 2) return { ...state, saveVersion: SAVE_VERSION, onboardingSeen: false };
+  if (state.saveVersion === 3) return { ...state, saveVersion: SAVE_VERSION, formationFrontId: state.formationFrontId || "mara" };
+  if (state.saveVersion === 2) return { ...state, saveVersion: SAVE_VERSION, onboardingSeen: state.onboardingSeen ?? false, formationFrontId: "mara" };
   if (state.saveVersion === 1) return {
     ...state,
     saveVersion: SAVE_VERSION,
@@ -30,6 +33,7 @@ function migrateSave(state) {
     activeRoute: "mosswind",
     completedRoutes: state.phase === "town" && state.routeCleared ? ["mosswind"] : [],
     onboardingSeen: false,
+    formationFrontId: "mara",
     battle: state.battle ? { ...state.battle, routeId: "mosswind" } : null
   };
   return state;

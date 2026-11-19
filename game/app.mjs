@@ -1,5 +1,5 @@
 import { ITEMS, PARTY_LIMIT, ROUTES, SCOUT_COST, createInitialState, findRoute } from "./data.mjs";
-import { buyItem, changeTab, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { buyItem, changeTab, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
 let state = loadGame() || createInitialState();
@@ -15,7 +15,7 @@ let guideStep = 0;
 const GUIDE_STEPS = [
   { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
   { kicker: "02 · PICK A ROAD", title: "Choose a route.", copy: "Select an open card on the travel board. Clear the Courier's Mark on Mosswind Road to open Amber Quarry." },
-  { kicker: "03 · DIRECT THE CREW", title: "Choose a target, then act.", copy: "Strike builds focus, Brace softens the next blow, and Wayfarer's Arc spends two focus to hit every foe. A Field Tonic uses your turn." },
+  { kicker: "03 · DIRECT THE CREW", title: "Choose a target, then act.", copy: "Front position sets who opens. The rear line softens incoming damage. Strike builds focus, Brace protects the front, and Wayfarer's Arc spends two focus." },
   { kicker: "04 · CLOSE THE LEDGER", title: "Bring your gains home.", copy: "After victory, return to Hearthcross to recover. Sell trade cargo, prepare again and continue. Your journey saves on this device." }
 ];
 
@@ -115,11 +115,11 @@ function renderBattle() {
   }).join("");
   return '<section class="landscape road-scene battle-scene ' + (route.id === "amber-quarry" ? "quarry-scene" : "") + '" aria-label="Illustrated encounter on ' + safe(route.name) + '"><div class="scene-vignette"></div>' +
     '<div class="scene-label"><span class="location-pin">⌖</span><div><small>' + safe(route.name.toUpperCase()) + ' · TURN ' + String(battle.turn).padStart(2, "0") + '</small><strong>' + safe(route.encounter) + '</strong></div></div><div class="scene-coordinate">' + safe(route.coordinate) + ' <span>·</span> ISSUE AN ORDER</div>' +
-    '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span></div>').join("") + '</div><div class="battle-enemies">' +
+    '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit ' + (unit.id === state.formationFrontId ? "front-unit" : "rear-unit") + '"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span><small>' + (unit.id === state.formationFrontId ? "FRONT" : "REAR") + '</small></div>').join("") + '</div><div class="battle-enemies">' +
     battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
     '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
     '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
-    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>Keyboard: 1 · 2 · 3</span></div>' +
+    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2.</div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · Keys: 1 · 2 · 3</span></div>' +
     '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal damage · gain 1 focus</small></span><b>↗</b></button>' +
     '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
     '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
@@ -156,10 +156,10 @@ function renderMarket() {
 }
 function renderRoster() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
-  return '<section class="roster-banner"><div><small>HEARTHCROSS · HIRING BOARD</small><h2>Travel light. Watch each other&#39;s backs.</h2><p>Your crew&#39;s formation affects how much room you have for new companions.</p></div><div class="slot-count">' + state.party.length + '<i> / ' + PARTY_LIMIT + '</i><small>CREW SLOTS</small></div></section>' +
+  return '<section class="roster-banner"><div><small>HEARTHCROSS · HIRING BOARD</small><h2>Travel light. Watch each other&#39;s backs.</h2><p>Set the front member before you leave. Formation changes turn order and how the crew screens incoming hits.</p></div><div class="slot-count">' + state.party.length + '<i> / ' + PARTY_LIMIT + '</i><small>CREW SLOTS</small></div></section>' +
     '<div class="roster-grid"><section class="panel roster-panel"><div class="panel-head"><div><small>ACTIVE FORMATION</small><h2>Road crew</h2></div><span class="status-pill">' + state.party.length + ' MEMBERS</span></div>' +
-    state.party.map((unit, index) => '<div class="roster-member"><span class="formation-index">0' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><div class="roster-member-info"><strong>' + safe(unit.name) + '</strong><small>' + safe(unit.role) + '</small>' + bar(unit.hp, unit.maxHp, "health") + '</div><span class="role-tag">' + (index === 0 ? "LEAD" : "SCOUT") + '</span></div>').join("") +
-    '<div class="formation-note">Formation and combat values are prototype rules. Detailed class and promotion systems are planned for a later slice.</div></section>' +
+    state.party.map((unit, index) => '<div class="roster-member"><span class="formation-index">0' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><div class="roster-member-info"><strong>' + safe(unit.name) + '</strong><small>' + safe(unit.role) + '</small>' + bar(unit.hp, unit.maxHp, "health") + '</div>' + (unit.id === state.formationFrontId ? '<span class="role-tag front-tag">FRONT</span>' : '<button type="button" class="formation-toggle" data-formation-front="' + unit.id + '">MOVE TO FRONT</button>') + '</div>').join("") +
+    '<div class="formation-note">Prototype rule: the front member takes the first attack and opens the crew turn. The rear member takes 2 less damage from screened hits.</div></section>' +
     '<section class="panel hire-panel"><div class="hire-portrait"><img src="./assets/scout.svg" alt=""></div><small>AVAILABLE FOR HIRE</small><h2>Tarin Reed</h2><span class="role-tag">TRAIL SCOUT</span><p>Knows the ridge paths. Adds a follow-up strike and keeps an eye on the crew&#39;s supplies.</p><div class="hire-footer"><span><small>CONTRACT</small><strong>' + SCOUT_COST + ' marks</strong></span><button type="button" class="secondary-button" data-action="hire" ' + (hasScout || state.coin < SCOUT_COST || state.party.length >= PARTY_LIMIT ? "disabled" : "") + '>' + (hasScout ? "IN YOUR CREW" : "HIRE SCOUT") + '<span>→</span></button></div></section></div>';
 }
 function renderInventory() {
@@ -212,6 +212,8 @@ function transition(next) { state = next; render(); }
 document.addEventListener("click", (event) => {
   const guideAction = event.target.closest('[data-action^="onboarding-"]');
   if (guideOpen && !guideAction) return;
+  const formationButton = event.target.closest("[data-formation-front]");
+  if (formationButton) { transition(setFormationFront(state, formationButton.dataset.formationFront)); return; }
   const routeButton = event.target.closest("[data-route]");
   if (routeButton) { transition(selectRoute(state, routeButton.dataset.route)); return; }
   const targetButton = event.target.closest("[data-target]");

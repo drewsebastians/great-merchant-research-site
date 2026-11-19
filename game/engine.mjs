@@ -40,17 +40,24 @@ function finishVictory(state) {
 function enemyPhase(state) {
   const attackers = livingEnemies(state);
   if (!attackers.length) return finishVictory(state);
+  const configuredFrontId = state.formationFrontId || "mara";
   for (let index = 0; index < attackers.length; index += 1) {
     const activeParty = livingParty(state);
     if (!activeParty.length) break;
-    const targetIndex = (state.battle.turn + index - 1) % state.party.length;
-    let target = state.party[targetIndex];
-    if (target.hp <= 0) target = activeParty[0];
+    const front = activeParty.find((unit) => unit.id === configuredFrontId) || activeParty[0];
+    const rear = activeParty.find((unit) => unit.id !== front.id);
+    const target = index % 2 === 0 || !rear ? front : rear;
     const attacker = attackers[index];
     let damage = attacker.damage;
     if (state.battle.guard > 0) {
       damage = Math.max(1, damage - state.battle.guard);
       state.battle.guard = 0;
+    }
+    const configuredFront = state.party.find((unit) => unit.id === configuredFrontId);
+    if (target.id !== configuredFrontId && configuredFront?.hp > 0 && damage > 1) {
+      const screened = Math.min(2, damage - 1);
+      damage -= screened;
+      record(state, front.name + " screens " + target.name + ", softening the hit by " + screened + ".");
     }
     target.hp = Math.max(0, target.hp - damage);
     record(state, attacker.name + " hits " + target.name + " for " + damage + ".");
@@ -63,14 +70,21 @@ function enemyPhase(state) {
   return state;
 }
 function resolveCrewAction(state, kind, selectedTarget) {
-  const hero = state.party[0];
+  const hero = state.party.find((unit) => unit.id === "mara") || state.party[0];
   const scout = state.party.find((unit) => unit.id === "scout");
-  const target = state.battle.enemies.find((enemy) => enemy.id === selectedTarget && enemy.hp > 0) || firstLivingEnemy(state);
+  let target = state.battle.enemies.find((enemy) => enemy.id === selectedTarget && enemy.hp > 0) || firstLivingEnemy(state);
+  const scoutOpens = Boolean(scout && state.formationFrontId === scout.id);
+  if (scoutOpens && target) {
+    record(state, scout.name + " scouts ahead and opens for " + hitEnemy(target, 6) + ".");
+    if (target.hp <= 0) target = firstLivingEnemy(state);
+  }
   if (kind === "strike") {
-    const hit = hitEnemy(target, 14);
-    record(state, hero.name + " strikes " + target.name + " for " + hit + ".");
-    if (scout) {
-      const nextTarget = target.hp > 0 ? target : firstLivingEnemy(state);
+    if (target) {
+      const hit = hitEnemy(target, 14);
+      record(state, hero.name + " strikes " + target.name + " for " + hit + ".");
+    }
+    if (scout && !scoutOpens) {
+      const nextTarget = target?.hp > 0 ? target : firstLivingEnemy(state);
       if (nextTarget) record(state, scout.name + " follows with " + hitEnemy(nextTarget, 8) + " damage.");
     }
     hero.focus = Math.min(hero.maxFocus, hero.focus + 1);
@@ -78,12 +92,12 @@ function resolveCrewAction(state, kind, selectedTarget) {
     state.battle.guard = 8;
     hero.focus = Math.min(hero.maxFocus, hero.focus + 1);
     record(state, hero.name + " braces. The next incoming blow is softened.");
-    if (scout && target) record(state, scout.name + " keeps the lookout busy for " + hitEnemy(target, 5) + ".");
+    if (scout && !scoutOpens && target) record(state, scout.name + " keeps the lookout busy for " + hitEnemy(target, 5) + ".");
   } else if (kind === "technique") {
     if (hero.focus < 2) return reject(state, "Build two focus with Strike or Brace before using the technique.");
     hero.focus -= 2;
     for (const enemy of livingEnemies(state)) record(state, "Wayfarer's Arc hits " + enemy.name + " for " + hitEnemy(enemy, 13) + ".");
-    if (scout) {
+    if (scout && !scoutOpens) {
       const nextTarget = firstLivingEnemy(state);
       if (nextTarget) record(state, scout.name + " follows the opening for " + hitEnemy(nextTarget, 7) + ".");
     }
@@ -108,6 +122,14 @@ export function selectRoute(state, routeId) {
   next.selectedRoute = routeId;
   next.routeCleared = false;
   return record(next, findRoute(routeId).name + " selected for the next journey.");
+}
+export function setFormationFront(state, unitId) {
+  if (state.phase !== "town") return reject(state, "Formation can only be changed in Hearthcross.");
+  if (!state.party.some((unit) => unit.id === unitId)) return reject(state, "That crew member is not in your party.");
+  if (state.formationFrontId === unitId) return reject(state, "That crew member already leads the formation.");
+  const next = copy(state);
+  next.formationFrontId = unitId;
+  return record(next, next.party.find((unit) => unit.id === unitId).name + " moves to the front of the formation.");
 }
 export function hireScout(state) {
   if (state.phase !== "town") return reject(state, "Crew changes are available in Hearthcross.");
