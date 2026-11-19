@@ -30,7 +30,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 ### Included in the first playable slice
 
 - Static, dependency-free web app under /game/.
-- A version 3 local save with v1/v2 migrations and a fresh-journey reset.
+- A version 6 local save with migrations from versions 1–5 and a fresh-journey reset.
 - Hearthcross as a town hub with a short errand and journey status.
 - A four-step optional field guide that can be skipped, dismissed and replayed.
 - A compact crew board; hiring a trail scout is required before the route.
@@ -39,6 +39,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - Turn-based combat with target selection, Strike, Brace, a focus-gated technique and a consumable.
 - A selectable crew front member that changes the action opening, first target and rear-line damage protection.
 - One original weapon with an equipment slot, local equip/unequip and a visible +3 Strike effect.
+- A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -57,7 +58,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 | --- | --- | --- |
 | Content | game/data.mjs | Original item and route catalogs, guide copy, starting state and encounter definitions |
 | Rules | game/engine.mjs | Pure state transitions for hiring, trade, supplies, combat and route rewards |
-| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v4 migrations and safe fallback |
+| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v5 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
 | Verification | tests/*.test.mjs | Node built-in tests for the engine, save migrations and rendered app flow |
@@ -82,6 +83,7 @@ The first slice is complete when a new player can:
 12. Skip or complete the field guide, replay it later and keep that choice across reloads.
 13. Change the front member and see the action order, first target and rear protection change in combat.
 14. Buy, equip and unequip an original weapon; see its damage effect in the crew, pack and combat UI.
+15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.
 
 ## Release guardrails
 
