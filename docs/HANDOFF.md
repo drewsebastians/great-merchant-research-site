@@ -1,7 +1,7 @@
 # Development Handoff
 
 Updated: 19 November 2026  
-Next task: V5-004 — formation-aware combat
+Next task: V5-005 — equipment slot and combat upgrade
 
 ## Start here
 
@@ -15,16 +15,16 @@ Next task: V5-004 — formation-aware combat
 - Development repo: `drewsebastians/great-merchant-research-site`.
 - Research repo is read-only for this project; do not change it.
 - Checkpoint branch: `checkpoint/pre-v5-2026-11-19` → pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.
-- Current production game-code commit: `2311ed2c299c9f9abec05f6cf96ede0df9f83f5a`.
+- Current production game-code commit: `1514a19f9933d2560cebfa028416ea9f9d07ac7e`.
 - `data/vault.json` is encrypted research material. Leave it byte-for-byte unchanged.
 - Public files may contain original game code, prototype tuning and high-level system specifications. Never copy source IDs, source records, private claims, guide text or media.
 
 ## Current verification
 
-Run `node --test tests/*.test.mjs` (17 tests currently pass). Run `node --check` on the app, engine, data and storage modules. Verify SVG/XML assets and the production route.
+Run `node --test tests/*.test.mjs` (19 tests currently pass). Run `node --check` on the app, engine, data and storage modules. Production app, data, storage and CSS returned HTTP 200 with formation markers.
 
-Tests cover route unlocking, two encounter/reward sets, v1/v2-to-v3 save migration, local save failure behavior, and app-render interactions for route selection and onboarding skip/replay/finish/Escape. Production page, app, data and styles returned HTTP 200 with current release markers.
+Tests cover route unlocking and rewards, front formation action order and rear protection, onboarding skip/replay/completion, save failure behavior and migration from versions 1–3 to version 4. The live browser smoke test completed and sold the first route's cargo before the later route/formation increments.
 
 ## Next increment
 
-Make formation affect turn order and protection. Define the rule in original prototype terms, show the formation and order clearly in the crew and combat interfaces, and test that changes cannot create extra actions or bypass the turn. Preserve v1/v2 migration coverage, now targeting save version 3.
+Add one original equipment item and one visible combat effect. Decide whether it enters through the Town Exchange or route rewards, expose equip/unequip in Pack or Crew, and ensure the effect is reflected in combat feedback. Update save migration to version 5, test price/equip/unequip/combat outcomes and verify the public build before deployment.
