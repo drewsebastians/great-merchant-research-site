@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17252b">
+  <meta name="description" content="A playable, original browser prototype about a wayfarer, a small crew and a road worth taking.">
+  <title>Wayfarer's Ledger — Playable Prototype</title>
+  <link rel="icon" href="./assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Wayfarer's Ledger home">
+        <img src="./assets/mark.svg" alt="" width="36" height="36">
+        <span><strong>WAYFARER'S LEDGER</strong><small>V5.0 · PLAYABLE SLICE</small></span>
+      </a>
+      <div class="topbar-center"><span class="live-dot"></span>LOCAL JOURNEY <i>/</i> HEARTHCROSS</div>
+      <div class="topbar-tools">
+        <span class="save-state" id="save-state"><span class="save-dot"></span> SAVED HERE</span>
+        <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small>MARKS</small></span>
+        <button class="icon-button" type="button" data-action="reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
+      </div>
+    </header>
+    <main class="game-layout">
+      <nav class="nav-rail" aria-label="Game screens">
+        <div class="nav-caption">YOUR LEDGER</div>
+        <button class="nav-item active" type="button" data-tab="journey"><span class="nav-glyph">⌂</span><span>Journey</span><kbd>01</kbd></button>
+        <button class="nav-item" type="button" data-tab="market"><span class="nav-glyph">◫</span><span>Town Exchange</span><kbd>02</kbd></button>
+        <button class="nav-item" type="button" data-tab="roster"><span class="nav-glyph">♙</span><span>Crew</span><kbd>03</kbd></button>
+        <button class="nav-item" type="button" data-tab="inventory"><span class="nav-glyph">▤</span><span>Pack</span><kbd>04</kbd></button>
+        <button class="nav-item" type="button" data-tab="journal"><span class="nav-glyph">≋</span><span>Journal</span><kbd>05</kbd></button>
+        <div class="rail-bottom"><div class="day-mark"><small>DAY</small><strong id="day-count">01</strong></div><span class="build-tag">ORIGINAL PROTOTYPE</span></div>
+      </nav>
+      <section class="main-column">
+        <div class="page-heading"><div><div class="eyebrow" id="screen-eyebrow">FIELD NOTES · CHAPTER 01</div><h1 id="screen-title">A road opens</h1></div><div class="screen-status" id="phase-label"><span class="status-pip"></span> HEARTHCROSS</div></div>
+        <div id="notice" class="notice" role="status" aria-live="polite"></div>
+        <div id="game-content" aria-live="polite"></div>
+        <footer class="main-footer"><span>WAYFARER'S LEDGER · V5.0</span><span>Prototype balance · original artwork · browser save</span></footer>
+      </section>
+      <aside class="intel-panel" aria-label="Journey status">
+        <section class="side-section objective-card">
+          <div class="side-kicker"><span class="mini-star">✦</span> ACTIVE ERRAND</div>
+          <h2 id="objective-title">The courier's mark</h2>
+          <p id="objective-copy">Hire a trail scout, pack a ration, then recover a sealed parcel from the ridge road.</p>
+          <div class="objective-progress"><span id="objective-progress"></span></div>
+          <div class="objective-meta"><span id="objective-step">PREPARE YOUR CREW</span><span id="objective-count">0 / 3</span></div>
+        </section>
+        <section class="side-section crew-section"><div class="side-heading"><span>YOUR CREW</span><small id="crew-count">1 / 3</small></div><div id="crew-summary" class="crew-list"></div></section>
+        <section class="side-section log-section"><div class="side-heading"><span>FIELD LOG</span><button type="button" data-tab="journal" class="text-button">OPEN</button></div><div id="log-summary" class="log-list"></div></section>
+        <div class="side-foot"><span class="seal-icon">◈</span><span>Progress saves on this device.<br>Prototype values are not source-game balance.</span></div>
+      </aside>
+    </main>
+  </div>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+# Development Backlog
+
+Last updated: 19 November 2026  
+Plan: Development Plan v5.0
+
+## Priority 0 — first playable loop
+
+- [x] Translate confirmed research patterns into a public, copyright-aware development specification.
+- [x] Create a separated browser game architecture under /game/.
+- [x] Build town, hiring, market, pack, journal and crew screens.
+- [x] Build one repeatable turn-based encounter with target selection and combat orders.
+- [x] Connect victory, loot, return-to-town, selling and local save.
+- [x] Hand-author original scene art and portraits.
+- [x] Add automated engine tests and verify the static app.
+- [ ] Verify the deployed route and play through the public build.
+
+## Priority 1 — next playable improvements
+
+- [ ] Add a second route with a distinct encounter and an optional route choice.
+- [ ] Add a short onboarding overlay that can be dismissed and replayed.
+- [ ] Make crew formation affect turn order and protection.
+- [ ] Add an equipment slot and one original upgrade with a visible effect.
+- [ ] Add a settlement ledger showing trip cost, cargo value and net proceeds.
+- [ ] Add a small production recipe that converts gathered materials into a trade item.
+- [ ] Add language and input preferences that persist locally.
+
+## Priority 2 — broader game architecture
+
+- [ ] Add a data-driven route/map catalog and accessible travel screen.
+- [ ] Add a quest and progression schema with conditions, rewards and unlocks.
+- [ ] Add save migrations before expanding the versioned state.
+- [ ] Add combat status effects only when their rules are independently specified and tested.
+- [ ] Add content validation for IDs, item references, balances and missing assets.
+- [ ] Research and design the offline-first Windows packaging path after the browser game loop matures.
+
+## Deferred pending evidence, rights or scope
+
+- [ ] Exact current-game formulas, item prices, drop probabilities and route gates.
+- [ ] Import of third-party art, sound, guides, client files or screenshots.
+- [ ] Multiplayer, online account services, server persistence or anti-cheat interaction.
