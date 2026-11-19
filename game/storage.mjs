@@ -1,13 +1,14 @@
 import { ROUTE_IDS, SAVE_VERSION, STORAGE_KEY } from "./data.mjs";
 
 function validSave(state) {
-  const tabs = ["journey", "market", "roster", "inventory", "journal"];
+  const tabs = ["journey", "market", "roster", "inventory", "journal", "preferences"];
   const unitIds = ["mara", "scout"];
   const itemIds = ["ration", "tonic", "tea", "fittings", "tool-roll", "edge", "seal"];
   if (!state || state.saveVersion !== SAVE_VERSION || !tabs.includes(state.activeTab)) return false;
   if (!ROUTE_IDS.includes(state.selectedRoute) || !ROUTE_IDS.includes(state.activeRoute) || !Array.isArray(state.completedRoutes) ||
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
   if (typeof state.onboardingSeen !== "boolean") return false;
+  if (!["en", "id"].includes(state.language) || typeof state.combatShortcutsEnabled !== "boolean") return false;
   if (!state.equipment || ![null, "edge"].includes(state.equipment.weapon)) return false;
   if (state.tripLedger !== null && state.tripLedger !== undefined) {
     const ledger = state.tripLedger;
@@ -41,12 +42,15 @@ function migrateToLatest(state, additions = {}) {
     inventory: { ...state.inventory, edge: state.inventory?.edge ?? 0, "tool-roll": state.inventory?.["tool-roll"] ?? 0 },
     equipment: state.equipment || { weapon: null },
     tripLedger: state.tripLedger || null,
-    lastSettlement: state.lastSettlement || null
+    lastSettlement: state.lastSettlement || null,
+    language: state.language || "en",
+    combatShortcutsEnabled: state.combatShortcutsEnabled ?? true
   };
 }
 
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
+  if (state.saveVersion === 7) return migrateToLatest(state);
   if (state.saveVersion === 6) return migrateToLatest(state);
   if (state.saveVersion === 5) return migrateToLatest(state);
   if (state.saveVersion === 4) return migrateToLatest(state);

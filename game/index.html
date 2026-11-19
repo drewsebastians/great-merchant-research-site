@@ -16,23 +16,24 @@
         <img src="./assets/mark.svg" alt="" width="36" height="36">
         <span><strong>WAYFARER'S LEDGER</strong><small>V5.0 · PLAYABLE SLICE</small></span>
       </a>
-      <div class="topbar-center"><span class="live-dot"></span>LOCAL JOURNEY <i>/</i> HEARTHCROSS</div>
+      <div class="topbar-center"><span class="live-dot"></span><span data-i18n="local.journey">LOCAL JOURNEY</span> <i>/</i> <span data-i18n="town.name">HEARTHCROSS</span></div>
       <div class="topbar-tools">
         <span class="save-state" id="save-state"><span class="save-dot"></span> SAVED HERE</span>
-        <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small>MARKS</small></span>
-        <button class="guide-replay" type="button" data-action="onboarding-replay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b>HOW TO PLAY</b></button>
+        <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small data-i18n="currency.marks">MARKS</small></span>
+        <button class="guide-replay" type="button" data-action="onboarding-replay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b data-i18n="guide.how">HOW TO PLAY</b></button>
         <button class="icon-button" type="button" data-action="reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
       </div>
     </header>
     <main class="game-layout">
       <nav class="nav-rail" aria-label="Game screens">
-        <div class="nav-caption">YOUR LEDGER</div>
-        <button class="nav-item active" type="button" data-tab="journey"><span class="nav-glyph">⌂</span><span>Journey</span><kbd>01</kbd></button>
-        <button class="nav-item" type="button" data-tab="market"><span class="nav-glyph">◫</span><span>Town Exchange</span><kbd>02</kbd></button>
-        <button class="nav-item" type="button" data-tab="roster"><span class="nav-glyph">♙</span><span>Crew</span><kbd>03</kbd></button>
-        <button class="nav-item" type="button" data-tab="inventory"><span class="nav-glyph">▤</span><span>Pack</span><kbd>04</kbd></button>
-        <button class="nav-item" type="button" data-tab="journal"><span class="nav-glyph">≋</span><span>Journal</span><kbd>05</kbd></button>
-        <div class="rail-bottom"><div class="day-mark"><small>DAY</small><strong id="day-count">01</strong></div><span class="build-tag">ORIGINAL PROTOTYPE</span></div>
+        <div class="nav-caption" data-i18n="ledger.yours">YOUR LEDGER</div>
+        <button class="nav-item active" type="button" data-tab="journey"><span class="nav-glyph">⌂</span><span data-i18n="tab.journey">Journey</span><kbd>01</kbd></button>
+        <button class="nav-item" type="button" data-tab="market"><span class="nav-glyph">◫</span><span data-i18n="tab.market">Town Exchange</span><kbd>02</kbd></button>
+        <button class="nav-item" type="button" data-tab="roster"><span class="nav-glyph">♙</span><span data-i18n="tab.crew">Crew</span><kbd>03</kbd></button>
+        <button class="nav-item" type="button" data-tab="inventory"><span class="nav-glyph">▤</span><span data-i18n="tab.pack">Pack</span><kbd>04</kbd></button>
+        <button class="nav-item" type="button" data-tab="journal"><span class="nav-glyph">≋</span><span data-i18n="tab.journal">Journal</span><kbd>05</kbd></button>
+        <button class="nav-item" type="button" data-tab="preferences"><span class="nav-glyph">⚙</span><span data-i18n="tab.preferences">Preferences</span><kbd>06</kbd></button>
+        <div class="rail-bottom"><div class="day-mark"><small data-i18n="day.label">DAY</small><strong id="day-count">01</strong></div><span class="build-tag" data-i18n="prototype.label">ORIGINAL PROTOTYPE</span></div>
       </nav>
       <section class="main-column">
         <div class="page-heading"><div><div class="eyebrow" id="screen-eyebrow">FIELD NOTES · CHAPTER 01</div><h1 id="screen-title">A road opens</h1></div><div class="screen-status" id="phase-label"><span class="status-pip"></span> HEARTHCROSS</div></div>
@@ -42,14 +43,14 @@
       </section>
       <aside class="intel-panel" aria-label="Journey status">
         <section class="side-section objective-card">
-          <div class="side-kicker"><span class="mini-star">✦</span> ACTIVE ERRAND</div>
+          <div class="side-kicker"><span class="mini-star">✦</span> <span data-i18n="errand.active">ACTIVE ERRAND</span></div>
           <h2 id="objective-title">The courier's mark</h2>
           <p id="objective-copy">Hire a trail scout, pack a ration, then recover a sealed parcel from the ridge road.</p>
           <div class="objective-progress"><span id="objective-progress"></span></div>
           <div class="objective-meta"><span id="objective-step">PREPARE YOUR CREW</span><span id="objective-count">0 / 3</span></div>
         </section>
-        <section class="side-section crew-section"><div class="side-heading"><span>YOUR CREW</span><small id="crew-count">1 / 3</small></div><div id="crew-summary" class="crew-list"></div></section>
-        <section class="side-section log-section"><div class="side-heading"><span>FIELD LOG</span><button type="button" data-tab="journal" class="text-button">OPEN</button></div><div id="log-summary" class="log-list"></div></section>
+        <section class="side-section crew-section"><div class="side-heading"><span data-i18n="crew.yours">YOUR CREW</span><small id="crew-count">1 / 3</small></div><div id="crew-summary" class="crew-list"></div></section>
+        <section class="side-section log-section"><div class="side-heading"><span data-i18n="log.field">FIELD LOG</span><button type="button" data-tab="journal" class="text-button" data-i18n="action.open">OPEN</button></div><div id="log-summary" class="log-list"></div></section>
         <div class="side-foot"><span class="seal-icon">◈</span><span>Progress saves on this device.<br>Prototype values are not source-game balance.</span></div>
       </aside>
     </main>

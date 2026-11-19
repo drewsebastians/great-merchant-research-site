@@ -1,5 +1,5 @@
 import { ITEMS, PARTY_LIMIT, RECIPES, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
-import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
 let state = loadGame() || createInitialState();
@@ -18,6 +18,60 @@ const GUIDE_STEPS = [
   { kicker: "03 · DIRECT THE CREW", title: "Choose a target, then act.", copy: "Front position sets who opens. The rear line softens incoming damage. Strike builds focus, Brace protects the front, and Wayfarer's Arc spends two focus." },
   { kicker: "04 · CLOSE THE LEDGER", title: "Bring your gains home.", copy: "After victory, return to Hearthcross to recover. Sell trade cargo, prepare again and continue. Your journey saves on this device." }
 ];
+const STATIC_LABELS = {
+  en: {
+    "local.journey": "LOCAL JOURNEY", "town.name": "HEARTHCROSS", "currency.marks": "MARKS", "guide.how": "HOW TO PLAY",
+    "ledger.yours": "YOUR LEDGER", "tab.journey": "Journey", "tab.market": "Town Exchange", "tab.crew": "Crew", "tab.pack": "Pack",
+    "tab.journal": "Journal", "tab.preferences": "Preferences", "day.label": "DAY", "prototype.label": "ORIGINAL PROTOTYPE",
+    "errand.active": "ACTIVE ERRAND", "crew.yours": "YOUR CREW", "log.field": "FIELD LOG", "action.open": "OPEN"
+  },
+  id: {
+    "local.journey": "JURNAL LOKAL", "town.name": "HEARTHCROSS", "currency.marks": "MARK", "guide.how": "CARA BERMAIN",
+    "ledger.yours": "BUKU PERJALANAN", "tab.journey": "Perjalanan", "tab.market": "Bursa Kota", "tab.crew": "Awak", "tab.pack": "Bekal",
+    "tab.journal": "Jurnal", "tab.preferences": "Preferensi", "day.label": "HARI", "prototype.label": "PROTOTIPE ORISINAL",
+    "errand.active": "TUGAS AKTIF", "crew.yours": "AWAKMU", "log.field": "CATATAN LAPANGAN", "action.open": "BUKA"
+  }
+};
+const UI_PHRASES = [
+  ["Language and controls", "Bahasa dan kontrol"], ["SAVED HERE", "TERSIMPAN"], ["SESSION ONLY", "SESI SAJA"],
+  ["Combat number shortcuts disabled.", "Pintasan angka untuk pertempuran dimatikan."],
+  ["Combat number shortcuts enabled.", "Pintasan angka untuk pertempuran diaktifkan."],
+  ["Goods and provisions", "Barang dan perbekalan"], ["A small crew, well chosen", "Awak kecil, pilihan tepat"],
+  ["The journey so far", "Perjalanan sejauh ini"], ["What you carry", "Barang bawaan"], ["A road opens", "Jalan terbuka"],
+  ["Make for the caravan", "Produksi untuk karavan"], ["Settlement ledger", "Ringkasan hasil perjalanan"],
+  ["Choose today&#39;s route", "Pilih rute hari ini"], ["SELECTED ROUTE", "RUTE PILIHAN"], ["TRAVEL BOARD", "PAPAN RUTE"],
+  ["FIELD NOTES", "CATATAN LAPANGAN"], ["ACTIVE FORMATION", "FORMASI AKTIF"], ["Road crew", "Awak perjalanan"],
+  ["Available goods", "Barang tersedia"], ["YOUR ORDER", "PERINTAHMU"], ["OPPONENTS · SELECT A TARGET", "LAWAN · PILIH TARGET"],
+  ["TRIP COST", "BIAYA PERJALANAN"], ["ROUTE REWARD", "HADIAH RUTE"], ["CARGO VALUE", "NILAI MUATAN"],
+  ["CARGO SOLD", "MUATAN TERJUAL"], ["NET PROCEEDS", "HASIL BERSIH"], ["ORIGINAL RECIPE", "RESEP ORISINAL"],
+  ["Sell value: ", "Nilai jual: "], ["Materials in pack: ", "Bahan di bekal: "], ["Make for the caravan", "Produksi untuk karavan"],
+  ["The interface language updates navigation, controls and common labels. Story and item descriptions remain in English.", "Bahasa mengubah navigasi, kontrol, dan label utama. Cerita dan deskripsi barang tetap berbahasa Inggris."],
+  ["Choose an interface language", "Pilih bahasa antarmuka"], ["Combat number shortcuts", "Pintasan angka untuk pertempuran"],
+  ["Use 1, 2 and 3 during combat to issue orders.", "Gunakan 1, 2, dan 3 saat bertempur untuk memberi perintah."],
+  ["Keyboard shortcuts are off", "Pintasan papan ketik mati"], ["Keyboard shortcuts are on", "Pintasan papan ketik aktif"],
+  ["KEYBOARD SHORTCUTS OFF", "PINTASAN PAPAN KETIK MATI"], ["Keys: 1 · 2 · 3", "Tombol: 1 · 2 · 3"],
+  ["PREFERENCES", "PREFERENSI"], ["Town Exchange", "Bursa Kota"], ["Journey", "Perjalanan"], ["Crew", "Awak"],
+  ["Pack", "Bekal"], ["Journal", "Jurnal"], ["Preferences", "Preferensi"], ["OPEN PACK", "BUKA BEKAL"],
+  ["BEFORE YOU LEAVE", "SEBELUM BERANGKAT"], ["Pack for the road", "Siapkan bekal"], ["TRAVEL PARTNER", "REKAN PERJALANAN"],
+  ["DAILY BOARD · PROTOTYPE QUOTES", "PAPAN HARGA · NILAI PROTOTIPE"], ["GOOD", "BARANG"], ["BUY", "BELI"], ["SELL", "JUAL"],
+  ["MARKS", "MARK"], ["LOCKED", "TERKUNCI"], ["AVAILABLE", "TERSEDIA"], ["COMPLETED", "SELESAI"], ["CLEARED", "DITUNTASKAN"],
+  ["SELECTED", "DIPILIH"], ["SET OUT AGAIN", "BERANGKAT LAGI"], ["BEGIN THE JOURNEY", "MULAI PERJALANAN"], ["MAKE", "BUAT"],
+  ["Strike", "Serang"], ["Brace", "Bertahan"], ["TURN", "GILIRAN"], ["ACTIVE", "AKTIF"], ["RETURN TO HEARTHCROSS", "KEMBALI KE HEARTHCROSS"]
+].sort((a, b) => b[0].length - a[0].length);
+
+function localizeUI(value) {
+  if (state.language !== "id") return value;
+  let localized = String(value);
+  for (const [english, indonesian] of UI_PHRASES) localized = localized.replaceAll(english, indonesian);
+  return localized;
+}
+function applyStaticLabels() {
+  const labels = STATIC_LABELS[state.language] || STATIC_LABELS.en;
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const label = labels[element.dataset.i18n];
+    if (label) element.textContent = label;
+  });
+}
 
 function safe(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -41,18 +95,18 @@ function renderSide() {
   $("#day-count").textContent = String(state.day).padStart(2, "0");
   $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
   $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
-  $("#log-summary").innerHTML = state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(entry) + '</span></div>').join("");
+  $("#log-summary").innerHTML = localizeUI(state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(entry) + '</span></div>').join(""));
   const complete = state.phase === "victory" || (state.phase === "town" && state.routeCleared);
   const returned = state.phase === "town" && state.routeCleared;
   const hasScout = state.party.some((unit) => unit.id === "scout");
   const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
-  $("#objective-step").textContent = returned ? "ERRAND DELIVERED" : complete ? "PARCEL RECOVERED" : hasScout ? "READY FOR THE ROAD" : "PREPARE YOUR CREW";
+  $("#objective-step").textContent = localizeUI(returned ? "ERRAND DELIVERED" : complete ? "PARCEL RECOVERED" : hasScout ? "READY FOR THE ROAD" : "PREPARE YOUR CREW");
   $("#objective-count").textContent = returned ? "3 / 3" : complete ? "2 / 3" : hasScout ? "1 / 3" : "0 / 3";
   $("#objective-progress").style.width = (returned ? 100 : complete ? 78 : hasScout ? 34 : 12) + "%";
-  $("#objective-title").textContent = returned ? route.name + " complete" : complete ? route.name + " cleared" : route.title;
-  $("#objective-copy").textContent = returned ? route.name + " cleared. Trade the recovered cargo or set out again with a fresh ration." :
+  $("#objective-title").textContent = localizeUI(returned ? route.name + " complete" : complete ? route.name + " cleared" : route.title);
+  $("#objective-copy").textContent = localizeUI(returned ? route.name + " cleared. Trade the recovered cargo or set out again with a fresh ration." :
     complete ? "The route is clear. Return to Hearthcross to close the errand and collect your reputation." :
-    hasScout ? route.summary + " Pack a ration, then set out." : "Hire a trail scout, pack a ration, then choose a route from the board.";
+    hasScout ? route.summary + " Pack a ration, then set out." : "Hire a trail scout, pack a ration, then choose a route from the board.");
 }
 function setHeader(tab, phase) {
   const names = {
@@ -60,14 +114,15 @@ function setHeader(tab, phase) {
     market: ["HEARTHCROSS · TOWN EXCHANGE", "Goods and provisions"],
     roster: ["HEARTHCROSS · YOUR CREW", "A small crew, well chosen"],
     inventory: ["TRAVEL KIT · PACK", "What you carry"],
-    journal: ["FIELD NOTES · LEDGER", "The journey so far"]
+    journal: ["FIELD NOTES · LEDGER", "The journey so far"],
+    preferences: ["HEARTHCROSS · PLAYER SETTINGS", "Language and controls"]
   };
   const current = names[tab] || names.journey;
-  eyebrow.textContent = current[0];
-  title.textContent = current[1];
+  eyebrow.textContent = localizeUI(current[0]);
+  title.textContent = localizeUI(current[1]);
   const route = findRoute(state.activeRoute || state.selectedRoute);
   phaseLabel.innerHTML = '<span class="status-pip ' + (phase === "battle" ? "danger-pip" : "") + '"></span>' +
-    (phase === "battle" ? safe(route.name.toUpperCase()) + " · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
+    localizeUI(phase === "battle" ? safe(route.name.toUpperCase()) + " · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
 }
 function navState() {
   document.querySelectorAll("[data-tab]").forEach((button) => {
@@ -122,7 +177,7 @@ function renderBattle() {
     battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
     '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
     '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
-    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2. <span class="gear-effect">WEAPON · ' + safe(weapon?.name || "UNARMED") + ' · STRIKE ' + strikeDamage + '</span></div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · Keys: 1 · 2 · 3</span></div>' +
+    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2. <span class="gear-effect">WEAPON · ' + safe(weapon?.name || "UNARMED") + ' · STRIKE ' + strikeDamage + '</span></div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · ' + (state.combatShortcutsEnabled ? "Keys: 1 · 2 · 3" : "Keyboard shortcuts are off") + '</span></div>' +
     '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal ' + strikeDamage + ' damage · gain 1 focus</small></span><b>↗</b></button>' +
     '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
     '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
@@ -205,6 +260,13 @@ function renderSettlement() {
   return '<section class="panel settlement-panel"><div class="panel-head"><div><small>LAST TRIP · ' + safe(route.name.toUpperCase()) + '</small><h2>Settlement ledger</h2></div><span class="status-pill">' + ledger.cargoSoldCount + ' / ' + ledger.cargoCount + ' CARGO SOLD</span></div><div class="settlement-grid">' +
     '<div class="settlement-cell"><small>TRIP COST</small><strong>−' + ledger.rationCost + ' M</strong><span>1 ration used</span></div><div class="settlement-cell"><small>ROUTE REWARD</small><strong>+' + ledger.rewardCoin + ' M</strong><span>reward currency</span></div><div class="settlement-cell"><small>CARGO VALUE</small><strong>' + ledger.cargoValue + ' M</strong><span>full resale value</span></div><div class="settlement-cell"><small>CARGO SOLD</small><strong>+' + ledger.cargoSoldRevenue + ' M</strong><span>' + remaining + ' M remaining</span></div><div class="settlement-cell settlement-net"><small>NET PROCEEDS</small><strong>' + (ledger.netProceeds >= 0 ? "+" : "") + ledger.netProceeds + ' M</strong><span>reward + sold cargo − ration</span></div></div><div class="settlement-progress"><span style="width:' + progress + '%"></span></div><p class="settlement-foot">Cargo value excludes quest items. Only cargo sold from this trip changes the net proceeds.</p></section>';
 }
+function renderPreferences() {
+  const language = state.language || "en";
+  return '<section class="preferences-banner"><div><small>HEARTHCROSS · PLAYER SETTINGS</small><h2>Make the journey yours.</h2><p>Choose the interface language and the combat input that suit you.</p></div><span class="market-stamp">LOCAL<br>SETTINGS</span></section>' +
+    '<section class="panel preferences-panel"><div class="preference-row"><div class="preference-copy"><small>DISPLAY</small><h3>Choose an interface language</h3><p>The interface language updates navigation, controls and common labels. Story and item descriptions remain in English.</p></div><div class="language-options" role="group" aria-label="Interface language"><button type="button" data-language-option="en" class="' + (language === "en" ? "selected" : "") + '" aria-pressed="' + (language === "en") + '">English</button><button type="button" data-language-option="id" class="' + (language === "id" ? "selected" : "") + '" aria-pressed="' + (language === "id") + '">Bahasa Indonesia</button></div></div>' +
+    '<div class="preference-row"><div class="preference-copy"><small>COMBAT INPUT</small><h3>Combat number shortcuts</h3><p>Use 1, 2 and 3 during combat to issue orders. You can still choose an order with the on-screen buttons.</p></div><button type="button" class="preference-toggle ' + (state.combatShortcutsEnabled ? "enabled" : "") + '" data-action="toggle-shortcuts" aria-pressed="' + state.combatShortcutsEnabled + '">' + (state.combatShortcutsEnabled ? "ON" : "OFF") + '</button></div>' +
+    '<p class="preferences-note">Preferences save with this local journey and stay on this device.</p></section>';
+}
 function renderGuide() {
   const topbar = document.querySelector(".topbar");
   const gameLayout = document.querySelector(".game-layout");
@@ -223,16 +285,18 @@ function renderGuide() {
   next?.focus();
 }
 function render() {
+  document.documentElement.lang = state.language || "en";
+  applyStaticLabels();
   setHeader(state.activeTab, state.phase);
   navState();
   renderSide();
-  notice.textContent = state.notice || "";
+  notice.textContent = localizeUI(state.notice || "");
   notice.classList.toggle("show", Boolean(state.notice));
-  const renderers = { journey: renderJourney, market: renderMarket, roster: renderRoster, inventory: renderInventory, journal: renderJournal };
-  content.innerHTML = renderers[state.activeTab]();
+  const renderers = { journey: renderJourney, market: renderMarket, roster: renderRoster, inventory: renderInventory, journal: renderJournal, preferences: renderPreferences };
+  content.innerHTML = localizeUI(renderers[state.activeTab]());
   renderGuide();
   const saved = saveGame(state);
-  $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + (saved ? " SAVED HERE" : " SESSION ONLY");
+  $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + localizeUI(saved ? " SAVED HERE" : " SESSION ONLY");
   document.body.dataset.phase = state.phase;
 }
 function transition(next) { state = next; render(); }
@@ -248,6 +312,7 @@ document.addEventListener("click", (event) => {
   if (targetButton) { transition(setTarget(state, targetButton.dataset.target)); return; }
   const button = event.target.closest("button");
   if (!button || button.disabled) return;
+  if (button.dataset.languageOption) { transition(setLanguage(state, button.dataset.languageOption)); return; }
   if (button.dataset.tab) { transition(changeTab(state, button.dataset.tab)); return; }
   const action = button.dataset.action;
   if (!action) return;
@@ -255,6 +320,7 @@ document.addEventListener("click", (event) => {
   else if (action === "hire") transition(hireScout(state));
   else if (action === "buy") transition(buyItem(state, button.dataset.item));
   else if (action === "craft") transition(craftRecipe(state, button.dataset.recipe));
+  else if (action === "toggle-shortcuts") transition(setCombatShortcutsEnabled(state, !state.combatShortcutsEnabled));
   else if (action === "equip") transition(equipItem(state, button.dataset.item));
   else if (action === "unequip") transition(equipItem(state, null));
   else if (action === "sell") transition(sellItem(state, button.dataset.item));
@@ -284,7 +350,7 @@ document.addEventListener("keydown", (event) => {
     return;
   }
   if (guideOpen) return;
-  if (state.phase !== "battle" || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (state.phase !== "battle" || !state.combatShortcutsEnabled || event.altKey || event.ctrlKey || event.metaKey) return;
   const orders = { "1": "strike", "2": "brace", "3": "technique" };
   if (!orders[event.key]) return;
   event.preventDefault();

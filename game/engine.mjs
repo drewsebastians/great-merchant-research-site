@@ -119,12 +119,26 @@ function resolveCrewAction(state, kind, selectedTarget) {
 }
 
 export function changeTab(state, tab) {
-  const allowed = ["journey", "market", "roster", "inventory", "journal"];
+  const allowed = ["journey", "market", "roster", "inventory", "journal", "preferences"];
   if (!allowed.includes(tab)) return state;
   if (state.phase !== "town" && ["market", "roster"].includes(tab)) return reject(state, "Town Exchange and Crew are available when you return to Hearthcross.");
   const next = copy(state);
   next.activeTab = tab;
   return next;
+}
+export function setLanguage(state, language) {
+  if (!["en", "id"].includes(language)) return reject(state, "Choose English or Bahasa Indonesia.");
+  if (state.language === language) return state;
+  const next = copy(state);
+  next.language = language;
+  return record(next, language === "id" ? "Bahasa tampilan diubah ke Bahasa Indonesia." : "Interface language changed to English.");
+}
+export function setCombatShortcutsEnabled(state, enabled) {
+  if (typeof enabled !== "boolean") return reject(state, "Choose whether combat number shortcuts are on or off.");
+  if (state.combatShortcutsEnabled === enabled) return state;
+  const next = copy(state);
+  next.combatShortcutsEnabled = enabled;
+  return record(next, enabled ? "Combat number shortcuts enabled." : "Combat number shortcuts disabled.");
 }
 export function selectRoute(state, routeId) {
   if (state.phase !== "town") return reject(state, "Choose a route from Hearthcross before setting out.");

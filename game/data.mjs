@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 export const STORAGE_KEY = "wayfarers-ledger:v5:save";
 export const SCOUT_COST = 22;
 export const PARTY_LIMIT = 3;
@@ -82,6 +82,8 @@ export function createInitialState() {
     activeRoute: "mosswind",
     completedRoutes: [],
     onboardingSeen: false,
+    language: "en",
+    combatShortcutsEnabled: true,
     formationFrontId: "mara",
     party: [{ id: "mara", name: "Mara Venn", role: "Wayfarer", hp: 64, maxHp: 64, focus: 2, maxFocus: 3, portrait: "assets/wayfarer.svg" }],
     inventory: { ration: 2, tonic: 1, tea: 0, fittings: 0, "tool-roll": 0, edge: 0, seal: 0 },

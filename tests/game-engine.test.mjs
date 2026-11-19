@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, startRoute, useTonic } from "../game/engine.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -11,6 +11,16 @@ test("hiring updates the crew and marks without exceeding the crew limit", () =>
   assert.equal(hired.coin, initial.coin - 22);
   assert.equal(hired.party.length, 2);
   assert.equal(hireScout(hired).party.length, 2);
+});
+test("language and combat shortcut preferences update persistable state", () => {
+  let state = createInitialState();
+  assert.equal(state.language, "en");
+  assert.equal(state.combatShortcutsEnabled, true);
+  state = setLanguage(state, "id");
+  assert.equal(state.language, "id");
+  state = setCombatShortcutsEnabled(state, false);
+  assert.equal(state.combatShortcutsEnabled, false);
+  assert.equal(setLanguage(state, "fr").language, "id");
 });
 test("market purchase and sale update currency and inventory", () => {
   const bought = buyItem(createInitialState(), "ration", 2);
@@ -135,6 +145,7 @@ test("town-only screens stay locked during an encounter", () => {
   const state = startRoute(preparedState());
   assert.equal(changeTab(state, "market").activeTab, "journey");
   assert.equal(changeTab(state, "inventory").activeTab, "inventory");
+  assert.equal(changeTab(state, "preferences").activeTab, "preferences");
 });
 test("front formation changes the opening order and screens the rear", () => {
   let state = preparedState();

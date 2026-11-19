@@ -51,7 +51,7 @@ test("version 1 saves migrate without losing the existing journey", () => {
     oldSave.party[0].hp = 53;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.equal(migrated.coin, 41);
     assert.equal(migrated.party[0].hp, 53);
     assert.equal(migrated.selectedRoute, "mosswind");
@@ -75,7 +75,7 @@ test("version 2 saves keep route progress during the onboarding migration", () =
     oldSave.coin = 74;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
     assert.equal(migrated.selectedRoute, "amber-quarry");
     assert.equal(migrated.coin, 74);
@@ -96,7 +96,7 @@ test("version 3 saves keep onboarding preference and route progress", () => {
     delete oldSave.inventory.edge;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.equal(migrated.onboardingSeen, true);
     assert.equal(migrated.formationFrontId, "mara");
     assert.deepEqual(migrated.equipment, { weapon: null });
@@ -115,7 +115,7 @@ test("version 4 saves preserve formation and onboarding while adding an empty ge
     delete oldSave.inventory.edge;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.equal(migrated.onboardingSeen, true);
     assert.equal(migrated.formationFrontId, "scout");
     assert.deepEqual(migrated.equipment, { weapon: null });
@@ -139,7 +139,7 @@ test("version 5 saves preserve crew, equipment and route progress while adding s
     delete oldSave.lastSettlement;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.equal(migrated.party.length, 2);
     assert.equal(migrated.formationFrontId, "scout");
     assert.deepEqual(migrated.equipment, { weapon: "edge" });
@@ -155,6 +155,8 @@ test("version 6 saves preserve settlement data while adding the recipe output sl
     const oldSave = createInitialState();
     oldSave.saveVersion = 6;
     delete oldSave.inventory["tool-roll"];
+    delete oldSave.language;
+    delete oldSave.combatShortcutsEnabled;
     oldSave.coin = 83;
     oldSave.lastSettlement = {
       routeId: "amber-quarry", rationCost: 6, rewardCoin: 27, cargoValue: 22,
@@ -162,9 +164,30 @@ test("version 6 saves preserve settlement data while adding the recipe output sl
     };
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 7);
+    assert.equal(migrated.saveVersion, 8);
     assert.equal(migrated.coin, 83);
     assert.equal(migrated.inventory["tool-roll"], 0);
+    assert.deepEqual(migrated.lastSettlement, oldSave.lastSettlement);
+    assert.equal(migrated.language, "en");
+    assert.equal(migrated.combatShortcutsEnabled, true);
+  });
+});
+
+test("version 7 settlement saves gain English defaults for the new preferences", () => {
+  withMemoryStorage((store) => {
+    const oldSave = createInitialState();
+    oldSave.saveVersion = 7;
+    delete oldSave.language;
+    delete oldSave.combatShortcutsEnabled;
+    oldSave.lastSettlement = {
+      routeId: "mosswind", rationCost: 6, rewardCoin: 18, cargoValue: 26,
+      cargoSoldRevenue: 0, cargoCount: 2, cargoSoldCount: 0, netProceeds: 12
+    };
+    store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
+    const migrated = loadGame();
+    assert.equal(migrated.saveVersion, 8);
+    assert.equal(migrated.language, "en");
+    assert.equal(migrated.combatShortcutsEnabled, true);
     assert.deepEqual(migrated.lastSettlement, oldSave.lastSettlement);
   });
 });

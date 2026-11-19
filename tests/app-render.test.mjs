@@ -12,10 +12,12 @@ function element(selector) {
   });
   return elements.get(selector);
 }
-const navButtons = ["journey", "market", "roster", "inventory", "journal"].map((tab) => ({
-  dataset: { tab }, disabled: false, classList: { toggle() {} }, setAttribute() {}
+const navI18n = { journey: "tab.journey", market: "tab.market", roster: "tab.crew", inventory: "tab.pack", journal: "tab.journal", preferences: "tab.preferences" };
+const navButtons = ["journey", "market", "roster", "inventory", "journal", "preferences"].map((tab) => ({
+  dataset: { tab, i18n: navI18n[tab] }, textContent: tab, disabled: false, classList: { toggle() {} }, setAttribute() {}
 }));
 globalThis.document = {
+  documentElement: { lang: "en" },
   querySelector: element,
   querySelectorAll: () => navButtons,
   addEventListener(type, handler) { (type === "click" ? clickHandlers : keyHandlers).push(handler); },
@@ -132,4 +134,34 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { action: "sell", item: "tool-roll" } });
   assert.equal(savedState().lastSettlement.cargoSoldRevenue, 28);
   assert.equal(savedState().lastSettlement.netProceeds, 49);
+
+  click({ dataset: { tab: "preferences" } });
+  assert.equal(savedState().activeTab, "preferences");
+  assert.match(element("#game-content").innerHTML, /Bahasa Indonesia/);
+  click({ dataset: { languageOption: "id" } });
+  assert.equal(savedState().language, "id");
+  assert.equal(element("#screen-title").textContent, "Bahasa dan kontrol");
+  assert.equal(navButtons[0].textContent, "Perjalanan");
+  assert.equal(navButtons[5].textContent, "Preferensi");
+  assert.match(element("#game-content").innerHTML, /Pintasan angka untuk pertempuran/);
+  click({ dataset: { action: "toggle-shortcuts" } });
+  assert.equal(savedState().combatShortcutsEnabled, false);
+  assert.match(element("#game-content").innerHTML, /OFF/);
+  click({ dataset: { tab: "market" } });
+  click({ dataset: { action: "buy", item: "ration" } });
+  click({ dataset: { tab: "journey" } });
+  click({ dataset: { action: "start" } });
+  assert.equal(savedState().phase, "battle");
+  const turnBeforeShortcut = savedState().battle.turn;
+  let keyPrevented = false;
+  keyHandlers.at(-1)({ key: "1", preventDefault() { keyPrevented = true; } });
+  assert.equal(keyPrevented, false);
+  assert.equal(savedState().battle.turn, turnBeforeShortcut);
+  click({ dataset: { tab: "preferences" } });
+  click({ dataset: { action: "toggle-shortcuts" } });
+  assert.equal(savedState().combatShortcutsEnabled, true);
+  click({ dataset: { tab: "journey" } });
+  keyHandlers.at(-1)({ key: "1", preventDefault() { keyPrevented = true; } });
+  assert.equal(keyPrevented, true);
+  assert.equal(savedState().battle.turn, turnBeforeShortcut + 1);
 });
