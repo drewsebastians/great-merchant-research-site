@@ -201,7 +201,7 @@ function renderBattle() {
   }).join("");
   return '<section class="landscape road-scene battle-scene ' + (route.id === "amber-quarry" ? "quarry-scene" : "") + '" aria-label="Illustrated encounter on ' + safe(route.name) + '"><div class="scene-vignette"></div>' +
     '<div class="scene-label"><span class="location-pin">⌖</span><div><small>' + safe(route.name.toUpperCase()) + ' · TURN ' + String(battle.turn).padStart(2, "0") + '</small><strong>' + safe(route.encounter) + '</strong></div></div><div class="scene-coordinate">' + safe(route.coordinate) + ' <span>·</span> ISSUE AN ORDER</div>' +
-    '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit ' + (unit.id === state.formationFrontId ? "front-unit" : "rear-unit") + '"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span><small>' + (unit.id === state.formationFrontId ? "FRONT" : "REAR") + '</small></div>').join("") + '</div><div class="battle-enemies">' +
+    '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit ' + (unit.id === state.formationFrontId ? "front-unit" : "rear-unit") + '"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span><small>' + (unit.id === state.formationFrontId ? "FRONT" : "REAR") + '</small><span class="battle-vitality">HP ' + Math.max(0, unit.hp) + '/' + unit.maxHp + '</span>' + bar(unit.hp, unit.maxHp, "health") + '</div>').join("") + '</div><div class="battle-enemies">' +
     battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
     '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
     '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
@@ -210,6 +210,15 @@ function renderBattle() {
     '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
     '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
     '<button class="supply-action" type="button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE FIELD TONIC <span>' + state.inventory.tonic + ' IN PACK</span></button></section>';
+}
+function renderCompactObjective() {
+  const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
+  const progress = getQuestProgress(state, route.questId);
+  if (!progress) return "";
+  const total = progress.totalStages;
+  const completed = progress.completedCount;
+  const step = progress.currentStage?.label || (progress.complete ? "ERRAND DELIVERED" : "PREPARE YOUR CREW");
+  return '<section class="compact-objective" aria-label="Active errand"><div class="compact-objective-copy"><small>ACTIVE ERRAND</small><strong>' + safe(progress.quest.title) + '</strong><span>' + safe(progress.quest.summary) + '</span></div><div class="compact-objective-progress"><div class="objective-progress"><span style="width:' + (total ? Math.round((completed / total) * 100) : 0) + '%"></span></div><small>' + safe(step) + '</small><b>' + completed + ' / ' + total + '</b></div></section>';
 }
 function renderVictory() {
   const route = findRoute(state.activeRoute);
@@ -226,16 +235,17 @@ function renderDefeat() {
   return '<section class="result-card defeat-card"><div class="result-emblem">↶</div><small>ROUTE INTERRUPTED</small><h2>The crew falls back.</h2><p>No reward was recovered from ' + safe(route.name) + '. Rest in Hearthcross, replace the ration, then choose your route again.</p><button class="primary-button" type="button" data-action="recover"><span>RECOVER IN HEARTHCROSS</span><b>→</b></button></section>';
 }
 function renderJourney() {
-  if (state.phase === "battle") return renderBattle();
-  if (state.phase === "victory") return renderVictory();
-  if (state.phase === "defeat") return renderDefeat();
-  return renderTown();
+  const compactStatus = renderCompactObjective();
+  if (state.phase === "battle") return compactStatus + renderBattle();
+  if (state.phase === "victory") return compactStatus + renderVictory();
+  if (state.phase === "defeat") return compactStatus + renderDefeat();
+  return compactStatus + renderTown();
 }
 function renderMarket() {
   const tradeItems = ITEMS.filter((item) => item.buyPrice !== null || item.sellPrice !== null);
   return '<section class="market-banner"><div><small>HEARTHCROSS · MARKET WARD</small><h2>Good routes begin with good terms.</h2><p>Buy the supplies you need. Sell trade goods after your return.</p></div><span class="market-stamp">LOCAL<br>EXCHANGE</span></section>' +
     '<section class="panel market-panel"><div class="panel-head"><div><small>DAILY BOARD · PROTOTYPE QUOTES</small><h2>Available goods</h2></div><span class="status-pill">MARKS ' + state.coin + '</span></div><div class="market-table"><div class="market-header"><span>GOOD</span><span>BUY</span><span>SELL</span><span>PACK</span><span></span></div>' +
-    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
+    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote buy-quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote sell-quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count market-pack">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
     '<button type="button" data-action="buy" data-item="' + item.id + '" ' + (item.buyPrice === null ? "disabled" : "") + ' aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
     '</div><div class="market-foot"><span>Original prototype quotes; not copied from any live game.</span><span>Held: ' + state.inventory.tea + ' tea · ' + state.inventory.fittings + ' fittings</span></div></section>' +
     renderProduction() + '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();

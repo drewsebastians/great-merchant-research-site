@@ -49,6 +49,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
+- Responsive game HUD: show active errand progress when the desktop status rail is hidden, keep crew vitality visible during combat, and reflow the market into larger tap-target cards on narrow phones.
 
 ### Deliberately deferred
 
@@ -84,7 +85,7 @@ The first slice is complete when a new player can:
 6. Sell cargo and see the ledger balance update.
 7. Reload the page and continue from the saved state.
 8. Reset only this game's local save.
-9. Complete the same loop on a narrow mobile layout.
+9. Complete the same loop on a narrow mobile layout, with errand progress and combat vitality visible and market actions easy to tap.
 10. Verify that the public build contains no private research records or unauthorized assets.
 11. Choose between routes, unlock the second route and play its distinct encounter.
 12. Skip or complete the field guide, replay it later, dismiss it with Escape or an outside click, and keep that choice across reloads.

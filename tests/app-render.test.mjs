@@ -69,6 +69,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.equal(savedState().formationFrontId, "mara");
   click({ dataset: { tab: "market" } });
   assert.match(element("#game-content").innerHTML, /Wayfarer&#39;s Edge/);
+  assert.match(element("#game-content").innerHTML, /class="quote buy-quote"/);
+  assert.match(element("#game-content").innerHTML, /class="quote sell-quote"/);
   click({ dataset: { action: "buy", item: "edge" } });
   assert.equal(savedState().inventory.edge, 1);
   assert.equal(savedState().coin, 4);
@@ -85,6 +87,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { tab: "journey" } });
   click({ dataset: { action: "start" } });
   assert.match(element("#game-content").innerHTML, /STRIKE 17/);
+  assert.match(element("#game-content").innerHTML, /class="compact-objective"/);
+  assert.match(element("#game-content").innerHTML, /class="battle-vitality">HP 64\/64/);
   for (let turn = 0; turn < 3; turn += 1) click({ dataset: { action: "strike" } });
   assert.equal(savedState().phase, "victory");
   click({ dataset: { action: "return-town" } });
