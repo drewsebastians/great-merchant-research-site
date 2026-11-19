@@ -41,6 +41,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - One original weapon with an equipment slot, local equip/unequip and a visible +3 Strike effect.
 - A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
+- Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
 - Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
@@ -50,6 +51,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - Full map traversal, pathfinding, online services, multiplayer, accounts and server saves.
 - Source-game names, exact unit/stat/item data, exact prices, drop odds or formulas.
 - Long-form quest chains, production professions, multi-step crafting and advanced promotion.
+- Full translation of story, item descriptions and all narrative content; the current Indonesian setting covers navigation, common interface labels and controls.
 - Imported screenshots, client files, music, copyrighted sprites or guide images.
 - User data collection; the save stays in this browser's local storage.
 
@@ -59,7 +61,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 | --- | --- | --- |
 | Content | game/data.mjs | Original item, route and recipe catalogs, guide copy, starting state and encounter definitions |
 | Rules | game/engine.mjs | Pure state transitions for hiring, trade, production, supplies, combat and route rewards |
-| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v6 migrations and safe fallback |
+| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
 | Presentation | game/app.mjs, game/index.html, game/styles.css | Screen rendering, input handling, responsive layout and accessibility |
 | Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
 | Verification | tests/*.test.mjs | Node built-in tests for the engine, save migrations and rendered app flow |
@@ -86,6 +88,7 @@ The first slice is complete when a new player can:
 14. Buy, equip and unequip an original weapon; see its damage effect in the crew, pack and combat UI.
 15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.
 16. Convert a route material at the workbench, see its output and resale value, and sell the crafted good.
+17. Choose English or Indonesian for common interface labels, switch combat number shortcuts off/on, and keep both settings across reloads.
 
 ## Release guardrails
 
