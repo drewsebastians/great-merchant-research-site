@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 const elements = new Map();
 const clickHandlers = [];
@@ -32,6 +33,7 @@ globalThis.window = {
   }
 };
 await import("../game/app.mjs?app-render-test");
+const gameStyles = await readFile(new URL("../game/styles.css", import.meta.url), "utf8");
 
 function savedState() { return JSON.parse(storage.get("wayfarers-ledger:v5:save")); }
 function click(button) {
@@ -47,6 +49,12 @@ function click(button) {
   } };
   clickHandlers.at(-1)({ target });
 }
+
+test("narrow-screen market controls use larger tap targets and card layout", () => {
+  assert.match(gameStyles, /@media\(max-width:430px\)\{\.market-panel/);
+  assert.match(gameStyles, /\.trade-actions button\{min-width:44px;min-height:38px/);
+  assert.match(gameStyles, /\.battle-vitality/);
+});
 
 test("route board and rendered journey flow select the distinct quarry encounter", () => {
   assert.match(element("#guide-layer").innerHTML, /FIELD GUIDE/);

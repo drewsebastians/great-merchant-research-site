@@ -30,7 +30,7 @@ This review compares the prototype to the broad, confirmed patterns already tran
 ## Verification
 
 - Rendered-flow check confirms the errand strip and party HP values are present in combat.
-- `node --test tests/*.test.mjs`: 33/33 pass.
+- `node --test tests/*.test.mjs`: 34/34 pass.
 - `node scripts/validate-game-content.mjs`: catalogs and seven scene/portrait paths pass.
 - Responsive CSS is checked at 1160px, 760px and 430px breakpoints. Actual device rendering still needs a device-level review.
 

@@ -17,7 +17,8 @@ Plan: Development Plan v5.0
 
 ## Priority 1 — next playable improvements
 
-- [ ] Review each screen against confirmed high-level interface patterns and implement the highest-impact layout or interaction gaps while keeping all artwork original.
+- [x] Review each screen against confirmed high-level interface patterns and implement the highest-impact responsive gaps while keeping all artwork original: visible errand progress, combat vitality and narrow-phone market cards.
+- [ ] Verify the guide, mobile market cards and combat controls on a physical phone after production deploy.
 - [x] Add a second route with a distinct encounter and an optional route choice.
 - [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
 - [x] Make crew formation affect turn order and protection.
