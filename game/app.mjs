@@ -1,5 +1,5 @@
-import { ITEMS, PARTY_LIMIT, ROUTES, SCOUT_COST, createInitialState, findRoute } from "./data.mjs";
-import { buyItem, changeTab, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { ITEMS, PARTY_LIMIT, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
+import { buyItem, changeTab, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
 let state = loadGame() || createInitialState();
@@ -107,6 +107,8 @@ function renderTown() {
 function renderBattle() {
   const battle = state.battle;
   const route = findRoute(battle.routeId || state.activeRoute);
+  const weapon = findItem(state.equipment?.weapon);
+  const strikeDamage = 14 + (weapon?.strikeBonus || 0);
   const enemies = battle.enemies.map((enemy) => {
     const selected = battle.targetId === enemy.id;
     const hp = Math.max(0, enemy.hp);
@@ -119,8 +121,8 @@ function renderBattle() {
     battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
     '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
     '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
-    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2.</div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · Keys: 1 · 2 · 3</span></div>' +
-    '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal damage · gain 1 focus</small></span><b>↗</b></button>' +
+    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2. <span class="gear-effect">WEAPON · ' + safe(weapon?.name || "UNARMED") + ' · STRIKE ' + strikeDamage + '</span></div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · Keys: 1 · 2 · 3</span></div>' +
+    '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal ' + strikeDamage + ' damage · gain 1 focus</small></span><b>↗</b></button>' +
     '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
     '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
     '<button class="supply-action" type="button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE FIELD TONIC <span>' + state.inventory.tonic + ' IN PACK</span></button></section>';
@@ -156,20 +158,28 @@ function renderMarket() {
 }
 function renderRoster() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
+  const weapon = findItem(state.equipment?.weapon);
   return '<section class="roster-banner"><div><small>HEARTHCROSS · HIRING BOARD</small><h2>Travel light. Watch each other&#39;s backs.</h2><p>Set the front member before you leave. Formation changes turn order and how the crew screens incoming hits.</p></div><div class="slot-count">' + state.party.length + '<i> / ' + PARTY_LIMIT + '</i><small>CREW SLOTS</small></div></section>' +
     '<div class="roster-grid"><section class="panel roster-panel"><div class="panel-head"><div><small>ACTIVE FORMATION</small><h2>Road crew</h2></div><span class="status-pill">' + state.party.length + ' MEMBERS</span></div>' +
     state.party.map((unit, index) => '<div class="roster-member"><span class="formation-index">0' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><div class="roster-member-info"><strong>' + safe(unit.name) + '</strong><small>' + safe(unit.role) + '</small>' + bar(unit.hp, unit.maxHp, "health") + '</div>' + (unit.id === state.formationFrontId ? '<span class="role-tag front-tag">FRONT</span>' : '<button type="button" class="formation-toggle" data-formation-front="' + unit.id + '">MOVE TO FRONT</button>') + '</div>').join("") +
+    '<div class="equipment-slot"><div><small>WEAPON SLOT</small><strong>' + safe(weapon?.name || "Empty") + '</strong><span>' + (weapon ? "+" + weapon.strikeBonus + " Strike damage" : "Equip a blade from your pack.") + '</span></div><button type="button" class="text-button" data-tab="inventory">OPEN PACK →</button></div>' +
     '<div class="formation-note">Prototype rule: the front member takes the first attack and opens the crew turn. The rear member takes 2 less damage from screened hits.</div></section>' +
     '<section class="panel hire-panel"><div class="hire-portrait"><img src="./assets/scout.svg" alt=""></div><small>AVAILABLE FOR HIRE</small><h2>Tarin Reed</h2><span class="role-tag">TRAIL SCOUT</span><p>Knows the ridge paths. Adds a follow-up strike and keeps an eye on the crew&#39;s supplies.</p><div class="hire-footer"><span><small>CONTRACT</small><strong>' + SCOUT_COST + ' marks</strong></span><button type="button" class="secondary-button" data-action="hire" ' + (hasScout || state.coin < SCOUT_COST || state.party.length >= PARTY_LIMIT ? "disabled" : "") + '>' + (hasScout ? "IN YOUR CREW" : "HIRE SCOUT") + '<span>→</span></button></div></section></div>';
 }
 function renderInventory() {
   const total = Object.values(state.inventory).reduce((sum, count) => sum + count, 0);
+  const itemCards = ITEMS.map((item) => {
+    const quantity = state.inventory[item.id] || 0;
+    const equipped = state.equipment?.weapon === item.id;
+    let actions = '<span class="bound-tag">' + (item.kind === "quest" ? "QUEST" : "SUPPLY") + '</span>';
+    if (item.kind === "equipment") actions = equipped ? '<button type="button" data-action="unequip" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>UNEQUIP</button>' : quantity > 0 ? '<div class="equipment-actions"><button type="button" data-action="equip" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>EQUIP</button><button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>SELL</button></div>' : '<span class="bound-tag">WEAPON SLOT</span>';
+    else if (item.id === "tonic") actions = '<button type="button" data-action="use-tonic" class="tiny-button" ' + (quantity < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button>';
+    else if (item.sellPrice !== null) actions = '<button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (quantity < 1 || state.phase !== "town" ? "disabled" : "") + '>SELL</button>';
+    return '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small><span class="inventory-quantity">' + (equipped ? "EQUIPPED" : "QUANTITY") + ' <b>' + (equipped ? "WEAPON SLOT" : quantity) + '</b></span></div>' + actions + '</article>';
+  }).join("");
   return '<section class="pack-banner"><div><small>TRAVEL KIT · CARRY LIMIT 20 EACH</small><h2>Every item has a purpose.</h2><p>Use a Field Tonic to restore the crew member who needs it most.</p></div><span class="pack-total">' + total + '<small>ITEMS</small></span></section>' +
     '<section class="panel pack-panel"><div class="panel-head"><div><small>YOUR PACK</small><h2>Supplies and cargo</h2></div><span class="status-pill">' + state.inventory.ration + ' RATIONS</span></div><div class="inventory-grid">' +
-    ITEMS.map((item) => '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small><span class="inventory-quantity">QUANTITY <b>' + (state.inventory[item.id] || 0) + '</b></span></div>' +
-    (item.id === "tonic" ? '<button type="button" data-action="use-tonic" class="tiny-button" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button>' :
-    item.sellPrice !== null ? '<button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + ((state.inventory[item.id] || 0) < 1 || state.phase !== "town" ? "disabled" : "") + '>SELL</button>' :
-    '<span class="bound-tag">' + (item.kind === "quest" ? "QUEST" : "SUPPLY") + '</span>') + '</article>').join("") + '</div>' +
+    itemCards + '</div>' +
     (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
 }
 function renderJournal() {
@@ -226,6 +236,8 @@ document.addEventListener("click", (event) => {
   if (action === "start") transition(startRoute(state));
   else if (action === "hire") transition(hireScout(state));
   else if (action === "buy") transition(buyItem(state, button.dataset.item));
+  else if (action === "equip") transition(equipItem(state, button.dataset.item));
+  else if (action === "unequip") transition(equipItem(state, null));
   else if (action === "sell") transition(sellItem(state, button.dataset.item));
   else if (action === "use-tonic") transition(useTonic(state));
   else if (["strike", "brace", "technique"].includes(action)) transition(performAction(state, action));

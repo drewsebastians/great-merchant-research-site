@@ -80,8 +80,9 @@ function resolveCrewAction(state, kind, selectedTarget) {
   }
   if (kind === "strike") {
     if (target) {
-      const hit = hitEnemy(target, 14);
-      record(state, hero.name + " strikes " + target.name + " for " + hit + ".");
+      const weapon = findItem(state.equipment?.weapon);
+      const hit = hitEnemy(target, 14 + (weapon?.strikeBonus || 0));
+      record(state, hero.name + " strikes " + target.name + (weapon ? " with " + weapon.name : "") + " for " + hit + ".");
     }
     if (scout && !scoutOpens) {
       const nextTarget = target?.hp > 0 ? target : firstLivingEnemy(state);
@@ -153,6 +154,26 @@ export function buyItem(state, itemId, quantity = 1) {
   next.coin -= cost;
   next.inventory[itemId] = (next.inventory[itemId] || 0) + quantity;
   return record(next, "Bought " + quantity + " × " + item.name + " for " + cost + " marks.");
+}
+export function equipItem(state, itemId) {
+  if (state.phase !== "town") return reject(state, "Equipment can only be changed in Hearthcross.");
+  const currentId = state.equipment?.weapon || null;
+  if (itemId === null) {
+    if (!currentId) return reject(state, "There is no weapon equipped.");
+    const next = copy(state);
+    next.inventory[currentId] = (next.inventory[currentId] || 0) + 1;
+    next.equipment.weapon = null;
+    return record(next, "Unequipped " + findItem(currentId).name + " and returned it to the pack.");
+  }
+  const item = findItem(itemId);
+  if (!item || item.kind !== "equipment") return reject(state, "That item cannot be equipped.");
+  if ((state.inventory[itemId] || 0) < 1) return reject(state, "That equipment is not in your pack.");
+  if (currentId === itemId) return reject(state, item.name + " is already equipped.");
+  const next = copy(state);
+  next.inventory[itemId] -= 1;
+  if (currentId) next.inventory[currentId] = (next.inventory[currentId] || 0) + 1;
+  next.equipment.weapon = itemId;
+  return record(next, "Equipped " + item.name + ". Mara's Strike now deals " + (14 + item.strikeBonus) + " damage.");
 }
 export function sellItem(state, itemId, quantity = 1) {
   const item = findItem(itemId);

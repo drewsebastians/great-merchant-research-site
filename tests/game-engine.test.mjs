@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setFormationFront, startRoute, useTonic } from "../game/engine.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
 
@@ -19,6 +19,22 @@ test("market purchase and sale update currency and inventory", () => {
   const sold = sellItem(bought, "ration", 1);
   assert.equal(sold.coin, 50);
   assert.equal(sold.inventory.ration, 3);
+});
+test("Wayfarer's Edge can be bought, equipped, unequipped and increases Strike damage", () => {
+  let state = buyItem(preparedState(), "edge");
+  assert.equal(state.coin, 4);
+  assert.equal(state.inventory.edge, 1);
+  state = equipItem(state, "edge");
+  assert.equal(state.equipment.weapon, "edge");
+  assert.equal(state.inventory.edge, 0);
+  state = equipItem(state, null);
+  assert.equal(state.equipment.weapon, null);
+  assert.equal(state.inventory.edge, 1);
+  state = equipItem(state, "edge");
+  state = startRoute(state);
+  state = performAction(state, "strike");
+  assert.equal(state.battle.enemies[0].hp, 2);
+  assert.equal(equipItem(state, null).equipment.weapon, "edge");
 });
 test("a rejected purchase leaves balance and pack unchanged", () => {
   const initial = createInitialState();

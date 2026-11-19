@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
+import { hireScout } from "../game/engine.mjs";
 import { clearGame, loadGame, saveGame } from "../game/storage.mjs";
 
 function withMemoryStorage(run) {
@@ -44,16 +45,20 @@ test("version 1 saves migrate without losing the existing journey", () => {
     delete oldSave.completedRoutes;
     delete oldSave.onboardingSeen;
     delete oldSave.formationFrontId;
+    delete oldSave.equipment;
+    delete oldSave.inventory.edge;
     oldSave.coin = 41;
     oldSave.party[0].hp = 53;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 4);
+    assert.equal(migrated.saveVersion, 5);
     assert.equal(migrated.coin, 41);
     assert.equal(migrated.party[0].hp, 53);
     assert.equal(migrated.selectedRoute, "mosswind");
     assert.deepEqual(migrated.completedRoutes, []);
     assert.equal(migrated.onboardingSeen, false);
+    assert.equal(migrated.inventory.edge, 0);
+    assert.deepEqual(migrated.equipment, { weapon: null });
   });
 });
 
@@ -62,16 +67,20 @@ test("version 2 saves keep route progress during the onboarding migration", () =
     const oldSave = createInitialState();
     oldSave.saveVersion = 2;
     delete oldSave.onboardingSeen;
+    delete oldSave.formationFrontId;
+    delete oldSave.equipment;
+    delete oldSave.inventory.edge;
     oldSave.completedRoutes = ["mosswind"];
     oldSave.selectedRoute = "amber-quarry";
     oldSave.coin = 74;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 4);
+    assert.equal(migrated.saveVersion, 5);
     assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
     assert.equal(migrated.selectedRoute, "amber-quarry");
     assert.equal(migrated.coin, 74);
     assert.equal(migrated.onboardingSeen, false);
+    assert.deepEqual(migrated.equipment, { weapon: null });
   });
 });
 
@@ -83,13 +92,34 @@ test("version 3 saves keep onboarding preference and route progress", () => {
     oldSave.completedRoutes = ["mosswind"];
     oldSave.selectedRoute = "amber-quarry";
     delete oldSave.formationFrontId;
+    delete oldSave.equipment;
+    delete oldSave.inventory.edge;
     store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
     const migrated = loadGame();
-    assert.equal(migrated.saveVersion, 4);
+    assert.equal(migrated.saveVersion, 5);
     assert.equal(migrated.onboardingSeen, true);
     assert.equal(migrated.formationFrontId, "mara");
+    assert.deepEqual(migrated.equipment, { weapon: null });
     assert.deepEqual(migrated.completedRoutes, ["mosswind"]);
     assert.equal(migrated.selectedRoute, "amber-quarry");
+  });
+});
+
+test("version 4 saves preserve formation and onboarding while adding an empty gear slot", () => {
+  withMemoryStorage((store) => {
+    const oldSave = hireScout(createInitialState());
+    oldSave.saveVersion = 4;
+    oldSave.onboardingSeen = true;
+    oldSave.formationFrontId = "scout";
+    delete oldSave.equipment;
+    delete oldSave.inventory.edge;
+    store.set("wayfarers-ledger:v5:save", JSON.stringify(oldSave));
+    const migrated = loadGame();
+    assert.equal(migrated.saveVersion, 5);
+    assert.equal(migrated.onboardingSeen, true);
+    assert.equal(migrated.formationFrontId, "scout");
+    assert.deepEqual(migrated.equipment, { weapon: null });
+    assert.equal(migrated.inventory.edge, 0);
   });
 });
 

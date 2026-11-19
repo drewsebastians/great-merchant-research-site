@@ -3,11 +3,12 @@ import { ROUTE_IDS, SAVE_VERSION, STORAGE_KEY } from "./data.mjs";
 function validSave(state) {
   const tabs = ["journey", "market", "roster", "inventory", "journal"];
   const unitIds = ["mara", "scout"];
-  const itemIds = ["ration", "tonic", "tea", "fittings", "seal"];
+  const itemIds = ["ration", "tonic", "tea", "fittings", "edge", "seal"];
   if (!state || state.saveVersion !== SAVE_VERSION || !tabs.includes(state.activeTab)) return false;
   if (!ROUTE_IDS.includes(state.selectedRoute) || !ROUTE_IDS.includes(state.activeRoute) || !Array.isArray(state.completedRoutes) ||
     state.completedRoutes.some((routeId) => !ROUTE_IDS.includes(routeId))) return false;
   if (typeof state.onboardingSeen !== "boolean") return false;
+  if (!state.equipment || ![null, "edge"].includes(state.equipment.weapon)) return false;
   if (!Array.isArray(state.party) || state.party.length < 1 || state.party.length > 3) return false;
   if (!["mara", "scout"].includes(state.formationFrontId)) return false;
   if (!state.party.some((unit) => unit.id === state.formationFrontId)) return false;
@@ -22,20 +23,29 @@ function validSave(state) {
   return true;
 }
 
+function migrateToLatest(state, additions = {}) {
+  return {
+    ...state,
+    ...additions,
+    saveVersion: SAVE_VERSION,
+    inventory: { ...state.inventory, edge: state.inventory?.edge ?? 0 },
+    equipment: state.equipment || { weapon: null }
+  };
+}
+
 function migrateSave(state) {
   if (!state || state.saveVersion === SAVE_VERSION) return state;
-  if (state.saveVersion === 3) return { ...state, saveVersion: SAVE_VERSION, formationFrontId: state.formationFrontId || "mara" };
-  if (state.saveVersion === 2) return { ...state, saveVersion: SAVE_VERSION, onboardingSeen: state.onboardingSeen ?? false, formationFrontId: "mara" };
-  if (state.saveVersion === 1) return {
-    ...state,
-    saveVersion: SAVE_VERSION,
+  if (state.saveVersion === 4) return migrateToLatest(state);
+  if (state.saveVersion === 3) return migrateToLatest(state, { formationFrontId: state.formationFrontId || "mara" });
+  if (state.saveVersion === 2) return migrateToLatest(state, { onboardingSeen: state.onboardingSeen ?? false, formationFrontId: "mara" });
+  if (state.saveVersion === 1) return migrateToLatest(state, {
     selectedRoute: "mosswind",
     activeRoute: "mosswind",
     completedRoutes: state.phase === "town" && state.routeCleared ? ["mosswind"] : [],
     onboardingSeen: false,
     formationFrontId: "mara",
     battle: state.battle ? { ...state.battle, routeId: "mosswind" } : null
-  };
+  });
   return state;
 }
 
