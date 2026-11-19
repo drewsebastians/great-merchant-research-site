@@ -22,10 +22,10 @@ Active task: V5-001 — first playable vertical slice
 
 ## Verification path
 
-Run: node --test tests/game-engine.test.mjs  
+Run: node --test tests/*.test.mjs  
 Run: node --check game/app.mjs  
 Run: node --check game/engine.mjs  
 Serve locally and walk the hire → prepare → fight → return → sell → reload loop.
 Check that non-town routes lock town-only actions, healing cannot exceed maximum vitality, failed purchases do not change currency, and a failed save degrades to a session-only message.
 
-After tests and asset/content checks pass, push the work branch, merge its commit into main by a fast-forward update, then verify the deployed /game/ route and run the same player loop against production. Record the final deployed URL and outcome in docs/STATUS.md before the session ends.
+The implementation commit f0b501f245ad57b49bb89ed4e7fc0501c080db50 is pushed and 13 tests pass. Fast-forward that commit from development/v5-first-playable-slice into main, then verify the deployed /game/ route and run the same player loop against production. Record the final deployed URL and outcome in docs/STATUS.md before the session ends.

@@ -9,9 +9,10 @@ Plan: Development Plan v5.0
 **Implementation:** first playable slice built on branch development/v5-first-playable-slice.  
 **Rollback checkpoint:** checkpoint/pre-v5-2026-11-19 points to the pre-change main commit a1bfc98df853ace84e4894c91361dcc3c5120935.  
 **Research source:** latest read-only state reviewed at great-merchant-research main commit f52446e6a8f25a9cff4fe15a21e63b976df85317, dated 17 November 2026.  
-**Existing encrypted vault:** unchanged; no research records, source IDs or private media are included in the game slice.  
-**Tests:** pending execution.  
-**Production deployment:** pending merge and live-route verification.
+**Existing encrypted vault:** unchanged; its blob SHA remains 748f8863212c1a2911c53569e7c934293c5e4205. No research records, source IDs or private media are included in the game slice.  
+**Tested implementation commit:** f0b501f245ad57b49bb89ed4e7fc0501c080db50 on the development branch.  
+**Tests:** 13/13 pass (engine, combat, economy and local-save behavior); JavaScript syntax and local asset-reference checks pass.  
+**Production deployment:** pending fast-forward to main and live-route verification.
 
 ## Delivered in this increment
 
@@ -26,6 +27,6 @@ The research confirms broad system patterns for onboarding, hiring and roster ma
 
 ## Remaining release checks
 
-1. Review the game and specs for copied private records or unauthorized assets.
-2. Commit and push the tested implementation.
-3. Fast-forward the production branch and verify the published page.
+1. Fast-forward the tested development commit to the production branch.
+2. Verify the published route and complete the gameplay loop in the live build.
+3. Record the production result and deployment date here.
