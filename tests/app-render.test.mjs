@@ -56,6 +56,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(element("#game-content").innerHTML, /Mosswind Road/);
   assert.match(element("#game-content").innerHTML, /Amber Quarry/);
   assert.match(element("#game-content").innerHTML, /LOCKED/);
+  assert.match(element("#game-content").innerHTML, /travel-map/);
+  assert.match(element("#game-content").innerHTML, /aria-label="Amber Quarry, locked"/);
 
   click({ dataset: { action: "hire" } });
   click({ dataset: { formationFront: "scout" } });
@@ -97,6 +99,7 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { route: "amber-quarry" } });
   assert.equal(savedState().selectedRoute, "amber-quarry");
   assert.match(element("#game-content").innerHTML, /SELECTED/);
+  assert.match(element("#game-content").innerHTML, /aria-label="Amber Quarry, selected"/);
   click({ dataset: { action: "start" } });
   const rendered = element("#game-content").innerHTML;
   assert.match(rendered, /quarry-scene/);

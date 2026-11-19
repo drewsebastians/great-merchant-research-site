@@ -14,6 +14,7 @@ export const ROUTES = [
     encounter: "Ridge Ambush",
     foeLabel: "Ridge raiders",
     coordinate: "MOSSWIND RIDGE",
+    mapPosition: { x: 23, y: 63 },
     opening: "A lookout steps from the ridge.",
     victoryTitle: "The parcel is yours.",
     victoryCopy: "The ridge is quiet again. Your crew recovered a sealed parcel and two Amber Tea Bricks.",
@@ -34,6 +35,7 @@ export const ROUTES = [
     encounter: "Quarry Watch",
     foeLabel: "Quarry keeper",
     coordinate: "EASTERN CUT",
+    mapPosition: { x: 77, y: 34 },
     opening: "A quarry keeper blocks the narrow cut.",
     victoryTitle: "The cut is yours again.",
     victoryCopy: "The keeper leaves the old workings. Your crew salvages a crate of Bronze Fittings.",
@@ -48,6 +50,7 @@ export const ROUTES = [
 
 export const ROUTE_IDS = ROUTES.map((route) => route.id);
 export function findRoute(id) { return ROUTES.find((route) => route.id === id) || ROUTES[0]; }
+export const ROUTE_LINKS = [{ from: "mosswind", to: "amber-quarry", label: "Ridge path" }];
 
 export const RECIPES = [
   {

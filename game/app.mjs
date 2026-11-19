@@ -1,4 +1,4 @@
-import { ITEMS, PARTY_LIMIT, RECIPES, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
+import { ITEMS, PARTY_LIMIT, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 
@@ -36,6 +36,10 @@ const UI_PHRASES = [
   ["Language and controls", "Bahasa dan kontrol"], ["SAVED HERE", "TERSIMPAN"], ["SESSION ONLY", "SESI SAJA"],
   ["Combat number shortcuts disabled.", "Pintasan angka untuk pertempuran dimatikan."],
   ["Combat number shortcuts enabled.", "Pintasan angka untuk pertempuran diaktifkan."],
+  ["REGION CHART · HEARTHCROSS", "PETA WILAYAH · HEARTHCROSS"], ["The Ridgeway", "Jalur Pegunungan"],
+  ["Choose an open location to see its errand.", "Pilih lokasi terbuka untuk melihat tugasnya."],
+  ["Region map with route choices", "Peta wilayah dengan pilihan rute"], ["locked", "terkunci"], ["selected", "dipilih"],
+  ["cleared", "dituntaskan"], ["open", "terbuka"],
   ["Goods and provisions", "Barang dan perbekalan"], ["A small crew, well chosen", "Awak kecil, pilihan tepat"],
   ["The journey so far", "Perjalanan sejauh ini"], ["What you carry", "Barang bawaan"], ["A road opens", "Jalan terbuka"],
   ["Make for the caravan", "Produksi untuk karavan"], ["Settlement ledger", "Ringkasan hasil perjalanan"],
@@ -133,6 +137,24 @@ function navState() {
     button.setAttribute("aria-disabled", String(locked));
   });
 }
+function renderTravelMap() {
+  const paths = ROUTE_LINKS.map((link) => {
+    const from = findRoute(link.from).mapPosition;
+    const to = findRoute(link.to).mapPosition;
+    const midX = (from.x + to.x) / 2;
+    const midY = (from.y + to.y) / 2 - 13;
+    return '<path d="M ' + from.x + ' ' + from.y + ' Q ' + midX + ' ' + midY + ' ' + to.x + ' ' + to.y + '" />';
+  }).join("");
+  const nodes = ROUTES.map((route, index) => {
+    const unlocked = isRouteUnlocked(state, route.id);
+    const selected = state.selectedRoute === route.id;
+    const completed = (state.completedRoutes || []).includes(route.id);
+    const status = !unlocked ? "LOCKED" : completed ? "CLEARED" : selected ? "SELECTED" : "OPEN";
+    const accessibleStatus = localizeUI(status.toLowerCase());
+    return '<button type="button" class="map-node ' + (selected ? "selected" : "") + (!unlocked ? " locked" : "") + (completed ? " completed" : "") + '" data-route="' + route.id + '" style="left:' + route.mapPosition.x + '%;top:' + route.mapPosition.y + '%" aria-label="' + safe(route.name + ", " + accessibleStatus) + '" aria-pressed="' + selected + '" ' + (!unlocked ? "disabled" : "") + '><span class="map-node-number">0' + (index + 1) + '</span><span class="map-node-copy"><strong>' + safe(route.name) + '</strong><small>' + status + '</small></span></button>';
+  }).join("");
+  return '<div class="travel-map" role="group" aria-label="Region map with route choices"><div class="travel-map-head"><small>REGION CHART · HEARTHCROSS</small><strong>The Ridgeway</strong><span>Choose an open location to see its errand.</span></div><div class="map-canvas"><svg class="map-trails" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="map-river" d="M 3 81 Q 26 67 41 75 T 67 60 T 96 52" />' + paths + '</svg>' + nodes + '<span class="map-compass" aria-hidden="true">N<br>↑</span></div></div>';
+}
 function renderTown() {
   const hasScout = state.party.some((unit) => unit.id === "scout");
   const route = findRoute(state.selectedRoute);
@@ -145,7 +167,7 @@ function renderTown() {
     '<div class="scene-bottom"><div><small>SELECTED ROUTE · ' + safe(route.name.toUpperCase()) + '</small><h2>' + safe(subtitle) + '</h2><p>Prepare at the exchange, check your crew, then choose a road from the route board.</p></div>' +
     '<button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + (completed ? "SET OUT AGAIN" : "BEGIN THE JOURNEY") + '</span><b>→</b></button></div></section>' +
     '<section class="chapter-strip"><div class="chapter-icon">0' + (ROUTES.findIndex((entry) => entry.id === route.id) + 1) + '</div><div class="chapter-copy"><small>SELECTED ROUTE · ' + safe(route.terrain) + '</small><strong>' + safe(route.title) + '</strong><span>' + safe(route.summary) + '</span></div><div class="chapter-status"><span class="status-pill">' + (completed ? "COMPLETED" : unlocked ? hasScout ? "CREW READY" : "CREW NEEDED" : "LOCKED") + '</span><span class="chapter-arrow">↗</span></div></section>' +
-    '<section class="route-board panel"><div class="panel-head"><div><small>TRAVEL BOARD · ' + (state.completedRoutes || []).length + ' ROUTE' + ((state.completedRoutes || []).length === 1 ? "" : "S") + ' CLEARED</small><h2>Choose today&#39;s route</h2></div><span class="status-pill">' + ROUTES.filter((entry) => isRouteUnlocked(state, entry.id)).length + ' AVAILABLE</span></div><div class="route-options">' +
+    '<section class="route-board panel"><div class="panel-head"><div><small>TRAVEL BOARD · ' + (state.completedRoutes || []).length + ' ROUTE' + ((state.completedRoutes || []).length === 1 ? "" : "S") + ' CLEARED</small><h2>Choose today&#39;s route</h2></div><span class="status-pill">' + ROUTES.filter((entry) => isRouteUnlocked(state, entry.id)).length + ' AVAILABLE</span></div>' + renderTravelMap() + '<div class="route-options">' +
     ROUTES.map((entry, index) => {
       const available = isRouteUnlocked(state, entry.id);
       const selected = route.id === entry.id;
