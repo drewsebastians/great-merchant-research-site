@@ -71,7 +71,7 @@ test("narrow-screen market controls use larger tap targets and card layout", () 
   assert.match(gameStyles, /\.battle-vitality/);
 });
 
-test("route board and rendered journey flow select the distinct quarry encounter", () => {
+test("route board and rendered journey flow select the distinct quarry encounter", async () => {
   assert.match(element("#guide-layer").innerHTML, /FIELD GUIDE/);
   assert.match(element("#guide-layer").innerHTML, /Start from Hearthcross/);
   assert.match(element("#guide-layer").innerHTML, /CLICK OUTSIDE TO CLOSE/);
@@ -303,4 +303,30 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(indonesianSettlement, /1 ransum digunakan/);
   assert.match(indonesianSettlement, /mata uang hadiah/);
   assert.match(indonesianSettlement, /Nilai muatan tidak mencakup barang misi/);
+
+  const defeatSave = savedState();
+  defeatSave.phase = "defeat";
+  defeatSave.activeTab = "journey";
+  defeatSave.activeRoute = "amber-quarry";
+  defeatSave.battle = null;
+  defeatSave.party.forEach((unit) => { unit.hp = 0; });
+  storage.set("wayfarers-ledger:v5:save", JSON.stringify(defeatSave));
+  await import("../game/app.mjs?app-defeat-render-test");
+  const indonesianDefeat = element("#game-content").innerHTML;
+  assert.match(indonesianDefeat, /PERJALANAN TERHENTI/);
+  assert.match(indonesianDefeat, /Awak mundur\./);
+  assert.match(indonesianDefeat, /Tidak ada hadiah yang diperoleh dari Amber Quarry/);
+  assert.match(indonesianDefeat, /Beristirahat di Hearthcross, ganti ransum/);
+  assert.match(indonesianDefeat, /PULIHKAN DI HEARTHCROSS/);
+
+  const dayBeforeRecovery = savedState().day;
+  click({ dataset: { action: "recover" } });
+  assert.equal(savedState().phase, "town");
+  assert.equal(savedState().day, dayBeforeRecovery + 1);
+  assert.ok(savedState().party.every((unit) => unit.hp > 0));
+  assert.equal(savedState().tripLedger, null);
+  assert.match(element("#game-content").innerHTML, /Amber Quarry/);
+  click({ dataset: { route: "mosswind" } });
+  assert.equal(savedState().selectedRoute, "mosswind");
+  assert.match(element("#game-content").innerHTML, /data-route="mosswind"[^>]*aria-pressed="true"/);
 });
