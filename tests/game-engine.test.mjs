@@ -119,6 +119,27 @@ test("Amber Quarry unlocks after Mosswind and uses its own encounter and reward"
   assert.equal(state.lastSettlement.cargoSoldCount, 1);
   assert.equal(state.lastSettlement.netProceeds, 43);
 });
+test("ordinary strikes can win Amber Quarry while repeated defense can cause a real defeat", () => {
+  let state = startRoute(preparedState());
+  while (state.phase === "battle") state = performAction(state, "strike");
+  assert.equal(state.phase, "victory");
+  state = returnToTown(state);
+  state = selectRoute(state, "amber-quarry");
+  state = startRoute(state);
+  let turns = 0;
+  while (state.phase === "battle" && turns < 20) {
+    state = performAction(state, "brace");
+    turns += 1;
+  }
+  assert.equal(state.phase, "defeat");
+  assert.ok(turns < 20);
+  assert.equal(state.tripLedger.rewardCoin, 0);
+  assert.equal(state.completedRoutes.includes("amber-quarry"), false);
+  const recovered = recoverInTown(state);
+  assert.equal(recovered.phase, "town");
+  assert.equal(recovered.tripLedger, null);
+  assert.ok(recovered.party.every((unit) => unit.hp > 0));
+});
 test("the Courier's Mark stages drive progress, completion and the next quest unlock", () => {
   let state = createInitialState();
   assert.equal(getQuestProgress(state, "courier-mark").completedCount, 0);

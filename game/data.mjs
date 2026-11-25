@@ -44,7 +44,7 @@ export const ROUTES = [
     recovery: "The quarry is open again. You salvage a crate of Bronze Fittings.",
     reward: { coin: 27, reputation: 2, items: { fittings: 1 } },
     enemies: [
-      { id: "warden", name: "Quarry Warden", hp: 54, damage: 8, portrait: "assets/quarry-warden.svg" }
+      { id: "warden", name: "Quarry Warden", hp: 64, damage: 18, portrait: "assets/quarry-warden.svg" }
     ]
   }
 ];
