@@ -107,6 +107,7 @@ The first slice is complete when a new player can:
 26. In Indonesian mode, the shared Market and Crew interface labels, helper copy, trade actions and accessible trade labels display in Indonesian; whole-word matching does not alter longer words, and item names and descriptions remain in English.
 27. In Indonesian mode, Journey, Pack and Journal headings, status text, controls and concise helper copy display in Indonesian; route/quest/story prose and item descriptions remain in English.
 28. In Indonesian mode, onboarding steps, combat orders, encounter controls, static save/scope notes and guide/reset accessibility labels display in Indonesian; game actions remain operable and item/story text stays English.
+29. In Indonesian mode, victory, retreat and settlement labels/actions/helper text display in Indonesian while route victory copy, quest text, item names and item descriptions remain English.
 
 ## Release guardrails
 

@@ -33,6 +33,7 @@ Plan: Development Plan v5.0
 - [x] Translate the shared Indonesian Market and Crew interface, use word-boundary matching to prevent partial-word corruption, and preserve English item names and descriptions.
 - [x] Translate shared Journey, Pack and Journal headings, labels, status text, controls and short helper copy while preserving story/quest prose and item descriptions.
 - [x] Translate Indonesian onboarding steps, combat controls/order labels and static shell notes, including accessible guide/reset names.
+- [x] Translate victory, retreat, and settlement interface labels and instructions while preserving original route copy and item names.
 
 ## Priority 2 — broader game architecture
 
