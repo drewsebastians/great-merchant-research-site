@@ -188,9 +188,17 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.equal(navButtons[0].textContent, "Perjalanan");
   assert.equal(navButtons[5].textContent, "Preferensi");
   assert.match(element("#game-content").innerHTML, /Pintasan angka untuk pertempuran/);
+  assert.match(element("#game-content").innerHTML, /Atur perjalananmu\./);
+  assert.match(element("#game-content").innerHTML, /PENGATURAN PEMAIN/);
+  assert.match(element("#game-content").innerHTML, /PENGATURAN<br>LOKAL/);
+  assert.match(element("#game-content").innerHTML, /KONTROL PERTEMPURAN/);
+  assert.match(element("#game-content").innerHTML, /Kamu tetap dapat memilih perintah melalui tombol di layar\./);
+  assert.match(element("#game-content").innerHTML, /Pengaturan tersimpan bersama perjalanan lokal ini di perangkat ini\./);
+  assert.match(element("#game-content").innerHTML, />AKTIF<\/button>/);
+  assert.doesNotMatch(element("#game-content").innerHTML, /PLAYER SETTINGS|Make the journey yours\.|LOCAL<br>SETTINGS|>DISPLAY<|COMBAT INPUT|on-screen buttons/);
   click({ dataset: { action: "toggle-shortcuts" } });
   assert.equal(savedState().combatShortcutsEnabled, false);
-  assert.match(element("#game-content").innerHTML, /OFF/);
+  assert.match(element("#game-content").innerHTML, />MATI<\/button>/);
   click({ dataset: { tab: "market" } });
   click({ dataset: { action: "buy", item: "ration" } });
   click({ dataset: { tab: "journey" } });

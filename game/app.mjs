@@ -40,6 +40,11 @@ const STATIC_LABELS = {
 };
 const UI_PHRASES = [
   ["Language and controls", "Bahasa dan kontrol"], ["SAVED HERE", "TERSIMPAN"], ["SESSION ONLY", "SESI SAJA"],
+  ["HEARTHCROSS · PLAYER SETTINGS", "HEARTHCROSS · PENGATURAN PEMAIN"], ["Make the journey yours.", "Atur perjalananmu."],
+  ["Choose the interface language and the combat input that suit you.", "Pilih bahasa antarmuka dan kontrol pertempuran sesuai keinginanmu."],
+  ["LOCAL SETTINGS", "PENGATURAN LOKAL"], ["LOCAL<br>SETTINGS", "PENGATURAN<br>LOKAL"], ["DISPLAY", "TAMPILAN"], ["COMBAT INPUT", "KONTROL PERTEMPURAN"],
+  ["Interface language", "Bahasa antarmuka"], ["You can still choose an order with the on-screen buttons.", "Kamu tetap dapat memilih perintah melalui tombol di layar."],
+  ["Preferences save with this local journey and stay on this device.", "Pengaturan tersimpan bersama perjalanan lokal ini di perangkat ini."],
   ["Combat number shortcuts disabled.", "Pintasan angka untuk pertempuran dimatikan."],
   ["Combat number shortcuts enabled.", "Pintasan angka untuk pertempuran diaktifkan."],
   ["REGION CHART · HEARTHCROSS", "PETA WILAYAH · HEARTHCROSS"], ["The Ridgeway", "Jalur Pegunungan"],
@@ -320,7 +325,7 @@ function renderPreferences() {
   const language = state.language || "en";
   return '<section class="preferences-banner"><div><small>HEARTHCROSS · PLAYER SETTINGS</small><h2>Make the journey yours.</h2><p>Choose the interface language and the combat input that suit you.</p></div><span class="market-stamp">LOCAL<br>SETTINGS</span></section>' +
     '<section class="panel preferences-panel"><div class="preference-row"><div class="preference-copy"><small>DISPLAY</small><h3>Choose an interface language</h3><p>The interface language updates navigation, controls and common labels. Story and item descriptions remain in English.</p></div><div class="language-options" role="group" aria-label="Interface language"><button type="button" data-language-option="en" class="' + (language === "en" ? "selected" : "") + '" aria-pressed="' + (language === "en") + '">English</button><button type="button" data-language-option="id" class="' + (language === "id" ? "selected" : "") + '" aria-pressed="' + (language === "id") + '">Bahasa Indonesia</button></div></div>' +
-    '<div class="preference-row"><div class="preference-copy"><small>COMBAT INPUT</small><h3>Combat number shortcuts</h3><p>Use 1, 2 and 3 during combat to issue orders. You can still choose an order with the on-screen buttons.</p></div><button type="button" class="preference-toggle ' + (state.combatShortcutsEnabled ? "enabled" : "") + '" data-action="toggle-shortcuts" aria-pressed="' + state.combatShortcutsEnabled + '">' + (state.combatShortcutsEnabled ? "ON" : "OFF") + '</button></div>' +
+    '<div class="preference-row"><div class="preference-copy"><small>COMBAT INPUT</small><h3>Combat number shortcuts</h3><p>Use 1, 2 and 3 during combat to issue orders. You can still choose an order with the on-screen buttons.</p></div><button type="button" class="preference-toggle ' + (state.combatShortcutsEnabled ? "enabled" : "") + '" data-action="toggle-shortcuts" aria-pressed="' + state.combatShortcutsEnabled + '">' + (state.language === "id" ? (state.combatShortcutsEnabled ? "AKTIF" : "MATI") : (state.combatShortcutsEnabled ? "ON" : "OFF")) + '</button></div>' +
     '<p class="preferences-note">Preferences save with this local journey and stay on this device.</p></section>';
 }
 function closeGuide() {
