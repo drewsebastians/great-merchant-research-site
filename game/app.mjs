@@ -40,6 +40,20 @@ const STATIC_LABELS = {
 };
 const UI_PHRASES = [
   ["Language and controls", "Bahasa dan kontrol"], ["SAVED HERE", "TERSIMPAN"], ["SESSION ONLY", "SESI SAJA"],
+  ["HEARTHCROSS · MARKET WARD", "HEARTHCROSS · KAWASAN PASAR"], ["Good routes begin with good terms.", "Perjalanan baik dimulai dengan transaksi yang tepat."],
+  ["Buy the supplies you need. Sell trade goods after your return.", "Beli perbekalan yang kamu butuhkan. Jual barang dagangan setelah kembali."],
+  ["LOCAL<br>EXCHANGE", "BURSA<br>LOKAL"], ["Original prototype quotes; not copied from any live game.", "Harga prototipe orisinal; tidak disalin dari game lain."],
+  ["Trade note", "Catatan dagang"], ["The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.", "Rute kurir memberi barang muatan yang bisa dijual di sini. Simpan satu ransum di bekal sebelum berangkat lagi."],
+  ["Buy one ", "Beli satu "], ["Sell one ", "Jual satu "], ["Held: ", "Dimiliki: "],
+  ["HEARTHCROSS · WORKBENCH", "HEARTHCROSS · BENGKEL"],
+  ["HEARTHCROSS · HIRING BOARD", "HEARTHCROSS · PAPAN REKRUTMEN"], ["Travel light. Watch each other&#39;s backs.", "Bepergianlah dengan ringan. Saling jaga satu sama lain."],
+  ["Set the front member before you leave. Formation changes turn order and how the crew screens incoming hits.", "Atur anggota di posisi depan sebelum berangkat. Formasi menentukan urutan giliran dan cara awak melindungi anggota dari serangan."],
+  ["CREW SLOTS", "SLOT AWAK"], ["MEMBERS", "ANGGOTA"], ["MOVE TO FRONT", "PINDAHKAN KE DEPAN"], ["FRONT", "DEPAN"],
+  ["WEAPON SLOT", "SLOT SENJATA"], ["Empty", "Kosong"], ["Equip a blade from your pack.", "Pasang senjata dari bekalmu."],
+  ["Prototype rule: the front member takes the first attack and opens the crew turn. The rear member takes 2 less damage from screened hits.", "Aturan prototipe: anggota di posisi depan menerima serangan pertama dan memulai giliran awak. Anggota di posisi belakang menerima 2 poin lebih sedikit dari serangan yang tertahan formasi."],
+  ["AVAILABLE FOR HIRE", "TERSEDIA UNTUK DIREKRUT"], ["TRAIL SCOUT", "PENJELAJAH JALUR"],
+  ["Knows the ridge paths. Adds a follow-up strike and keeps an eye on the crew&#39;s supplies.", "Hafal jalur punggung bukit. Ia memberi satu serangan susulan dan membantu mengawasi perbekalan awak."],
+  ["CONTRACT", "KONTRAK"], ["IN YOUR CREW", "SUDAH DI AWAK"], ["HIRE SCOUT", "REKRUT PENJELAJAH"],
   ["HEARTHCROSS · PLAYER SETTINGS", "HEARTHCROSS · PENGATURAN PEMAIN"], ["Make the journey yours.", "Atur perjalananmu."],
   ["Choose the interface language and the combat input that suit you.", "Pilih bahasa antarmuka dan kontrol pertempuran sesuai keinginanmu."],
   ["LOCAL SETTINGS", "PENGATURAN LOKAL"], ["LOCAL<br>SETTINGS", "PENGATURAN<br>LOKAL"], ["DISPLAY", "TAMPILAN"], ["COMBAT INPUT", "KONTROL PERTEMPURAN"],
@@ -78,8 +92,19 @@ const UI_PHRASES = [
 function localizeUI(value) {
   if (state.language !== "id") return value;
   let localized = String(value);
-  for (const [english, indonesian] of UI_PHRASES) localized = localized.replaceAll(english, indonesian);
-  return localized;
+  const preservedSegments = [];
+  localized = localized.replace(/<([a-z][\w-]*)\b[^>]*\bdata-locale-preserve\b[^>]*>[\s\S]*?<\/\1>/gi, (segment) => {
+    const marker = "\uE000" + preservedSegments.length + "\uE001";
+    preservedSegments.push(segment);
+    return marker;
+  });
+  for (const [english, indonesian] of UI_PHRASES) {
+    const escaped = english.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const wordStart = /^[A-Za-z0-9_]/.test(english) ? "\\b" : "";
+    const wordEnd = /[A-Za-z0-9_]$/.test(english) ? "\\b" : "";
+    localized = localized.replace(new RegExp(wordStart + escaped + wordEnd, "g"), indonesian);
+  }
+  return localized.replace(/\uE000(\d+)\uE001/g, (_, index) => preservedSegments[Number(index)]);
 }
 function applyStaticLabels() {
   const labels = STATIC_LABELS[state.language] || STATIC_LABELS.en;
@@ -252,7 +277,7 @@ function renderMarket() {
   const tradeItems = ITEMS.filter((item) => item.buyPrice !== null || item.sellPrice !== null);
   return '<section class="market-banner"><div><small>HEARTHCROSS · MARKET WARD</small><h2>Good routes begin with good terms.</h2><p>Buy the supplies you need. Sell trade goods after your return.</p></div><span class="market-stamp">LOCAL<br>EXCHANGE</span></section>' +
     '<section class="panel market-panel"><div class="panel-head"><div><small>DAILY BOARD · PROTOTYPE QUOTES</small><h2>Available goods</h2></div><span class="status-pill">MARKS ' + state.coin + '</span></div><div class="market-table"><div class="market-header"><span>GOOD</span><span>BUY</span><span>SELL</span><span>PACK</span><span></span></div>' +
-    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small></span></div><span class="quote buy-quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote sell-quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count market-pack">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
+    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong data-locale-preserve>' + safe(item.name) + '</strong><small data-locale-preserve>' + safe(item.detail) + '</small></span></div><span class="quote buy-quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote sell-quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count market-pack">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
     '<button type="button" data-action="buy" data-item="' + item.id + '" ' + (item.buyPrice === null ? "disabled" : "") + ' aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
     '</div><div class="market-foot"><span>Original prototype quotes; not copied from any live game.</span><span>Held: ' + state.inventory.tea + ' tea · ' + state.inventory.fittings + ' fittings</span></div></section>' +
     renderProduction() + '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();
@@ -284,7 +309,7 @@ function renderInventory() {
     if (item.kind === "equipment") actions = equipped ? '<button type="button" data-action="unequip" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>UNEQUIP</button>' : quantity > 0 ? '<div class="equipment-actions"><button type="button" data-action="equip" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>EQUIP</button><button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>SELL</button></div>' : '<span class="bound-tag">WEAPON SLOT</span>';
     else if (item.id === "tonic") actions = '<button type="button" data-action="use-tonic" class="tiny-button" ' + (quantity < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button>';
     else if (item.sellPrice !== null) actions = '<button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (quantity < 1 || state.phase !== "town" ? "disabled" : "") + '>SELL</button>';
-    return '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong>' + safe(item.name) + '</strong><small>' + safe(item.detail) + '</small><span class="inventory-quantity">' + (equipped ? "EQUIPPED" : "QUANTITY") + ' <b>' + (equipped ? "WEAPON SLOT" : quantity) + '</b></span></div>' + actions + '</article>';
+    return '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong data-locale-preserve>' + safe(item.name) + '</strong><small data-locale-preserve>' + safe(item.detail) + '</small><span class="inventory-quantity">' + (equipped ? "EQUIPPED" : "QUANTITY") + ' <b>' + (equipped ? "WEAPON SLOT" : quantity) + '</b></span></div>' + actions + '</article>';
   }).join("");
   return '<section class="pack-banner"><div><small>TRAVEL KIT · CARRY LIMIT 20 EACH</small><h2>Every item has a purpose.</h2><p>Use a Field Tonic to restore the crew member who needs it most.</p></div><span class="pack-total">' + total + '<small>ITEMS</small></span></section>' +
     '<section class="panel pack-panel"><div class="panel-head"><div><small>YOUR PACK</small><h2>Supplies and cargo</h2></div><span class="status-pill">' + state.inventory.ration + ' RATIONS</span></div><div class="inventory-grid">' +
