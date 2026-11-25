@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 15009)
+Total output lines: 553
+
 import { ITEMS, PARTY_LIMIT, QUESTS, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute, findQuest } from "./data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
@@ -139,16 +142,28 @@ const UI_PHRASES = [
   ["SELECTED", "DIPILIH"], ["SET OUT AGAIN", "BERANGKAT LAGI"], ["BEGIN THE JOURNEY", "MULAI PERJALANAN"], ["MAKE", "BUAT"],
   ["Strike", "Serang"], ["Brace", "Bertahan"], ["TURN", "GILIRAN"], ["ACTIVE", "AKTIF"], ["RETURN TO HEARTHCROSS", "KEMBALI KE HEARTHCROSS"]
 ].sort((a, b) => b[0].length - a[0].length);
+const PRESERVED_GAME_COPY = [
+  ...ROUTES.flatMap((route) => [route.name, route.title, route.summary, route.terrain, route.encounter, route.foeLabel, route.coordinate, route.opening, route.victoryTitle, route.victoryCopy, route.recovery]),
+  ...QUESTS.flatMap((quest) => [quest.title, quest.summary, ...quest.stages.map((stage) => stage.label)]),
+  ...ITEMS.flatMap((item) => [item.name, item.detail])
+].filter(Boolean).map(safe).sort((a, b) => b.length - a.length);
 
 function localizeUI(value) {
   if (state.language !== "id") return value;
   let localized = String(value);
   const preservedSegments = [];
+  const preserve = (segment) => {
+    if (!segment || !localized.includes(segment)) return;
+    const marker = "\uE000" + preservedSegments.length + "\uE001";
+    preservedSegments.push(segment);
+    localized = localized.replaceAll(segment, marker);
+  };
   localized = localized.replace(/<([a-z][\w-]*)\b[^>]*\bdata-locale-preserve\b[^>]*>[\s\S]*?<\/\1>/gi, (segment) => {
     const marker = "\uE000" + preservedSegments.length + "\uE001";
     preservedSegments.push(segment);
     return marker;
   });
+  for (const segment of PRESERVED_GAME_COPY) preserve(segment);
   for (const [english, indonesian] of UI_PHRASES) {
     const escaped = english.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const wordStart = /^[A-Za-z0-9_]/.test(english) ? "\\b" : "";
@@ -156,6 +171,15 @@ function localizeUI(value) {
     localized = localized.replace(new RegExp(wordStart + escaped + wordEnd, "g"), indonesian);
   }
   return localized.replace(/\uE000(\d+)\uE001/g, (_, index) => preservedSegments[Number(index)]);
+}
+function localizeNotice(value) {
+  const message = String(value || "");
+  if (state.language !== "id") return message;
+  const selectedRoute = ROUTES.find((route) => message === route.name + " selected for the next journey.");
+  if (selectedRoute) return selectedRoute.name + " dipilih untuk perjalanan berikutnya.";
+  const trade = message.match(/^(Bought|Sold) (\d+) × (.+) for (\d+) marks?\.$/);
+  if (trade) return (trade[1] === "Bought" ? "Membeli " : "Menjual ") + trade[2] + " × " + trade[3] + " seharga " + trade[4] + " mark.";
+  return localizeUI(message);
 }
 function applyStaticLabels() {
   const labels = STATIC_LABELS[state.language] || STATIC_LABELS.en;
@@ -167,177 +191,7 @@ function applyStaticLabels() {
     const label = labels[element.dataset.i18nAria];
     if (label) element.setAttribute("aria-label", label);
   });
-  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
-    const label = labels[element.dataset.i18nTitle];
-    if (label) element.setAttribute("title", label);
-  });
-}
-
-function safe(value) {
-  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
-}
-function portrait(id) {
-  const assets = { mara: "assets/wayfarer.svg", scout: "assets/scout.svg", lookout: "assets/raider.svg", skirmisher: "assets/skirmisher.svg", warden: "assets/quarry-warden.svg" };
-  return "./" + (assets[id] || "assets/mark.svg");
-}
-function bar(value, max, tone) {
-  const percent = max ? Math.max(0, Math.min(100, Math.round((value / max) * 100))) : 0;
-  return '<div class="meter ' + tone + '"><span style="width:' + percent + '%"></span></div>';
-}
-function unitCard(unit, compact) {
-  const image = portrait(unit.id);
-  return '<article class="unit-card ' + (compact ? "compact" : "") + '"><div class="unit-avatar"><img src="' + image + '" alt=""></div>' +
-    '<div class="unit-info"><div class="unit-top"><strong>' + safe(unit.name) + '</strong><span>' + Math.max(0, unit.hp) + '<i> / ' + unit.maxHp + '</i></span></div><small>' + safe(unit.role) + '</small>' +
-    bar(unit.hp, unit.maxHp, "health") + (!compact && unit.maxFocus ? '<div class="focus-row"><span>FOCUS</span>' + Array.from({ length: unit.maxFocus }, (_, i) => '<i class="' + (i < unit.focus ? "filled" : "") + '"></i>').join("") + '</div>' : "") + '</div></article>';
-}
-function renderSide() {
-  $("#coin-count").textContent = String(state.coin);
-  $("#day-count").textContent = String(state.day).padStart(2, "0");
-  $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
-  $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
-  $("#log-summary").innerHTML = localizeUI(state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(entry) + '</span></div>').join(""));
-  const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
-  const questProgress = getQuestProgress(state, route.questId);
-  const quest = questProgress?.quest;
-  const total = questProgress?.totalStages || 0;
-  const completed = questProgress?.completedCount || 0;
-  const returned = questProgress?.complete || false;
-  const stageLabel = questProgress?.currentStage?.label || (returned ? "ERRAND DELIVERED" : "PREPARE YOUR CREW");
-  $("#objective-step").textContent = localizeUI(stageLabel);
-  $("#objective-count").textContent = completed + " / " + total;
-  $("#objective-progress").style.width = (total ? Math.round((completed / total) * 100) : 0) + "%";
-  $("#objective-title").textContent = localizeUI(quest?.title || route.title);
-  $("#objective-copy").textContent = localizeUI(quest?.summary || route.summary);
-}
-function setHeader(tab, phase) {
-  const names = {
-    journey: ["FIELD NOTES · CHAPTER 01", "A road opens"],
-    market: ["HEARTHCROSS · TOWN EXCHANGE", "Goods and provisions"],
-    roster: ["HEARTHCROSS · YOUR CREW", "A small crew, well chosen"],
-    inventory: ["TRAVEL KIT · PACK", "What you carry"],
-    journal: ["FIELD NOTES · LEDGER", "The journey so far"],
-    preferences: ["HEARTHCROSS · PLAYER SETTINGS", "Language and controls"]
-  };
-  const current = names[tab] || names.journey;
-  eyebrow.textContent = localizeUI(current[0]);
-  title.textContent = localizeUI(current[1]);
-  const route = findRoute(state.activeRoute || state.selectedRoute);
-  phaseLabel.innerHTML = '<span class="status-pip ' + (phase === "battle" ? "danger-pip" : "") + '"></span>' +
-    localizeUI(phase === "battle" ? safe(route.name.toUpperCase()) + " · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
-}
-function navState() {
-  document.querySelectorAll("[data-tab]").forEach((button) => {
-    const tab = button.dataset.tab;
-    button.classList.toggle("active", tab === state.activeTab);
-    const locked = state.phase !== "town" && ["market", "roster"].includes(tab);
-    button.disabled = locked;
-    button.setAttribute("aria-disabled", String(locked));
-  });
-}
-function renderTravelMap() {
-  const paths = ROUTE_LINKS.map((link) => {
-    const from = findRoute(link.from).mapPosition;
-    const to = findRoute(link.to).mapPosition;
-    const midX = (from.x + to.x) / 2;
-    const midY = (from.y + to.y) / 2 - 13;
-    return '<path d="M ' + from.x + ' ' + from.y + ' Q ' + midX + ' ' + midY + ' ' + to.x + ' ' + to.y + '" />';
-  }).join("");
-  const nodes = ROUTES.map((route, index) => {
-    const unlocked = isRouteUnlocked(state, route.id);
-    const selected = state.selectedRoute === route.id;
-    const completed = (state.completedRoutes || []).includes(route.id);
-    const status = !unlocked ? "LOCKED" : completed ? "CLEARED" : selected ? "SELECTED" : "OPEN";
-    const accessibleStatus = localizeUI(status.toLowerCase());
-    return '<button type="button" class="map-node ' + (selected ? "selected" : "") + (!unlocked ? " locked" : "") + (completed ? " completed" : "") + '" data-route="' + route.id + '" style="left:' + route.mapPosition.x + '%;top:' + route.mapPosition.y + '%" aria-label="' + safe(route.name + ", " + accessibleStatus) + '" aria-pressed="' + selected + '" ' + (!unlocked ? "disabled" : "") + '><span class="map-node-number">0' + (index + 1) + '</span><span class="map-node-copy"><strong>' + safe(route.name) + '</strong><small>' + status + '</small></span></button>';
-  }).join("");
-  return '<div class="travel-map" role="group" aria-label="Region map with route choices"><div class="travel-map-head"><small>REGION CHART · HEARTHCROSS</small><strong>The Ridgeway</strong><span>Choose an open location to see its errand.</span></div><div class="map-canvas"><svg class="map-trails" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="map-river" d="M 3 81 Q 26 67 41 75 T 67 60 T 96 52" />' + paths + '</svg>' + nodes + '<span class="map-compass" aria-hidden="true">N<br>↑</span></div></div>';
-}
-function renderTown() {
-  const hasScout = state.party.some((unit) => unit.id === "scout");
-  const route = findRoute(state.selectedRoute);
-  const unlocked = isRouteUnlocked(state, route.id);
-  const completed = (state.completedRoutes || []).includes(route.id);
-  const canSetOut = hasScout && state.inventory.ration > 0 && unlocked;
-  const subtitle = completed ? "A familiar road, another day's work." : route.summary;
-  return '<section class="landscape town-scene" aria-label="Illustrated view of Hearthcross market town"><div class="scene-vignette"></div>' +
-    '<div class="scene-label"><span class="location-pin">⌖</span><div><small>HOME BASE · DAY ' + String(state.day).padStart(2, "0") + '</small><strong>Hearthcross</strong></div></div><div class="scene-coordinate">NORTH GATE <span>·</span> MARKET WARD</div>' +
-    '<div class="scene-bottom"><div><small>SELECTED ROUTE · ' + safe(route.name.toUpperCase()) + '</small><h2>' + safe(subtitle) + '</h2><p>Prepare at the exchange, check your crew, then choose a road from the route board.</p></div>' +
-    '<button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + (completed ? "SET OUT AGAIN" : "BEGIN THE JOURNEY") + '</span><b>→</b></button></div></section>' +
-    '<section class="chapter-strip"><div class="chapter-icon">0' + (ROUTES.findIndex((entry) => entry.id === route.id) + 1) + '</div><div class="chapter-copy"><small>SELECTED ROUTE · ' + safe(route.terrain) + '</small><strong>' + safe(route.title) + '</strong><span>' + safe(route.summary) + '</span></div><div class="chapter-status"><span class="status-pill">' + (completed ? "COMPLETED" : unlocked ? hasScout ? "CREW READY" : "CREW NEEDED" : "LOCKED") + '</span><span class="chapter-arrow">↗</span></div></section>' +
-    '<section class="route-board panel"><div class="panel-head"><div><small>TRAVEL BOARD · ' + (state.completedRoutes || []).length + ' ROUTE' + ((state.completedRoutes || []).length === 1 ? "" : "S") + ' CLEARED</small><h2>Choose today&#39;s route</h2></div><span class="status-pill">' + ROUTES.filter((entry) => isRouteUnlocked(state, entry.id)).length + ' AVAILABLE</span></div>' + renderTravelMap() + '<div class="route-options">' +
-    ROUTES.map((entry, index) => {
-      const available = isRouteUnlocked(state, entry.id);
-      const selected = route.id === entry.id;
-      const routeDone = (state.completedRoutes || []).includes(entry.id);
-      return '<button type="button" class="route-card ' + (selected ? "selected" : "") + (!available ? " locked" : "") + '" data-route="' + entry.id + '" aria-pressed="' + selected + '" ' + (!available ? "disabled" : "") + '><span class="route-number">0' + (index + 1) + '</span><span class="route-card-copy"><small>' + safe(entry.terrain) + '</small><strong>' + safe(entry.name) + '</strong><span>' + safe(entry.summary) + '</span></span><span class="route-card-status">' + (!available ? "LOCKED" : routeDone ? "CLEARED" : selected ? "SELECTED" : "OPEN") + '</span></button>';
-    }).join("") + '</div></section>' +
-    renderSettlement() +
-    '<div class="lower-grid"><section class="panel prep-panel"><div class="panel-head"><div><small>BEFORE YOU LEAVE</small><h2>Pack for the road</h2></div><button type="button" data-tab="inventory" class="text-button">OPEN PACK →</button></div>' +
-    '<div class="prep-grid"><div class="prep-item"><span class="item-glyph ration-glyph">R</span><div><strong>Trail Rations</strong><small>' + state.inventory.ration + ' in pack · 1 required</small></div><span class="check-mark ' + (state.inventory.ration > 0 ? "ready" : "") + '">' + (state.inventory.ration > 0 ? "✓" : "·") + '</span></div>' +
-    '<div class="prep-item"><span class="item-glyph tonic-glyph">+</span><div><strong>Field Tonic</strong><small>' + state.inventory.tonic + ' in pack · restores vitality</small></div><button type="button" class="tiny-button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button></div></div></section>' +
-    '<section class="panel crew-callout"><div class="panel-head"><div><small>TRAVEL PARTNER</small><h2>' + (hasScout ? "Tarin is on the route" : "Hire a trail scout") + '</h2></div><span class="round-seal">♙</span></div><p>' +
-    (hasScout ? "Tarin watches the ridgeline and adds a follow-up strike in an encounter." : "A second pair of eyes makes this first route safer. Your ledger has enough for the contract.") + '</p><button class="secondary-button" type="button" data-tab="roster">' +
-    (hasScout ? "VIEW YOUR CREW" : "VISIT THE HIRING BOARD") + '<span>→</span></button></section></div>';
-}
-function renderBattle() {
-  const battle = state.battle;
-  const route = findRoute(battle.routeId || state.activeRoute);
-  const weapon = findItem(state.equipment?.weapon);
-  const strikeDamage = 14 + (weapon?.strikeBonus || 0);
-  const enemies = battle.enemies.map((enemy) => {
-    const selected = battle.targetId === enemy.id;
-    const hp = Math.max(0, enemy.hp);
-    return '<button type="button" class="enemy-card ' + (selected ? "selected" : "") + (hp === 0 ? " defeated" : "") + '" data-target="' + enemy.id + '" ' + (hp === 0 ? "disabled" : "") + '><img src="./' + portrait(enemy.id) + '" alt="">' +
-      '<span class="enemy-name">' + safe(enemy.name) + '</span><span class="enemy-state">' + (hp === 0 ? "DOWN" : selected ? "TARGET" : "SELECT") + '</span>' + bar(hp, enemy.maxHp, "enemy-health") + '<small>' + hp + ' / ' + enemy.maxHp + ' VITALITY</small></button>';
-  }).join("");
-  return '<section class="landscape road-scene battle-scene ' + (route.id === "amber-quarry" ? "quarry-scene" : "") + '" aria-label="Illustrated encounter on ' + safe(route.name) + '"><div class="scene-vignette"></div>' +
-    '<div class="scene-label"><span class="location-pin">⌖</span><div><small>' + safe(route.name.toUpperCase()) + ' · TURN ' + String(battle.turn).padStart(2, "0") + '</small><strong>' + safe(route.encounter) + '</strong></div></div><div class="scene-coordinate">' + safe(route.coordinate) + ' <span>·</span> ISSUE AN ORDER</div>' +
-    '<div class="combat-parties"><div class="battle-party">' + state.party.map((unit) => '<div class="battle-unit ' + (unit.id === state.formationFrontId ? "front-unit" : "rear-unit") + '"><img src="./' + portrait(unit.id) + '" alt=""><span>' + safe(unit.name.split(" ")[0]) + '</span><small>' + (unit.id === state.formationFrontId ? "FRONT" : "REAR") + '</small><span class="battle-vitality">HP ' + Math.max(0, unit.hp) + '/' + unit.maxHp + '</span>' + bar(unit.hp, unit.maxHp, "health") + '</div>').join("") + '</div><div class="battle-enemies">' +
-    battle.enemies.map((enemy) => '<div class="battle-foe ' + (enemy.hp <= 0 ? "gone" : "") + '"><img src="./' + portrait(enemy.id) + '" alt=""><span>' + safe(enemy.name.split(" ")[1]) + '</span></div>').join("") + '</div></div>' +
-    '<div class="scene-bottom battle-caption"><div><small>ENCOUNTER</small><h2>Hold the road.</h2><p>Choose a target, then strike, brace or spend focus on a technique.</p></div><span class="turn-badge">TURN ' + battle.turn + '</span></div></section>' +
-    '<section class="combat-panel"><div class="panel-head"><div><small>OPPONENTS · SELECT A TARGET</small><h2>' + safe(route.foeLabel) + '</h2></div><span class="status-pill alert-pill">' + battle.enemies.filter((enemy) => enemy.hp > 0).length + ' ACTIVE</span></div>' +
-    '<div class="enemy-row ' + (battle.enemies.length === 1 ? "single-enemy" : "") + '">' + enemies + '</div><div class="formation-effect-note"><span>FORMATION</span> ' + safe(state.party.find((unit) => unit.id === state.formationFrontId)?.name || "Mara") + ' leads; the rear line reduces incoming damage by 2. <span class="gear-effect">WEAPON · ' + safe(weapon?.name || "UNARMED") + ' · STRIKE ' + strikeDamage + '</span></div><div class="combat-orders"><div class="orders-label"><small>YOUR ORDER</small><span>' + (state.formationFrontId === "scout" ? "Tarin opens · Mara follows" : "Mara leads · Tarin follows") + ' · ' + (state.combatShortcutsEnabled ? "Keys: 1 · 2 · 3" : "Keyboard shortcuts are off") + '</span></div>' +
-    '<button class="order-button" type="button" data-action="strike"><span class="order-key">1</span><span><strong>Strike</strong><small>Deal ' + strikeDamage + ' damage · gain 1 focus</small></span><b>↗</b></button>' +
-    '<button class="order-button" type="button" data-action="brace"><span class="order-key">2</span><span><strong>Brace</strong><small>Soften a hit · scout follows</small></span><b>◇</b></button>' +
-    '<button class="order-button skill-order" type="button" data-action="technique" ' + (state.party[0].focus < 2 ? "disabled" : "") + '><span class="order-key">3</span><span><strong>Wayfarer&#39;s Arc</strong><small>Area technique · costs 2 focus</small></span><b>✦</b></button></div>' +
-    '<button class="supply-action" type="button" data-action="use-tonic" ' + (state.inventory.tonic < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE FIELD TONIC <span>' + state.inventory.tonic + ' IN PACK</span></button></section>';
-}
-function renderCompactObjective() {
-  const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
-  const progress = getQuestProgress(state, route.questId);
-  if (!progress) return "";
-  const total = progress.totalStages;
-  const completed = progress.completedCount;
-  const step = progress.currentStage?.label || (progress.complete ? "ERRAND DELIVERED" : "PREPARE YOUR CREW");
-  return '<section class="compact-objective" aria-label="Active errand"><div class="compact-objective-copy"><small>ACTIVE ERRAND</small><strong>' + safe(progress.quest.title) + '</strong><span>' + safe(progress.quest.summary) + '</span></div><div class="compact-objective-progress"><div class="objective-progress"><span style="width:' + (total ? Math.round((completed / total) * 100) : 0) + '%"></span></div><small>' + safe(step) + '</small><b>' + completed + ' / ' + total + '</b></div></section>';
-}
-function renderVictory() {
-  const route = findRoute(state.activeRoute);
-  const cargo = Object.entries(route.reward.items).map(([itemId, quantity]) => {
-    const item = ITEMS.find((entry) => entry.id === itemId);
-    return '<span><i>' + safe(item?.glyph || "◆") + '</i>' + quantity + ' ' + safe(item?.name || itemId) + '</span>';
-  }).join("");
-  return '<section class="result-card victory-card"><div class="result-emblem">✓</div><small>ROUTE CLEARED · REWARD SECURED</small><h2>' + safe(route.victoryTitle) + '</h2><p>' + safe(route.victoryCopy) + '</p><div class="reward-row"><span><i>＋</i>' + route.reward.coin + ' marks</span>' + cargo + '<span><i>✦</i>' + route.reward.reputation + ' reputation</span></div>' +
-    '<button class="primary-button" type="button" data-action="return-town"><span>RETURN TO HEARTHCROSS</span><b>→</b></button></section><section class="panel result-notes"><div class="panel-head"><div><small>FIELD NOTES</small><h2>Close the errand</h2></div><span class="round-seal">01</span></div><p>Visit the Town Exchange to sell the recovered cargo, or review the crew and pack before another journey.</p><div class="mini-log">' +
-    state.log.slice(0, 2).map((entry) => '<span>· ' + safe(entry) + '</span>').join("") + '</div></section>';
-}
-function renderDefeat() {
-  const route = findRoute(state.activeRoute);
-  return '<section class="result-card defeat-card"><div class="result-emblem">↶</div><small>ROUTE INTERRUPTED</small><h2>The crew falls back.</h2><p>No reward was recovered from ' + safe(route.name) + '. Rest in Hearthcross, replace the ration, then choose your route again.</p><button class="primary-button" type="button" data-action="recover"><span>RECOVER IN HEARTHCROSS</span><b>→</b></button></section>';
-}
-function renderJourney() {
-  const compactStatus = renderCompactObjective();
-  if (state.phase === "battle") return compactStatus + renderBattle();
-  if (state.phase === "victory") return compactStatus + renderVictory();
-  if (state.phase === "defeat") return compactStatus + renderDefeat();
-  return compactStatus + renderTown();
-}
-function renderMarket() {
-  const tradeItems = ITEMS.filter((item) => item.buyPrice !== null || item.sellPrice !== null);
-  return '<section class="market-banner"><div><small>HEARTHCROSS · MARKET WARD</small><h2>Good routes begin with good terms.</h2><p>Buy the supplies you need. Sell trade goods after your return.</p></div><span class="market-stamp">LOCAL<br>EXCHANGE</span></section>' +
-    '<section class="panel market-panel"><div class="panel-head"><div><small>DAILY BOARD · PROTOTYPE QUOTES</small><h2>Available goods</h2></div><span class="status-pill">MARKS ' + state.coin + '</span></div><div class="market-table"><div class="market-header"><span>GOOD</span><span>BUY</span><span>SELL</span><span>PACK</span><span></span></div>' +
-    tradeItems.map((item) => '<div class="market-row"><div class="good-cell"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><span><strong data-locale-preserve>' + safe(item.name) + '</strong><small data-locale-preserve>' + safe(item.detail) + '</small></span></div><span class="quote buy-quote">' + (item.buyPrice === null ? "—" : item.buyPrice) + '<small> M</small></span><span class="quote sell-quote">' + (item.sellPrice === null ? "—" : item.sellPrice) + '<small> M</small></span><span class="pack-count market-pack">' + (state.inventory[item.id] || 0) + '</span><span class="trade-actions">' +
-    '<button type="button" data-action="buy" data-item="' + item.id + '" ' + (item.buyPrice === null ? "disabled" : "") + ' aria-label="Buy one ' + safe(item.name) + '">BUY</button><button type="button" data-action="sell" data-item="' + item.id + '" ' + ((state.inventory[item.id] || 0) < 1 ? "disabled" : "") + ' aria-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
+  document.querySelectorAll("[data-i18…5009 tokens truncated…a-label="Sell one ' + safe(item.name) + '">SELL</button></span></div>').join("") +
     '</div><div class="market-foot"><span>Original prototype quotes; not copied from any live game.</span><span>Held: ' + state.inventory.tea + ' tea · ' + state.inventory.fittings + ' fittings</span></div></section>' +
     renderProduction() + '<div class="market-tip"><span>✦</span><p><strong>Trade note</strong> The parcel route rewards cargo that can be sold here. Keep a ration in your pack before another trip.</p></div>' + renderSettlement();
 }
@@ -445,7 +299,7 @@ function render() {
   setHeader(state.activeTab, state.phase);
   navState();
   renderSide();
-  notice.textContent = localizeUI(state.notice || "");
+  notice.textContent = localizeNotice(state.notice);
   notice.classList.toggle("show", Boolean(state.notice));
   const renderers = { journey: renderJourney, market: renderMarket, roster: renderRoster, inventory: renderInventory, journal: renderJournal, preferences: renderPreferences };
   content.innerHTML = localizeUI(renderers[state.activeTab]());

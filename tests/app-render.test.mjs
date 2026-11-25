@@ -293,6 +293,10 @@ test("route board and rendered journey flow select the distinct quarry encounter
   const indonesianVictory = element("#game-content").innerHTML;
   assert.match(indonesianVictory, /RUTE SELESAI · HADIAH DIAMANKAN/);
   assert.match(indonesianVictory, /The keeper leaves the old workings\. Your crew salvages a crate of Bronze Fittings\./);
+  assert.match(indonesianVictory, /The quarry is open again\. You salvage a crate of Bronze Fittings\./);
+  assert.doesNotMatch(indonesianVictory, /The quarry is terbuka again/);
+  assert.match(element("#notice").textContent, /The quarry is open again/);
+  assert.doesNotMatch(element("#log-summary").innerHTML, /terbuka again/);
   assert.match(indonesianVictory, /27 mark/);
   assert.match(indonesianVictory, /2 reputasi/);
   assert.match(indonesianVictory, /Tutup tugas/);
@@ -329,4 +333,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { route: "mosswind" } });
   assert.equal(savedState().selectedRoute, "mosswind");
   assert.match(element("#game-content").innerHTML, /data-route="mosswind"[^>]*aria-pressed="true"/);
+  assert.equal(element("#notice").textContent, "Mosswind Road dipilih untuk perjalanan berikutnya.");
+  click({ dataset: { tab: "market" } });
+  click({ dataset: { action: "buy", item: "ration" } });
+  assert.equal(element("#notice").textContent, "Membeli 1 × Trail Ration seharga 6 mark.");
 });
