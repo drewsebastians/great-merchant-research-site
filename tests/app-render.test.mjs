@@ -71,7 +71,7 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(element("#game-content").innerHTML, /Hire a trail scout/);
   assert.match(element("#game-content").innerHTML, /aria-current="step"/);
   assert.match(element("#game-content").innerHTML, /The Quarry Ledger/);
-  assert.match(element("#game-content").innerHTML, /COMPLETE THE PREVIOUS ERRAND TO UNLOCK/);
+  assert.match(element("#game-content").innerHTML, /UNLOCKS AFTER <strong>The Courier&#39;s Mark<\/strong> IS COMPLETED/);
   click({ dataset: { tab: "journey" } });
 
   assert.match(element("#game-content").innerHTML, /Mosswind Road/);
@@ -115,7 +115,7 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { tab: "journal" } });
   assert.match(element("#game-content").innerHTML, /class="quest-status-pill complete">COMPLETED/);
   assert.match(element("#game-content").innerHTML, /class="quest-status-pill progress">IN PROGRESS/);
-  assert.doesNotMatch(element("#game-content").innerHTML, /COMPLETE THE PREVIOUS ERRAND TO UNLOCK/);
+  assert.doesNotMatch(element("#game-content").innerHTML, /class="quest-locked-note"/);
   click({ dataset: { tab: "market" } });
   assert.match(element("#game-content").innerHTML, /Settlement ledger/);
   assert.match(element("#game-content").innerHTML, /NET PROCEEDS/);

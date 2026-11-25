@@ -296,7 +296,7 @@ function renderQuestJournal() {
       const stageStatus = stage.complete ? "DONE" : current ? "CURRENT" : "UPCOMING";
       const stageClass = stage.complete ? "complete" : current ? "current" : "upcoming";
       return '<li class="quest-stage ' + stageClass + '" ' + (current ? 'aria-current="step"' : "") + '><span class="quest-stage-index">' + (stage.complete ? "✓" : String(index + 1).padStart(2, "0")) + '</span><span class="quest-stage-copy"><strong>' + safe(stage.label) + '</strong><small>' + stageStatus + '</small></span></li>';
-    }).join("") + '</ol>' : '<div class="quest-locked-note"><span>◈</span> COMPLETE THE PREVIOUS ERRAND TO UNLOCK</div>';
+    }).join("") + '</ol>' : '<div class="quest-locked-note"><span>◈</span><span>UNLOCKS AFTER ' + quest.requiresQuests.map((questId) => findQuest(questId)?.title).filter(Boolean).map((title) => '<strong>' + safe(title) + '</strong>').join(" · ") + ' IS COMPLETED</span></div>';
     return '<article class="quest-journal-card ' + statusClass + '"><div class="quest-journal-heading"><div><small>CONTRACT · ' + safe(findRoute(quest.routeId).name.toUpperCase()) + '</small><h3>' + safe(quest.title) + '</h3><p>' + safe(quest.summary) + '</p></div><span class="quest-status-pill ' + statusClass + '">' + status + '</span></div>' + stages + '</article>';
   }).join("");
   return '<section class="panel quest-journal-panel"><div class="panel-head"><div><small>QUEST JOURNAL · CURRENT OBJECTIVES</small><h2>Active contracts</h2></div><button type="button" class="text-button" data-tab="journey">VIEW JOURNEY →</button></div><div class="quest-journal-list">' + cards + '</div></section>';
