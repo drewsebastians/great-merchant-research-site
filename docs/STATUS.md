@@ -8,7 +8,7 @@ Plan: Development Plan v5.0
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
 **Latest production code commit:** `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f` from `main`.
-**Latest production deployment:** Pages run `45542156190` succeeded for `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f`.
+**Latest game-code deployment:** Pages run `45542156190` succeeded for `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Pre-tuning checkpoint:** `checkpoint/pre-v5-025-2026-11-25` is saved at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.  
 **Pre-localization-boundary checkpoint:** `checkpoint/pre-v5-026-2026-11-25` is saved at `3c463e506829818125c0f497f0da410ee250468f`.  
@@ -62,6 +62,7 @@ Plan: Development Plan v5.0
 - The follow-up copy-boundary fix preserves full English story prose and localizes route selection and buy/sell notices. All 35 automated tests and the content validator passed; Pages workflow run `45540650380` succeeded. Production verification of these latest notice changes is the next task.
 - A truncated app-module upload briefly caused the latest production screen to render blank. The full 553-line source was restored, locally validated and checkpointed; Pages run `45541878333` succeeded. The follow-up log fix is deployed in run `45542156190`.
 - Production Cloud Chromium verified the game screen and controls render, route-selection copy is wholly Indonesian in the notice, side log and Journal, purchase and sale confirmations are wholly Indonesian, and English narrative text remains unchanged. No production `game/app.mjs` runtime errors were observed.
+- A final production navigation sweep opened Journey, Town Exchange, Crew, Pack, Journal and Preferences; each rendered its expected screen content and no app script errors were logged.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
 
@@ -71,4 +72,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-Continue screen-by-screen production checks and responsive behavior. The defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.
+Continue responsive and device-specific behavior checks. The six-tab screen navigation, defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.
