@@ -35,7 +35,12 @@ Plan: Development Plan v5.0
 - [x] Translate Indonesian onboarding steps, combat controls/order labels and static shell notes, including accessible guide/reset names.
 - [x] Translate victory, retreat, and settlement interface labels and instructions while preserving original route copy and item names.
 - [x] Add rendered coverage for Indonesian defeat copy, recovery into town, crew restoration, cleared trip accounting and a subsequent route change.
-- [ ] Verify defeat recovery and route switching on production after deployment.
+- [x] Tune the Quarry encounter so ordinary strikes still win while prolonged defensive play can cause a reachable defeat; these are original prototype values.
+- [x] Verify defeat recovery without route rewards, route switching and the standard Strike victory on production.
+- [x] Protect route/quest/item prose from broad Indonesian UI phrase replacement and translate route/buy/sell notices as complete messages; add rendered regression coverage.
+- [x] Translate route selection and buy/sell log entries consistently in the notice, field log and Journal.
+- [x] Verify localized route, purchase and sale messages plus intact narrative prose on production after restoring the full app module.
+- [ ] Continue production screen and responsive interaction review; physical phone checks remain pending.
 
 ## Priority 2 — broader game architecture
 

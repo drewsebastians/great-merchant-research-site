@@ -1,15 +1,18 @@
 # Development Status
 
 Updated: 25 November 2026  
-Task: V5-025 — verify defeat recovery and route switching
+Task: V5-027 — localize route and trade records across all game screens
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Latest game code:** commit `e5d14540c2ccf0b1da168170fdc87629c7e9bf32` from `main`.  
-**Latest rendered-test commit:** `120a4febbca69d2589d0e44ca815baeccbbc78f9`.
+**Latest production code commit:** `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f` from `main`.
+**Latest production deployment:** Pages run `45542156190` succeeded for `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
+**Pre-tuning checkpoint:** `checkpoint/pre-v5-025-2026-11-25` is saved at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.  
+**Pre-localization-boundary checkpoint:** `checkpoint/pre-v5-026-2026-11-25` is saved at `3c463e506829818125c0f497f0da410ee250468f`.  
+**Pre-log-localization checkpoint:** `checkpoint/pre-v5-027-2026-11-25` is saved at `0635af9b4311ef580196797d53da30af1a19eea3`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
 
@@ -32,6 +35,9 @@ Plan: Development Plan v5.0
 - Original region map draws route positions and connections from the data catalog, marks locked/selected/cleared locations, and supports the same accessible route action as the existing cards.
 - A quest catalog drives entry requirements, ordered objective progress, first-completion rewards and route unlocks. The Courier's Mark completes on return to Hearthcross, grants its Courier's Seal once, and unlocks the Quarry Ledger; replaying a completed route does not duplicate the quest reward.
 - The game is installable as a Windows PWA from Edge. Its game-scoped manifest and service worker cache the app shell and original assets, revalidate online files against the deployment, and serve the saved shell when offline.
+- The Amber Quarry encounter uses original prototype tuning at 64 HP and 18 damage. A standard Strike plan still wins; repeated Brace actions can defeat the crew, making retreat and recovery reachable through normal play.
+- Indonesian UI localization protects complete route, quest and item prose from word-level substitutions; route selection and buy/sell confirmations are rendered as complete Indonesian notices.
+- Route-selection and buy/sell messages now use the same complete Indonesian wording in the confirmation, field log and Journal. The English route and quest source copy remains intact.
 - Cache refresh reliability is hardened: a v2 shell cache installs with HTTP-cache reload and successful online requests revalidate, addressing older modules persisting after a new deployment.
 - The first-run guide still opens on a new save, but tapping outside its dialog now closes it, records the choice and releases the page controls. Escape, the close button and Skip Guide remain available.
 - The guide keeps Tab and Shift+Tab within the open dialog and returns focus to the guide trigger after dismissal, including when the user presses Escape.
@@ -48,11 +54,14 @@ Plan: Development Plan v5.0
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **34/34 pass**, including an Indonesian guide-to-battle-to-victory-to-settlement flow and defeated-save render/recovery/route-switch coverage, preserved English route/item/quest copy, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench and v1–v7 save migration.
+- `node --test tests/*.test.mjs`: **35/35 pass**, including a normal Strike victory and a reachable Brace-driven Quarry defeat, Indonesian victory/settlement/defeat rendering, recovery, route switching, preserved English route/item/quest copy, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench and v1–v7 save migration.
 - `node scripts/validate-game-content.mjs`: catalog checks pass; seven route/party scene and portrait paths exist.
 - JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
 - The Indonesian victory/settlement deployment is live. Cloud Chromium confirmed the result copy, return-to-town action, and preserved English route victory text and item names; Pages workflow run `45537422625` succeeded.
-- The new defeat/recovery integration check passes locally. Pages run `45538332667` is deploying the test checkpoint; production verification of the defeat screen, recovery action and post-recovery route choice remains pending.
+- Production Cloud Chromium confirmed a Brace-driven Amber Quarry defeat, Indonesian retreat result, recovery into Hearthcross with no reward settlement, route switching, and a normal Strike victory. Pages workflow run `45539788548` succeeded for the tuning.
+- The follow-up copy-boundary fix preserves full English story prose and localizes route selection and buy/sell notices. All 35 automated tests and the content validator passed; Pages workflow run `45540650380` succeeded. Production verification of these latest notice changes is the next task.
+- A truncated app-module upload briefly caused the latest production screen to render blank. The full 553-line source was restored, locally validated and checkpointed; Pages run `45541878333` succeeded. The follow-up log fix is deployed in run `45542156190`.
+- Production Cloud Chromium verified the game screen and controls render, route-selection copy is wholly Indonesian in the notice, side log and Journal, purchase and sale confirmations are wholly Indonesian, and English narrative text remains unchanged. No production `game/app.mjs` runtime errors were observed.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
 
@@ -62,4 +71,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-Deploy this increment and verify the Indonesian defeat screen, recovery action and route switching in Cloud Chromium. Victory and settlement copy are already verified live, with route victory text and item names preserved in English. Then verify the guide, market cards and combat controls on a physical phone and complete Windows Edge PWA install/offline checks when suitable devices are available. Status effects remain deferred because the research repository contains no independently specified rule set.
+Continue screen-by-screen production checks and responsive behavior. The defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.
