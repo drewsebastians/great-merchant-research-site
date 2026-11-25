@@ -1,13 +1,14 @@
 # Development Status
 
 Updated: 25 November 2026  
-Task: V5-024 — complete Indonesian result and settlement interface copy
+Task: V5-025 — verify defeat recovery and route switching
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Latest game code:** commit `e5d14540c2ccf0b1da168170fdc87629c7e9bf32` from `main`.
+**Latest game code:** commit `e5d14540c2ccf0b1da168170fdc87629c7e9bf32` from `main`.  
+**Latest rendered-test commit:** `120a4febbca69d2589d0e44ca815baeccbbc78f9`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
@@ -47,10 +48,11 @@ Plan: Development Plan v5.0
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **34/34 pass**, including an Indonesian guide-to-battle-to-victory-to-settlement flow, preserved English route/item/quest copy, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench and v1–v7 save migration.
+- `node --test tests/*.test.mjs`: **34/34 pass**, including an Indonesian guide-to-battle-to-victory-to-settlement flow and defeated-save render/recovery/route-switch coverage, preserved English route/item/quest copy, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench and v1–v7 save migration.
 - `node scripts/validate-game-content.mjs`: catalog checks pass; seven route/party scene and portrait paths exist.
 - JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
-- GitHub Pages deployment of the Indonesian result/settlement update is pending production verification.
+- The Indonesian victory/settlement deployment is live. Cloud Chromium confirmed the result copy, return-to-town action, and preserved English route victory text and item names; Pages workflow run `45537422625` succeeded.
+- The new defeat/recovery integration check passes locally. Pages run `45538332667` is deploying the test checkpoint; production verification of the defeat screen, recovery action and post-recovery route choice remains pending.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
 
@@ -60,4 +62,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-After deployment, reload production to verify the Indonesian victory and settlement screens; confirm route victory text and item names remain English. Continue the screen-by-screen review of defeat/recovery and route switching, then verify the guide, market cards and combat controls on a physical phone and complete Windows Edge PWA install/offline checks when suitable devices are available. Status effects remain deferred because the research repository contains no independently specified rule set.
+Deploy this increment and verify the Indonesian defeat screen, recovery action and route switching in Cloud Chromium. Victory and settlement copy are already verified live, with route victory text and item names preserved in English. Then verify the guide, market cards and combat controls on a physical phone and complete Windows Edge PWA install/offline checks when suitable devices are available. Status effects remain deferred because the research repository contains no independently specified rule set.

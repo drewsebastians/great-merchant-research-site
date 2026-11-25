@@ -108,6 +108,7 @@ The first slice is complete when a new player can:
 27. In Indonesian mode, Journey, Pack and Journal headings, status text, controls and concise helper copy display in Indonesian; route/quest/story prose and item descriptions remain in English.
 28. In Indonesian mode, onboarding steps, combat orders, encounter controls, static save/scope notes and guide/reset accessibility labels display in Indonesian; game actions remain operable and item/story text stays English.
 29. In Indonesian mode, victory, retreat and settlement labels/actions/helper text display in Indonesian while route victory copy, quest text, item names and item descriptions remain English.
+30. In either route's defeat state, the player can read the retreat result, recover in Hearthcross, restore the crew, lose no route reward or trip ledger, and choose another unlocked route.
 
 ## Release guardrails
 

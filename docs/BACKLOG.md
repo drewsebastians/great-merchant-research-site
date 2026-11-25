@@ -34,6 +34,8 @@ Plan: Development Plan v5.0
 - [x] Translate shared Journey, Pack and Journal headings, labels, status text, controls and short helper copy while preserving story/quest prose and item descriptions.
 - [x] Translate Indonesian onboarding steps, combat controls/order labels and static shell notes, including accessible guide/reset names.
 - [x] Translate victory, retreat, and settlement interface labels and instructions while preserving original route copy and item names.
+- [x] Add rendered coverage for Indonesian defeat copy, recovery into town, crew restoration, cleared trip accounting and a subsequent route change.
+- [ ] Verify defeat recovery and route switching on production after deployment.
 
 ## Priority 2 — broader game architecture
 
