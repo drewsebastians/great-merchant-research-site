@@ -41,7 +41,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - One original weapon with an equipment slot, local equip/unequip and a visible +3 Strike effect.
 - A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
-- Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
+- Saved English/Indonesian interface language choice for shared shell, journey, market, crew, pack, journal, guide and combat labels/controls, plus an independent combat-number-shortcut toggle; route/quest prose and item descriptions remain English.
 - A Journal quest board that shows each unlocked contract, ordered objective states and prerequisite-locked errands.
 - An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
 - A data-driven quest catalog with stable IDs, entry conditions, ordered objectives, one-time completion rewards, prerequisites and unlocks; the first errand's objective counter and quarry gate read from this catalog.
@@ -105,6 +105,8 @@ The first slice is complete when a new player can:
 24. Tab and Shift+Tab remain inside the open field guide; Escape, skip, finish or outside click closes it and returns focus to a useful guide control.
 25. In Indonesian mode, settings headings, helper text, toggle state and local-save copy display in Indonesian while story and item descriptions remain in English.
 26. In Indonesian mode, the shared Market and Crew interface labels, helper copy, trade actions and accessible trade labels display in Indonesian; whole-word matching does not alter longer words, and item names and descriptions remain in English.
+27. In Indonesian mode, Journey, Pack and Journal headings, status text, controls and concise helper copy display in Indonesian; route/quest/story prose and item descriptions remain in English.
+28. In Indonesian mode, onboarding steps, combat orders, encounter controls, static save/scope notes and guide/reset accessibility labels display in Indonesian; game actions remain operable and item/story text stays English.
 
 ## Release guardrails
 

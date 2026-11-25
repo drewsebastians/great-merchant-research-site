@@ -16,7 +16,7 @@ This review compares the prototype to the broad, confirmed patterns already tran
 | Crew | Roster, recruitment and party order | Hire board, crew vitality, front-member selection and formation effect | Deeper advancement and contract management are outside this slice |
 | Pack | Distinct carried items with relevant actions | Supplies, trade goods, quest items and equipment show quantity and applicable use/equip/sell actions | Filtering and sorting are deferred until the catalog grows |
 | Journal | Persistent activity, trip accounting and objective tracking | Ordered field log, cargo sale progress and net proceeds, plus a contract board showing each quest's completed, current, upcoming or locked objectives | Physical-phone visual review remains pending |
-| Preferences | Player-controlled interface options | Saved English/Indonesian common labels and combat shortcut toggle | Story and item descriptions remain English by design |
+| Preferences | Player-controlled interface options | Saved English/Indonesian shared labels across shell, travel, market, crew, pack, journal, guide and combat; combat shortcut toggle | Route/quest prose and item descriptions remain English by design |
 | Combat | Encounter context, target selection, party order and explicit actions | Illustrated scene, turn, target cards, HP bars, Strike/Brace/Technique, tonic and formation note | Party HP was only in the side rail; each combat portrait now includes current/max HP and a bar |
 | Onboarding | Brief tutorial with a way back to play | Four-step guide, skip, close, replay and Escape | Outside tap now closes the guide and releases page controls |
 
@@ -29,6 +29,8 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - Keep keyboard focus within the open field guide and return focus to the guide trigger when it closes.
 - Translate all user-facing settings labels and helper text in Indonesian mode, including the shortcut toggle state; leave story and item descriptions in English.
 - Translate the shared Market and Crew interface copy, including market actions' accessible labels; use word boundaries so translating `open` never corrupts a word such as `opens`, and preserve item names and descriptions as English.
+- Extend shared Indonesian UI copy across Journey, Pack and Journal, including route-state labels, inventory actions and quest-board controls; leave route/quest prose, proper names and item descriptions as English.
+- Translate the field guide steps, combat orders/status labels and static shell notes/accessibility names so the selected language remains consistent through the core gameplay loop.
 - Retain the desktop side rail and existing save schema; this is a presentation-only change.
 
 ## Verification
@@ -40,8 +42,8 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - Live production smoke check confirms that tapping outside the first-run guide closes it and that Crew navigation responds afterward.
 - Live Journal content initially appeared only after a cache-busted reload, revealing that an existing browser HTTP cache could keep an older app module after deployment. The service worker now uses a versioned shell cache, reloads shell requests on install and revalidates online files; after deployment, the normal production URL rendered the current Journal on reload.
 - The production guide focus loop was checked with Tab, Shift+Tab and Escape. At 400% browser zoom, the compact bottom navigation and a market purchase action also responded; physical phone rendering remains unverified.
-- Production Indonesian screen checks found mixed English Market and Crew labels and a partial-word replacement defect (`opens` became `terbukas`). The localization pass now uses word boundaries, fills the shared Market/Crew labels and trade actions, and skips item name/description fragments. The rendered-flow test covers both screens; production reload verification is pending.
+- Production Indonesian screen checks found mixed English labels across the game and a partial-word replacement defect (`opens` became `terbukas`). The localization pass now uses word boundaries, fills shared headings, controls, status labels, the onboarding guide and battle orders, and skips item name/description fragments. Rendered-flow tests cover all core screens and verify that story/quest and item text remains English; the latest guide/combat deployment needs live verification.
 
 ## Next review target
 
-Continue screen-by-screen interaction checks in Cloud Chromium. Verify Indonesian Market/Crew copy after deployment, then review the remaining shared screens for mismatched labels and preserve the existing rule that item and story descriptions stay English. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.
+Continue screen-by-screen interaction checks in Cloud Chromium. Verify the latest Indonesian guide and combat copy after deployment, then review the remaining progression/result states for mixed labels. Keep item names/descriptions and route/quest prose in English. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.

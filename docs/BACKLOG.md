@@ -31,6 +31,8 @@ Plan: Development Plan v5.0
 - [x] Add language and input preferences that persist locally.
 - [x] Complete Indonesian settings headings, helper copy, local-save note and shortcut toggle state while leaving story and item descriptions in English.
 - [x] Translate the shared Indonesian Market and Crew interface, use word-boundary matching to prevent partial-word corruption, and preserve English item names and descriptions.
+- [x] Translate shared Journey, Pack and Journal headings, labels, status text, controls and short helper copy while preserving story/quest prose and item descriptions.
+- [x] Translate Indonesian onboarding steps, combat controls/order labels and static shell notes, including accessible guide/reset names.
 
 ## Priority 2 — broader game architecture
 

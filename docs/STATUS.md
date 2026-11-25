@@ -1,13 +1,13 @@
 # Development Status
 
 Updated: 25 November 2026  
-Task: V5-021 — complete Indonesian Market and Crew interface copy
+Task: V5-023 — complete Indonesian guide and combat interface copy
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Latest game code:** commit `d80b350ddb7999ebaa375a2edc78a7db73397d78` from `main`.
+**Latest game code:** commit `cbc5caf273a8d995a64f8c38418622d44e6a7cc7` from `main`.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
@@ -24,6 +24,8 @@ Plan: Development Plan v5.0
 - Preferences screen switches common interface labels between English and Indonesian and persists the choice; narrative and item descriptions stay English.
 - Indonesian Preferences now translates the settings banner, help copy, local-settings badge, saved-on-device note and shortcut on/off state alongside the existing labels; story and item copy remain English.
 - Indonesian Market and Crew screens now translate the shared headings, helper copy, formation rules, hiring controls, trade note and accessible buy/sell labels. Word-boundary matching prevents partial-word corruption (for example, `opens`), and item names and descriptions stay English.
+- Indonesian Journey, Pack and Journal now translate their shared headers, progress/status labels, inventory controls and concise helper text. Route/quest prose and item descriptions remain English; common replacements use word boundaries.
+- Indonesian onboarding and combat now translate all four guide steps, guide actions, target/turn/party labels, order instructions and recovery/status labels. The static reset button's accessible name, guide title and save/scope notes follow the selected language.
 - Combat number shortcuts can be disabled/re-enabled from Preferences, including during an encounter.
 - Original region map draws route positions and connections from the data catalog, marks locked/selected/cleared locations, and supports the same accessible route action as the existing cards.
 - A quest catalog drives entry requirements, ordered objective progress, first-completion rewards and route unlocks. The Courier's Mark completes on return to Hearthcross, grants its Courier's Seal once, and unlocks the Quarry Ledger; replaying a completed route does not duplicate the quest reward.
@@ -44,10 +46,10 @@ Plan: Development Plan v5.0
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **34/34 pass**, including Indonesian Market/Crew copy and safe word matching, guide dismissal and focus loop, mobile-market CSS, quest journal progress/lock/unlock rendering, combat vitality, PWA shell refresh and offline fallback, workbench, preferences and v1–v7 save migration.
+- `node --test tests/*.test.mjs`: **34/34 pass**, including Indonesian UI copy through guide, market, crew, pack, journal and battle, preserved English item/quest descriptions, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench, and v1–v7 save migration.
 - `node scripts/validate-game-content.mjs`: catalog checks pass; seven route/party scene and portrait paths exist.
 - JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
-- GitHub Pages deployment of the Indonesian Market/Crew localization fix is pending push and production verification.
+- GitHub Pages deployment of the Indonesian guide/combat interface is pending production verification.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
 
@@ -57,4 +59,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-After deployment, reload production to verify Indonesian Market and Crew headings, formation copy, trade note and action labels; confirm item descriptions remain English. Continue the screen-by-screen interaction review, then verify the guide, market cards and combat controls on a physical phone and complete Windows Edge PWA install/offline checks when suitable devices are available. Status effects remain deferred because the research repository contains no independently specified rule set.
+After deployment, reload production to verify the Indonesian field guide and combat actions while playing through an encounter; confirm item descriptions and quest prose remain English. Continue the screen-by-screen review of victory/defeat and settlement states, then verify the guide, market cards and combat controls on a physical phone and complete Windows Edge PWA install/offline checks when suitable devices are available. Status effects remain deferred because the research repository contains no independently specified rule set.
