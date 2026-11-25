@@ -1,18 +1,19 @@
 # Development Status
 
 Updated: 25 November 2026  
-Task: V5-027 — localize route and trade records across all game screens
+Task: V5-029 — continue responsive and device-specific verification
 Plan: Development Plan v5.0
 
 ## Current state
 
 **Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Latest production code commit:** `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f` from `main`.
-**Latest game-code deployment:** Pages run `45542156190` succeeded for `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f`.
+**Latest production code commit:** `55d22522d3cba7b6c9b5286bdcb195034ab21ae3` from `main`.
+**Latest game-code deployment:** Pages run `45543428008` succeeded for this commit.
 **Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
 **Pre-tuning checkpoint:** `checkpoint/pre-v5-025-2026-11-25` is saved at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.  
 **Pre-localization-boundary checkpoint:** `checkpoint/pre-v5-026-2026-11-25` is saved at `3c463e506829818125c0f497f0da410ee250468f`.  
 **Pre-log-localization checkpoint:** `checkpoint/pre-v5-027-2026-11-25` is saved at `0635af9b4311ef580196797d53da30af1a19eea3`.  
+**Pre-item-copy-order checkpoint:** `checkpoint/pre-v5-028-2026-11-25` is saved at `6758a4fa0a598e3dfab1386b41c9dee7cd412a63`.  
 **Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
 **Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
 
@@ -38,6 +39,7 @@ Plan: Development Plan v5.0
 - The Amber Quarry encounter uses original prototype tuning at 64 HP and 18 damage. A standard Strike plan still wins; repeated Brace actions can defeat the crew, making retreat and recovery reachable through normal play.
 - Indonesian UI localization protects complete route, quest and item prose from word-level substitutions; route selection and buy/sell confirmations are rendered as complete Indonesian notices.
 - Route-selection and buy/sell messages now use the same complete Indonesian wording in the confirmation, field log and Journal. The English route and quest source copy remains intact.
+- Complete UI sentences are translated before standalone catalog names are protected, so Pack instructions can mention an English item name while the actual item name and description remain unchanged.
 - Cache refresh reliability is hardened: a v2 shell cache installs with HTTP-cache reload and successful online requests revalidate, addressing older modules persisting after a new deployment.
 - The first-run guide still opens on a new save, but tapping outside its dialog now closes it, records the choice and releases the page controls. Escape, the close button and Skip Guide remain available.
 - The guide keeps Tab and Shift+Tab within the open dialog and returns focus to the guide trigger after dismissal, including when the user presses Escape.
@@ -63,6 +65,7 @@ Plan: Development Plan v5.0
 - A truncated app-module upload briefly caused the latest production screen to render blank. The full 553-line source was restored, locally validated and checkpointed; Pages run `45541878333` succeeded. The follow-up log fix is deployed in run `45542156190`.
 - Production Cloud Chromium verified the game screen and controls render, route-selection copy is wholly Indonesian in the notice, side log and Journal, purchase and sale confirmations are wholly Indonesian, and English narrative text remains unchanged. No production `game/app.mjs` runtime errors were observed.
 - A final production navigation sweep opened Journey, Town Exchange, Crew, Pack, Journal and Preferences; each rendered its expected screen content and no app script errors were logged.
+- Production verified the translated Pack sentence that mentions Field Tonic while its catalog name and item description remain in English; Pages run `45543428008` succeeded.
 - Production tree retains the original encrypted research vault blob SHA unchanged.
 - Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
 
@@ -72,4 +75,4 @@ Research supports broad patterns for onboarding, hiring and roster management, t
 
 ## Next work
 
-Continue responsive and device-specific behavior checks. The six-tab screen navigation, defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.
+Continue responsive and device-specific behavior checks. The six-tab screen navigation, Pack instruction, defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.

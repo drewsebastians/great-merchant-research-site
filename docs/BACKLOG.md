@@ -41,6 +41,8 @@ Plan: Development Plan v5.0
 - [x] Translate route selection and buy/sell log entries consistently in the notice, field log and Journal.
 - [x] Verify localized route, purchase and sale messages plus intact narrative prose on production after restoring the full app module.
 - [x] Smoke-test Journey, Town Exchange, Crew, Pack, Journal and Preferences navigation and non-empty renders on production.
+- [x] Translate complete UI phrases before protecting catalog name fragments, with rendered regression coverage for the Field Tonic instruction.
+- [x] Verify the Pack instruction is translated in production while its item name and description stay English.
 - [ ] Verify responsive interaction on a physical phone and complete Windows Edge PWA install/offline checks when devices are available.
 
 ## Priority 2 — broader game architecture

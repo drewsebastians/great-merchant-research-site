@@ -1,7 +1,7 @@
 # Development Handoff
 
 Updated: 25 November 2026  
-Next task: V5-028 — complete device-specific responsive and PWA checks when suitable devices are available
+Next task: V5-029 — complete responsive and device-specific verification when suitable devices are available
 
 ## Start here
 
@@ -15,11 +15,12 @@ Next task: V5-028 — complete device-specific responsive and PWA checks when su
 - Development repo: `drewsebastians/great-merchant-research-site`.
 - Research repo is read-only for this project; do not change it.
 - Checkpoint branch: `checkpoint/pre-v5-2026-11-19` → pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.
-- Latest production code commit: `b55fea7555a9f5500eb8b159ae7d36d92a0bba3f`.
-- Latest game-code deploy: Pages run `45542156190` succeeded for this commit.
+- Latest production code commit: `55d22522d3cba7b6c9b5286bdcb195034ab21ae3`.
+- Latest game-code deploy: Pages run `45543428008` succeeded for this commit.
 - Pre-tuning rollback checkpoint: `checkpoint/pre-v5-025-2026-11-25` at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.
 - Pre-localization-boundary checkpoint: `checkpoint/pre-v5-026-2026-11-25` at `3c463e506829818125c0f497f0da410ee250468f`.
 - Pre-log-localization checkpoint: `checkpoint/pre-v5-027-2026-11-25` at `0635af9b4311ef580196797d53da30af1a19eea3`.
+- Pre-item-copy-order checkpoint: `checkpoint/pre-v5-028-2026-11-25` at `6758a4fa0a598e3dfab1386b41c9dee7cd412a63`.
 - `data/vault.json` is encrypted research material. Leave it byte-for-byte unchanged.
 - Public files may contain original game code, prototype tuning and high-level system specifications. Never copy source IDs, source records, private claims, guide text or media.
 
@@ -31,4 +32,4 @@ Tests cover route and quest unlocking, ordered objective progress, entry require
 
 ## Next increment
 
-The screen-by-screen review is recorded in `docs/ui-fidelity-review-v5.md`. Journal now shows quest stages and locked prerequisites; production browser testing confirmed guide dismissal, core navigation, purchasing, keyboard focus containment, Indonesian result screens, reachable defeat, recovery, route switching and ordinary Strike victory. It also confirmed that route and buy/sell messages are fully localized across notices and logs, while route/quest prose stays intact. All six tabs render in production. Continue responsive checks that can be automated; keep physical-phone and Windows Edge PWA verification open until suitable devices are available. Do not invent combat status effects while their rules lack independent support.
+The screen-by-screen review is recorded in `docs/ui-fidelity-review-v5.md`. Journal now shows quest stages and locked prerequisites; production browser testing confirmed guide dismissal, core navigation, purchasing, keyboard focus containment, Indonesian result screens, reachable defeat, recovery, route switching and ordinary Strike victory. It also confirmed that route and buy/sell messages are fully localized across notices and logs, while route/quest prose stays intact. All six tabs render in production. The Field Tonic helper sentence is Indonesian while its catalog name and detail remain English. Continue responsive checks that can be automated; keep physical-phone and Windows Edge PWA verification open until suitable devices are available. Do not invent combat status effects while their rules lack independent support.
