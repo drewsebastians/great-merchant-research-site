@@ -53,6 +53,7 @@ function click(button) {
 test("narrow-screen market controls use larger tap targets and card layout", () => {
   assert.match(gameStyles, /@media\(max-width:430px\)\{\.market-panel/);
   assert.match(gameStyles, /\.trade-actions button\{min-width:44px;min-height:38px/);
+  assert.match(gameStyles, /\.quest-stage\.current/);
   assert.match(gameStyles, /\.battle-vitality/);
 });
 
@@ -63,6 +64,15 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ backdrop: true, dataset: {} });
   assert.equal(savedState().onboardingSeen, true);
   assert.equal(element("#guide-layer").innerHTML, "");
+
+  click({ dataset: { tab: "journal" } });
+  assert.match(element("#game-content").innerHTML, /QUEST JOURNAL/);
+  assert.match(element("#game-content").innerHTML, /The Courier&#39;s Mark/);
+  assert.match(element("#game-content").innerHTML, /Hire a trail scout/);
+  assert.match(element("#game-content").innerHTML, /aria-current="step"/);
+  assert.match(element("#game-content").innerHTML, /The Quarry Ledger/);
+  assert.match(element("#game-content").innerHTML, /COMPLETE THE PREVIOUS ERRAND TO UNLOCK/);
+  click({ dataset: { tab: "journey" } });
 
   assert.match(element("#game-content").innerHTML, /Mosswind Road/);
   assert.match(element("#game-content").innerHTML, /Amber Quarry/);
@@ -102,6 +112,10 @@ test("route board and rendered journey flow select the distinct quarry encounter
   click({ dataset: { action: "return-town" } });
   assert.equal(savedState().phase, "town");
   assert.equal(savedState().lastSettlement.netProceeds, 12);
+  click({ dataset: { tab: "journal" } });
+  assert.match(element("#game-content").innerHTML, /class="quest-status-pill complete">COMPLETED/);
+  assert.match(element("#game-content").innerHTML, /class="quest-status-pill progress">IN PROGRESS/);
+  assert.doesNotMatch(element("#game-content").innerHTML, /COMPLETE THE PREVIOUS ERRAND TO UNLOCK/);
   click({ dataset: { tab: "market" } });
   assert.match(element("#game-content").innerHTML, /Settlement ledger/);
   assert.match(element("#game-content").innerHTML, /NET PROCEEDS/);

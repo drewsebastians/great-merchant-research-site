@@ -1,7 +1,7 @@
-import { ITEMS, PARTY_LIMIT, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute } from "./data.mjs";
+import { ITEMS, PARTY_LIMIT, QUESTS, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute, findQuest } from "./data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
-import { getQuestProgress } from "./quests.mjs";
+import { getQuestProgress, isQuestUnlocked } from "./quests.mjs";
 
 if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {});
@@ -61,6 +61,7 @@ const UI_PHRASES = [
   ["KEYBOARD SHORTCUTS OFF", "PINTASAN PAPAN KETIK MATI"], ["Keys: 1 · 2 · 3", "Tombol: 1 · 2 · 3"],
   ["PREFERENCES", "PREFERENSI"], ["Town Exchange", "Bursa Kota"], ["Journey", "Perjalanan"], ["Crew", "Awak"],
   ["Pack", "Bekal"], ["Journal", "Jurnal"], ["Preferences", "Preferensi"], ["OPEN PACK", "BUKA BEKAL"],
+  ["ACTIVE CONTRACTS", "KONTRAK AKTIF"], ["QUEST JOURNAL", "JURNAL MISI"], ["CURRENT", "SAAT INI"], ["UPCOMING", "BERIKUTNYA"], ["IN PROGRESS", "BERJALAN"], ["DONE", "SELESAI"],
   ["BEFORE YOU LEAVE", "SEBELUM BERANGKAT"], ["Pack for the road", "Siapkan bekal"], ["TRAVEL PARTNER", "REKAN PERJALANAN"],
   ["DAILY BOARD · PROTOTYPE QUOTES", "PAPAN HARGA · NILAI PROTOTIPE"], ["GOOD", "BARANG"], ["BUY", "BELI"], ["SELL", "JUAL"],
   ["MARKS", "MARK"], ["LOCKED", "TERKUNCI"], ["AVAILABLE", "TERSEDIA"], ["COMPLETED", "SELESAI"], ["CLEARED", "DITUNTASKAN"],
@@ -284,8 +285,24 @@ function renderInventory() {
     itemCards + '</div>' +
     (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
 }
+function renderQuestJournal() {
+  const cards = QUESTS.map((quest) => {
+    const progress = getQuestProgress(state, quest.id);
+    const unlocked = isQuestUnlocked(state, quest.id);
+    const status = !unlocked ? "LOCKED" : progress.complete ? "COMPLETED" : progress.completedCount ? "IN PROGRESS" : "AVAILABLE";
+    const statusClass = !unlocked ? "locked" : progress.complete ? "complete" : progress.completedCount ? "progress" : "available";
+    const stages = unlocked ? '<ol class="quest-stage-list">' + progress.stages.map((stage, index) => {
+      const current = !stage.complete && progress.currentStage?.id === stage.id;
+      const stageStatus = stage.complete ? "DONE" : current ? "CURRENT" : "UPCOMING";
+      const stageClass = stage.complete ? "complete" : current ? "current" : "upcoming";
+      return '<li class="quest-stage ' + stageClass + '" ' + (current ? 'aria-current="step"' : "") + '><span class="quest-stage-index">' + (stage.complete ? "✓" : String(index + 1).padStart(2, "0")) + '</span><span class="quest-stage-copy"><strong>' + safe(stage.label) + '</strong><small>' + stageStatus + '</small></span></li>';
+    }).join("") + '</ol>' : '<div class="quest-locked-note"><span>◈</span> COMPLETE THE PREVIOUS ERRAND TO UNLOCK</div>';
+    return '<article class="quest-journal-card ' + statusClass + '"><div class="quest-journal-heading"><div><small>CONTRACT · ' + safe(findRoute(quest.routeId).name.toUpperCase()) + '</small><h3>' + safe(quest.title) + '</h3><p>' + safe(quest.summary) + '</p></div><span class="quest-status-pill ' + statusClass + '">' + status + '</span></div>' + stages + '</article>';
+  }).join("");
+  return '<section class="panel quest-journal-panel"><div class="panel-head"><div><small>QUEST JOURNAL · CURRENT OBJECTIVES</small><h2>Active contracts</h2></div><button type="button" class="text-button" data-tab="journey">VIEW JOURNEY →</button></div><div class="quest-journal-list">' + cards + '</div></section>';
+}
 function renderJournal() {
-  return renderSettlement() + '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' +
+  return renderSettlement() + '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' + renderQuestJournal() +
     '<section class="panel journal-panel"><div class="panel-head"><div><small>RECENT ENTRIES</small><h2>Ledger</h2></div><span class="status-pill">' + state.log.length + ' NOTES</span></div><div class="journal-list">' +
     state.log.map((entry, index) => '<article><span class="journal-index">' + String(state.log.length - index).padStart(2, "0") + '</span><i></i><p>' + safe(entry) + '</p></article>').join("") + '</div></section>';
 }

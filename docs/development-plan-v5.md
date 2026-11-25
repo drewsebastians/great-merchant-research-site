@@ -42,6 +42,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
 - A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
 - Saved interface language choice for English/Indonesian common labels and an independent toggle for combat number shortcuts.
+- A Journal quest board that shows each unlocked contract, ordered objective states and prerequisite-locked errands.
 - An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
 - A data-driven quest catalog with stable IDs, entry conditions, ordered objectives, one-time completion rewards, prerequisites and unlocks; the first errand's objective counter and quarry gate read from this catalog.
 - A content-validation pass for item/route/quest/recipe IDs, references, route and quest rewards, prerequisite cycles, map positions, encounter data and referenced art files.
@@ -98,6 +99,7 @@ The first slice is complete when a new player can:
 19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
 20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
 21. Install the game from the production URL as an Edge PWA, load the saved app shell offline after the initial online cache fill, and retain the same origin-scoped local save.
+22. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
 
 ## Release guardrails
 
