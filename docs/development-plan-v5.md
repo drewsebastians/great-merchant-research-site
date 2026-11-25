@@ -99,6 +99,7 @@ The first slice is complete when a new player can:
 19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
 20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
 21. Install the game from the production URL as an Edge PWA, load the saved app shell offline after the initial online cache fill, and retain the same origin-scoped local save.
+22. After a new deployment, the updated game shell and modules load on an ordinary online visit without requiring a cache-busting URL; offline launch continues to use the saved shell.
 22. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
 
 ## Release guardrails

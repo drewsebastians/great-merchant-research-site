@@ -1,6 +1,6 @@
 # Development Backlog
 
-Last updated: 19 November 2026  
+Last updated: 25 November 2026  
 Plan: Development Plan v5.0
 
 ## Priority 0 — first playable loop
@@ -18,6 +18,8 @@ Plan: Development Plan v5.0
 ## Priority 1 — next playable improvements
 
 - [x] Review each screen against confirmed high-level interface patterns and implement the highest-impact responsive gaps while keeping all artwork original: visible errand progress, combat vitality and narrow-phone market cards.
+- [x] Add a data-driven quest board to Journal with ordered stage states, prerequisite locks and a Journey shortcut.
+- [x] Verify guide outside-tap dismissal and screen navigation on the live production page in Cloud Chromium.
 - [ ] Verify the guide, mobile market cards and combat controls on a physical phone after production deploy.
 - [x] Add a second route with a distinct encounter and an optional route choice.
 - [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
@@ -33,6 +35,7 @@ Plan: Development Plan v5.0
 - [x] Add a quest and progression schema with entry conditions, ordered objectives, one-time rewards and unlocks; connect the first errand and quarry gate.
 - [x] Compare static PWA, Tauri and Electron options; select and document the PWA path for the current static game.
 - [x] Add install metadata, original Windows app icons, and offline app-shell caching with a tested network fallback.
+- [x] Revalidate deployed files through the service worker, version the shell cache and test the offline fallback after the refresh change.
 - [ ] Verify PWA install and offline launch on Windows Edge after the online cache fill.
 - [x] Add versioned save migrations for route progress, onboarding and formation preferences.
 - [ ] Add combat status effects only when their rules are independently specified and tested.

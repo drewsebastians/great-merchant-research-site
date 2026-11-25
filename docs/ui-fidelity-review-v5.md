@@ -34,7 +34,9 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - `node --test tests/*.test.mjs`: 34/34 pass.
 - `node scripts/validate-game-content.mjs`: catalogs and seven scene/portrait paths pass.
 - Responsive CSS is checked at 1160px, 760px and 430px breakpoints. Actual device rendering still needs a device-level review.
+- Live production smoke check confirms that tapping outside the first-run guide closes it and that Crew navigation responds afterward.
+- Live Journal content initially appeared only after a cache-busted reload, revealing that an existing browser HTTP cache could keep an older app module after deployment. The service worker now uses a versioned shell cache, reloads shell requests on install and revalidates online files; after deployment, the normal production URL rendered the current Journal on reload.
 
 ## Next review target
 
-Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone. Verify PWA installation and offline launch in Edge when an appropriate Windows device is available.
+Continue narrow-screen and keyboard interaction checks in Cloud Chromium. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.
