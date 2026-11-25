@@ -21,8 +21,8 @@
       <div class="topbar-tools">
         <span class="save-state" id="save-state"><span class="save-dot"></span> SAVED HERE</span>
         <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small data-i18n="currency.marks">MARKS</small></span>
-        <button class="guide-replay" type="button" data-action="onboarding-replay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b data-i18n="guide.how">HOW TO PLAY</b></button>
-        <button class="icon-button" type="button" data-action="reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
+        <button class="guide-replay" type="button" data-action="onboarding-replay" data-i18n-title="action.guideReplay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b data-i18n="guide.how">HOW TO PLAY</b></button>
+        <button class="icon-button" type="button" data-action="reset" data-i18n-aria="action.reset" data-i18n-title="action.reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
       </div>
     </header>
     <main class="game-layout">
@@ -40,7 +40,7 @@
         <div class="page-heading"><div><div class="eyebrow" id="screen-eyebrow">FIELD NOTES · CHAPTER 01</div><h1 id="screen-title">A road opens</h1></div><div class="screen-status" id="phase-label"><span class="status-pip"></span> HEARTHCROSS</div></div>
         <div id="notice" class="notice" role="status" aria-live="polite"></div>
         <div id="game-content" aria-live="polite"></div>
-        <footer class="main-footer"><span>WAYFARER'S LEDGER · V5.0</span><span>Prototype balance · original artwork · browser save</span></footer>
+        <footer class="main-footer"><span>WAYFARER'S LEDGER · V5.0</span><span data-i18n="footer.brandline">Prototype balance · original artwork · browser save</span></footer>
       </section>
       <aside class="intel-panel" aria-label="Journey status">
         <section class="side-section objective-card">
@@ -52,7 +52,7 @@
         </section>
         <section class="side-section crew-section"><div class="side-heading"><span data-i18n="crew.yours">YOUR CREW</span><small id="crew-count">1 / 3</small></div><div id="crew-summary" class="crew-list"></div></section>
         <section class="side-section log-section"><div class="side-heading"><span data-i18n="log.field">FIELD LOG</span><button type="button" data-tab="journal" class="text-button" data-i18n="action.open">OPEN</button></div><div id="log-summary" class="log-list"></div></section>
-        <div class="side-foot"><span class="seal-icon">◈</span><span>Progress saves on this device.<br>Prototype values are not source-game balance.</span></div>
+        <div class="side-foot"><span class="seal-icon">◈</span><span><span data-i18n="footer.save">Progress saves on this device.</span><br><span data-i18n="footer.scope">Prototype values are not source-game balance.</span></span></div>
       </aside>
     </main>
     <div id="guide-layer"></div>

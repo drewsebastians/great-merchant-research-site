@@ -29,13 +29,17 @@ const STATIC_LABELS = {
     "local.journey": "LOCAL JOURNEY", "town.name": "HEARTHCROSS", "currency.marks": "MARKS", "guide.how": "HOW TO PLAY",
     "ledger.yours": "YOUR LEDGER", "tab.journey": "Journey", "tab.market": "Town Exchange", "tab.crew": "Crew", "tab.pack": "Pack",
     "tab.journal": "Journal", "tab.preferences": "Preferences", "day.label": "DAY", "prototype.label": "ORIGINAL PROTOTYPE",
-    "errand.active": "ACTIVE ERRAND", "crew.yours": "YOUR CREW", "log.field": "FIELD LOG", "action.open": "OPEN"
+    "errand.active": "ACTIVE ERRAND", "crew.yours": "YOUR CREW", "log.field": "FIELD LOG", "action.open": "OPEN",
+    "action.reset": "Start a new journey", "action.guideReplay": "Replay the quick guide", "footer.brandline": "Prototype balance · original artwork · browser save",
+    "footer.save": "Progress saves on this device.", "footer.scope": "Prototype values are not source-game balance."
   },
   id: {
     "local.journey": "JURNAL LOKAL", "town.name": "HEARTHCROSS", "currency.marks": "MARK", "guide.how": "CARA BERMAIN",
     "ledger.yours": "BUKU PERJALANAN", "tab.journey": "Perjalanan", "tab.market": "Bursa Kota", "tab.crew": "Awak", "tab.pack": "Bekal",
     "tab.journal": "Jurnal", "tab.preferences": "Preferensi", "day.label": "HARI", "prototype.label": "PROTOTIPE ORISINAL",
-    "errand.active": "TUGAS AKTIF", "crew.yours": "AWAKMU", "log.field": "CATATAN LAPANGAN", "action.open": "BUKA"
+    "errand.active": "TUGAS AKTIF", "crew.yours": "AWAKMU", "log.field": "CATATAN LAPANGAN", "action.open": "BUKA",
+    "action.reset": "Mulai perjalanan baru", "action.guideReplay": "Buka ulang panduan singkat", "footer.brandline": "Keseimbangan prototipe · ilustrasi orisinal · simpanan browser",
+    "footer.save": "Progres tersimpan di perangkat ini.", "footer.scope": "Nilai prototipe bukan acuan keseimbangan game sumber."
   }
 };
 const UI_PHRASES = [
@@ -45,6 +49,7 @@ const UI_PHRASES = [
   ["FIELD NOTES · CHAPTER 01", "CATATAN LAPANGAN · BAB 01"], ["FIELD NOTES · DAY ", "CATATAN LAPANGAN · HARI "],
   ["Progress saves on this device.", "Progres tersimpan di perangkat ini."],
   ["Prototype balance · original artwork · browser save", "Keseimbangan prototipe · ilustrasi orisinal · simpanan browser"],
+  ["Prototype values are not source-game balance.", "Nilai prototipe bukan acuan keseimbangan game sumber."],
   ["HOME BASE · DAY ", "MARKAS · HARI "], ["NORTH GATE", "GERBANG UTARA"], ["MARKET WARD", "KAWASAN PASAR"], ["ISSUE AN ORDER", "BERI PERINTAH"],
   ["ROUTES CLEARED", "RUTE SELESAI"], ["ROUTE CLEARED", "RUTE SELESAI"], ["CREW READY", "AWAK SIAP"], ["CREW NEEDED", "AWAK DIPERLUKAN"], ["OPEN", "TERBUKA"],
   ["Travel partner", "Rekan perjalanan"], ["VIEW YOUR CREW", "LIHAT AWAKMU"], ["VISIT THE HIRING BOARD", "KUNJUNGI PAPAN REKRUTMEN"],
@@ -60,6 +65,27 @@ const UI_PHRASES = [
   ["The road is still active. Using a tonic spends your crew order and the raiders will respond.", "Perjalanan masih berlangsung. Menggunakan tonik memakai giliran awak dan para perampok akan membalas."],
   ["ROUTE INTERRUPTED", "PERJALANAN TERHENTI"], ["RECOVER IN HEARTHCROSS", "PULIHKAN DI HEARTHCROSS"],
   ["ERRAND DELIVERED", "TUGAS DIANTARKAN"], ["PREPARE YOUR CREW", "SIAPKAN AWAKMU"],
+  ["GET READY", "SIAPKAN DIRI"], ["PICK A ROAD", "PILIH JALUR"], ["DIRECT THE CREW", "ATUR AWAK"], ["CLOSE THE LEDGER", "TUTUP PEMBUKUAN"],
+  ["FIELD GUIDE", "PANDUAN SINGKAT"], ["Start from Hearthcross.", "Mulai dari Hearthcross."], ["Choose a route.", "Pilih rute."],
+  ["Choose a target, then act.", "Pilih sasaran, lalu bertindak."], ["Bring your gains home.", "Bawa pulang hasilmu."],
+  ["Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip.", "Rekrut penjelajah jalur dari Awak, periksa bekalmu, lalu beli perbekalan di Bursa Kota. Setiap perjalanan memerlukan satu ransum."],
+  ["Select an open card on the travel board. Clear the Courier&#39;s Mark on Mosswind Road to open Amber Quarry.", "Pilih kartu yang tersedia di papan rute. Selesaikan Courier&#39;s Mark di Mosswind Road untuk membuka Amber Quarry."],
+  ["Front position sets who opens. The rear line softens incoming damage. Strike builds focus, Brace protects the front, and Wayfarer&#39;s Arc spends two focus.", "Posisi depan menentukan siapa yang memulai giliran. Barisan belakang mengurangi serangan yang diterima. Serang menambah fokus, Bertahan melindungi posisi depan, dan Wayfarer&#39;s Arc memakai dua fokus."],
+  ["After victory, return to Hearthcross to recover. Sell trade cargo, prepare again and continue. Your journey saves on this device.", "Setelah menang, kembali ke Hearthcross untuk memulihkan awak. Jual muatan dagang, bersiaplah, lalu lanjutkan perjalanan. Perjalananmu tersimpan di perangkat ini."],
+  ["CLICK OUTSIDE TO CLOSE · REPLAY FROM THE TOP BAR", "KLIK DI LUAR UNTUK MENUTUP · BUKA ULANG DARI BILAH ATAS"],
+  ["Close quick guide", "Tutup panduan singkat"], ["Replay the quick guide", "Buka ulang panduan singkat"], ["SKIP GUIDE", "LEWATI PANDUAN"], ["CONTINUE", "LANJUTKAN"], ["BACK", "KEMBALI"], ["FINISH GUIDE", "SELESAIKAN PANDUAN"],
+  ["Illustrated encounter on ", "Pertarungan di "], [" · TURN ", " · GILIRAN "],
+  ["DOWN", "TUMBANG"], ["TARGET", "SASARAN"], ["SELECT", "PILIH"], ["VITALITY", "DAYA TAHAN"], ["ENCOUNTER", "PERTARUNGAN"],
+  ["Hold the road.", "Pertahankan jalan."], ["Choose a target, then strike, brace or spend focus on a technique.", "Pilih sasaran, lalu serang, bertahan, atau gunakan fokus untuk mengaktifkan teknik."],
+  ["OPPONENTS · SELECT A TARGET", "LAWAN · PILIH SASARAN"], ["FORMATION", "FORMASI"], ["WEAPON · ", "SENJATA · "], ["STRIKE", "SERANG"],
+  ["Strike damage", "daya serang"], [" leads; the rear line reduces incoming damage by 2.", " memimpin; barisan belakang mengurangi kerusakan yang diterima sebesar 2."],
+  ["Tarin opens · Mara follows", "Tarin memulai · Mara mengikuti"], ["Mara leads · Tarin follows", "Mara memimpin · Tarin mengikuti"],
+  ["Deal ", "Berikan "], [" damage · gain ", " kerusakan · dapatkan "], ["Soften a hit · scout follows", "Tahan serangan · penjelajah menyusul"],
+  ["Area technique · costs 2 focus", "Teknik area · gunakan 2 fokus"], ["USE FIELD TONIC", "GUNAKAN FIELD TONIC"], [" IN PACK", " DI BEKAL"],
+  ["1 ration used", "1 ransum digunakan"], ["reward currency", "mata uang hadiah"], ["full resale value", "nilai jual kembali penuh"],
+  [" M remaining", " M tersisa"], ["reward + sold cargo − ration", "hadiah + muatan terjual − ransum"],
+  ["Cargo value excludes quest items. Only cargo sold from this trip changes the net proceeds.", "Nilai muatan tidak mencakup barang misi. Hanya muatan dari perjalanan ini yang terjual akan mengubah hasil bersih."],
+  [" marks", " mark"], ["reputation", "reputasi"], ["focus", "fokus"], ["FOCUS", "FOKUS"], ["REAR", "BELAKANG"],
   ["HEARTHCROSS · MARKET WARD", "HEARTHCROSS · KAWASAN PASAR"], ["Good routes begin with good terms.", "Perjalanan baik dimulai dengan transaksi yang tepat."],
   ["Buy the supplies you need. Sell trade goods after your return.", "Beli perbekalan yang kamu butuhkan. Jual barang dagangan setelah kembali."],
   ["LOCAL<br>EXCHANGE", "BURSA<br>LOKAL"], ["Original prototype quotes; not copied from any live game.", "Harga prototipe orisinal; tidak disalin dari game lain."],
@@ -90,7 +116,7 @@ const UI_PHRASES = [
   ["Make for the caravan", "Produksi untuk karavan"], ["Settlement ledger", "Ringkasan hasil perjalanan"],
   ["Choose today&#39;s route", "Pilih rute hari ini"], ["SELECTED ROUTE", "RUTE PILIHAN"], ["TRAVEL BOARD", "PAPAN RUTE"],
   ["FIELD NOTES", "CATATAN LAPANGAN"], ["ACTIVE FORMATION", "FORMASI AKTIF"], ["Road crew", "Awak perjalanan"],
-  ["Available goods", "Barang tersedia"], ["YOUR ORDER", "PERINTAHMU"], ["OPPONENTS · SELECT A TARGET", "LAWAN · PILIH TARGET"],
+  ["Available goods", "Barang tersedia"], ["YOUR ORDER", "PERINTAHMU"],
   ["TRIP COST", "BIAYA PERJALANAN"], ["ROUTE REWARD", "HADIAH RUTE"], ["CARGO VALUE", "NILAI MUATAN"],
   ["CARGO SOLD", "MUATAN TERJUAL"], ["NET PROCEEDS", "HASIL BERSIH"], ["ORIGINAL RECIPE", "RESEP ORISINAL"],
   ["Sell value: ", "Nilai jual: "], ["Materials in pack: ", "Bahan di bekal: "], ["Make for the caravan", "Produksi untuk karavan"],
@@ -101,7 +127,7 @@ const UI_PHRASES = [
   ["KEYBOARD SHORTCUTS OFF", "PINTASAN PAPAN KETIK MATI"], ["Keys: 1 · 2 · 3", "Tombol: 1 · 2 · 3"],
   ["PREFERENCES", "PREFERENSI"], ["Town Exchange", "Bursa Kota"], ["Journey", "Perjalanan"], ["Crew", "Awak"],
   ["Pack", "Bekal"], ["Journal", "Jurnal"], ["Preferences", "Preferensi"], ["OPEN PACK", "BUKA BEKAL"],
-  ["ACTIVE CONTRACTS", "KONTRAK AKTIF"], ["QUEST JOURNAL", "JURNAL MISI"], ["CURRENT", "SAAT INI"], ["UPCOMING", "BERIKUTNYA"], ["IN PROGRESS", "BERJALAN"], ["DONE", "SELESAI"],
+  ["ACTIVE ERRAND", "TUGAS AKTIF"], ["Active errand", "Tugas aktif"], ["ACTIVE CONTRACTS", "KONTRAK AKTIF"], ["QUEST JOURNAL", "JURNAL MISI"], ["CURRENT", "SAAT INI"], ["UPCOMING", "BERIKUTNYA"], ["IN PROGRESS", "BERJALAN"], ["DONE", "SELESAI"],
   ["BEFORE YOU LEAVE", "SEBELUM BERANGKAT"], ["Pack for the road", "Siapkan bekal"], ["TRAVEL PARTNER", "REKAN PERJALANAN"],
   ["DAILY BOARD · PROTOTYPE QUOTES", "PAPAN HARGA · NILAI PROTOTIPE"], ["GOOD", "BARANG"], ["BUY", "BELI"], ["SELL", "JUAL"],
   ["MARKS", "MARK"], ["LOCKED", "TERKUNCI"], ["AVAILABLE", "TERSEDIA"], ["COMPLETED", "SELESAI"], ["CLEARED", "DITUNTASKAN"],
@@ -131,6 +157,14 @@ function applyStaticLabels() {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const label = labels[element.dataset.i18n];
     if (label) element.textContent = label;
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+    const label = labels[element.dataset.i18nAria];
+    if (label) element.setAttribute("aria-label", label);
+  });
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+    const label = labels[element.dataset.i18nTitle];
+    if (label) element.setAttribute("title", label);
   });
 }
 
@@ -396,6 +430,7 @@ function renderGuide() {
   guideLayer.innerHTML = '<div class="guide-backdrop"><section class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guide-title" aria-describedby="guide-copy"><button type="button" class="guide-close" data-action="onboarding-close" aria-label="Close quick guide">×</button><div class="guide-emblem"><span>W</span><i>✦</i></div><small class="guide-kicker">FIELD GUIDE · ' + step.kicker + '</small><h2 id="guide-title">' + safe(step.title) + '</h2><p id="guide-copy">' + safe(step.copy) + '</p><div class="guide-progress" aria-label="Step ' + (guideStep + 1) + ' of ' + GUIDE_STEPS.length + '">' + GUIDE_STEPS.map((_, index) => '<i class="' + (index === guideStep ? "current" : index < guideStep ? "passed" : "") + '"></i>').join("") + '<span>' + (guideStep + 1) + ' / ' + GUIDE_STEPS.length + '</span></div><div class="guide-actions">' +
     (guideStep > 0 ? '<button type="button" class="guide-back-button" data-action="onboarding-back">← BACK</button>' : '<button type="button" class="guide-back-button" data-action="onboarding-close">SKIP GUIDE</button>') +
     '<button type="button" class="guide-next" data-action="' + (last ? "onboarding-close" : "onboarding-next") + '" data-guide-next>' + (last ? "FINISH GUIDE" : "CONTINUE") + '<span>→</span></button></div><div class="guide-note">CLICK OUTSIDE TO CLOSE · REPLAY FROM THE TOP BAR</div></section></div>';
+  guideLayer.innerHTML = localizeUI(guideLayer.innerHTML);
   const next = guideLayer.querySelector?.("[data-guide-next]");
   next?.focus();
 }

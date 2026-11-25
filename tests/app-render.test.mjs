@@ -18,11 +18,21 @@ const navI18n = { journey: "tab.journey", market: "tab.market", roster: "tab.cre
 const navButtons = ["journey", "market", "roster", "inventory", "journal", "preferences"].map((tab) => ({
   dataset: { tab, i18n: navI18n[tab] }, textContent: tab, disabled: false, classList: { toggle() {} }, setAttribute() {}
 }));
+const shellLabels = ["footer.save", "footer.scope", "footer.brandline"].map((key) => ({
+  dataset: { i18n: key }, textContent: "", setAttribute(name, value) { this[name] = value; }
+}));
+const resetControl = { dataset: { i18nAria: "action.reset", i18nTitle: "action.reset" }, setAttribute(name, value) { this[name] = value; } };
+const guideReplayControl = { dataset: { i18nTitle: "action.guideReplay" }, setAttribute(name, value) { this[name] = value; } };
 globalThis.document = {
   documentElement: { lang: "en" },
   activeElement: null,
   querySelector: element,
-  querySelectorAll: () => navButtons,
+  querySelectorAll(selector) {
+    if (selector === "[data-i18n]") return [...navButtons, ...shellLabels];
+    if (selector === "[data-i18n-aria]") return [resetControl];
+    if (selector === "[data-i18n-title]") return [resetControl, guideReplayControl];
+    return navButtons;
+  },
   addEventListener(type, handler) { (type === "click" ? clickHandlers : keyHandlers).push(handler); },
   body: { dataset: {} }
 };
@@ -187,6 +197,11 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.equal(element("#screen-title").textContent, "Bahasa dan kontrol");
   assert.equal(navButtons[0].textContent, "Perjalanan");
   assert.equal(navButtons[5].textContent, "Preferensi");
+  assert.equal(shellLabels[0].textContent, "Progres tersimpan di perangkat ini.");
+  assert.equal(shellLabels[1].textContent, "Nilai prototipe bukan acuan keseimbangan game sumber.");
+  assert.equal(resetControl["aria-label"], "Mulai perjalanan baru");
+  assert.equal(resetControl.title, "Mulai perjalanan baru");
+  assert.equal(guideReplayControl.title, "Buka ulang panduan singkat");
   assert.match(element("#game-content").innerHTML, /Pintasan angka untuk pertempuran/);
   assert.match(element("#game-content").innerHTML, /Atur perjalananmu\./);
   assert.match(element("#game-content").innerHTML, /PENGATURAN PEMAIN/);
@@ -204,6 +219,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(indonesianCrew, /Aturan prototipe: anggota di posisi depan menerima serangan pertama dan memulai giliran awak\./);
   assert.match(indonesianCrew, /TERSEDIA UNTUK DIREKRUT/);
   assert.match(indonesianCrew, /SUDAH DI AWAK/);
+  assert.match(indonesianCrew, /\+3 daya serang/);
+  assert.match(indonesianCrew, /22 mark/);
   assert.doesNotMatch(indonesianCrew, /HIRING BOARD|Set the front member|opens the crew turn|terbukas the crew turn|AVAILABLE FOR HIRE|HIRE SCOUT/);
   click({ dataset: { tab: "preferences" } });
   click({ dataset: { action: "toggle-shortcuts" } });
@@ -229,6 +246,8 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(indonesianPack, /BEKALMU/);
   assert.match(indonesianPack, /0 RANSUM/);
   assert.match(indonesianPack, /A balanced field blade\. Adds 3 damage to Mara&#39;s Strike while equipped\./);
+  assert.match(indonesianPack, />GUNAKAN<\/button>/);
+  assert.match(indonesianPack, />MISI<\/span>/);
   click({ dataset: { tab: "journal" } });
   const indonesianJournal = element("#game-content").innerHTML;
   assert.equal(element("#screen-eyebrow").textContent, "CATATAN LAPANGAN · BUKU PERJALANAN");
@@ -247,6 +266,11 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(element("#game-content").innerHTML, /1 di bekal · 1 diperlukan/);
   click({ dataset: { action: "start" } });
   assert.equal(savedState().phase, "battle");
+  const indonesianBattle = element("#game-content").innerHTML;
+  assert.match(indonesianBattle, /Pertarungan di (?:Mosswind Road|Amber Quarry)/);
+  assert.match(indonesianBattle, /LAWAN · PILIH SASARAN/);
+  assert.match(indonesianBattle, /Pilih sasaran, lalu serang, bertahan/);
+  assert.match(indonesianBattle, /Berikan 17 kerusakan · dapatkan 1 fokus/);
   const turnBeforeShortcut = savedState().battle.turn;
   let keyPrevented = false;
   keyHandlers.at(-1)({ key: "1", preventDefault() { keyPrevented = true; } });
@@ -259,4 +283,9 @@ test("route board and rendered journey flow select the distinct quarry encounter
   keyHandlers.at(-1)({ key: "1", preventDefault() { keyPrevented = true; } });
   assert.equal(keyPrevented, true);
   assert.equal(savedState().battle.turn, turnBeforeShortcut + 1);
+  click({ dataset: { action: "onboarding-replay" } });
+  assert.match(element("#guide-layer").innerHTML, /PANDUAN SINGKAT · 01 · SIAPKAN DIRI/);
+  assert.match(element("#guide-layer").innerHTML, /Mulai dari Hearthcross\./);
+  assert.match(element("#guide-layer").innerHTML, /LEWATI PANDUAN/);
+  click({ dataset: { action: "onboarding-close" } });
 });
