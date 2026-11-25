@@ -216,7 +216,7 @@ function renderSide() {
   $("#day-count").textContent = String(state.day).padStart(2, "0");
   $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
   $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
-  $("#log-summary").innerHTML = localizeUI(state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(entry) + '</span></div>').join(""));
+  $("#log-summary").innerHTML = state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(localizeNotice(entry)) + '</span></div>').join("");
   const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
   const questProgress = getQuestProgress(state, route.questId);
   const quest = questProgress?.quest;
@@ -340,7 +340,7 @@ function renderVictory() {
   }).join("");
   return '<section class="result-card victory-card"><div class="result-emblem">✓</div><small>ROUTE CLEARED · REWARD SECURED</small><h2>' + safe(route.victoryTitle) + '</h2><p>' + safe(route.victoryCopy) + '</p><div class="reward-row"><span><i>＋</i>' + route.reward.coin + ' marks</span>' + cargo + '<span><i>✦</i>' + route.reward.reputation + ' reputation</span></div>' +
     '<button class="primary-button" type="button" data-action="return-town"><span>RETURN TO HEARTHCROSS</span><b>→</b></button></section><section class="panel result-notes"><div class="panel-head"><div><small>FIELD NOTES</small><h2>Close the errand</h2></div><span class="round-seal">01</span></div><p>Visit the Town Exchange to sell the recovered cargo, or review the crew and pack before another journey.</p><div class="mini-log">' +
-    state.log.slice(0, 2).map((entry) => '<span>· ' + safe(entry) + '</span>').join("") + '</div></section>';
+    state.log.slice(0, 2).map((entry) => '<span>· ' + safe(localizeNotice(entry)) + '</span>').join("") + '</div></section>';
 }
 function renderDefeat() {
   const route = findRoute(state.activeRoute);
@@ -415,7 +415,7 @@ function renderQuestJournal() {
 function renderJournal() {
   return renderSettlement() + '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' + renderQuestJournal() +
     '<section class="panel journal-panel"><div class="panel-head"><div><small>RECENT ENTRIES</small><h2>Ledger</h2></div><span class="status-pill">' + state.log.length + ' NOTES</span></div><div class="journal-list">' +
-    state.log.map((entry, index) => '<article><span class="journal-index">' + String(state.log.length - index).padStart(2, "0") + '</span><i></i><p>' + safe(entry) + '</p></article>').join("") + '</div></section>';
+    state.log.map((entry, index) => '<article><span class="journal-index">' + String(state.log.length - index).padStart(2, "0") + '</span><i></i><p>' + safe(localizeNotice(entry)) + '</p></article>').join("") + '</div></section>';
 }
 function renderSettlement() {
   const ledger = state.lastSettlement;
