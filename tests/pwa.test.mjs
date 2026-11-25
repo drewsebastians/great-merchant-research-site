@@ -29,9 +29,12 @@ test("service worker precaches the app shell and serves its saved page while off
   const listeners = new Map();
   const records = new Map();
   let online = true;
+  let observedFetchCacheMode;
+  let observedShellCacheModes = [];
   const cache = {
     async addAll(urls) {
-      for (const url of urls) records.set(url, new Response("cached:" + url));
+      observedShellCacheModes = urls.map((request) => request.cache);
+      for (const request of urls) records.set(request.url, new Response("cached:" + request.url));
     },
     async match(request, options = {}) {
       const url = typeof request === "string" ? request : request.url;
@@ -48,11 +51,14 @@ test("service worker precaches the app shell and serves its saved page while off
     async put(request, response) { records.set(typeof request === "string" ? request : request.url, response); }
   };
   const cacheNames = new Set();
+  cacheNames.add("wayfarers-ledger-shell-v1");
   const context = {
     URL,
+    Request,
     Response,
-    fetch: async (request) => {
+    fetch: async (request, options = {}) => {
       if (!online) throw new Error("offline");
+      observedFetchCacheMode = options.cache;
       return new Response("network:" + request.url);
     },
     caches: {
@@ -73,6 +79,12 @@ test("service worker precaches the app shell and serves its saved page while off
   listeners.get("install")({ waitUntil(promise) { installPromise = promise; } });
   await installPromise;
   assert.equal(records.size, appShell.length);
+  assert.ok(observedShellCacheModes.every((mode) => mode === "reload"), "new app-shell files bypass the browser HTTP cache");
+
+  let activatePromise;
+  listeners.get("activate")({ waitUntil(promise) { activatePromise = promise; } });
+  await activatePromise;
+  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v2"]);
 
   let onlineResponse;
   listeners.get("fetch")({
@@ -80,6 +92,7 @@ test("service worker precaches the app shell and serves its saved page while off
     respondWith(promise) { onlineResponse = promise; }
   });
   assert.match(await (await onlineResponse).text(), /network:.*styles\.css/);
+  assert.equal(observedFetchCacheMode, "no-cache", "online files revalidate against the deployed site");
   online = false;
 
   let responsePromise;

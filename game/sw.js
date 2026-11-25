@@ -1,4 +1,4 @@
-const CACHE_NAME = "wayfarers-ledger-shell-v1";
+const CACHE_NAME = "wayfarers-ledger-shell-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -27,7 +27,8 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     const shellUrls = APP_SHELL.map((asset) => new URL(asset, self.registration.scope).href);
-    await cache.addAll(shellUrls);
+    // Install the deployed files instead of reusing stale browser HTTP-cache copies.
+    await cache.addAll(shellUrls.map((url) => new Request(url, { cache: "reload" })));
     await self.skipWaiting();
   })());
 });
@@ -51,7 +52,8 @@ self.addEventListener("fetch", (event) => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     try {
-      const response = await fetch(request);
+      // Revalidate online requests so existing installs pick up each deployment.
+      const response = await fetch(request, { cache: "no-cache" });
       if (response.ok) await cache.put(request, response.clone());
       return response;
     } catch {
