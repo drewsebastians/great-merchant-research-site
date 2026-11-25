@@ -243,6 +243,7 @@ test("route board and rendered journey flow select the distinct quarry encounter
   const indonesianPack = element("#game-content").innerHTML;
   assert.equal(element("#screen-eyebrow").textContent, "PERLENGKAPAN JALAN · BEKAL");
   assert.match(indonesianPack, /Setiap barang punya kegunaan\./);
+  assert.match(indonesianPack, /Gunakan Field Tonic untuk memulihkan anggota awak yang paling membutuhkan\./);
   assert.match(indonesianPack, /BEKALMU/);
   assert.match(indonesianPack, /0 RANSUM/);
   assert.match(indonesianPack, /A balanced field blade\. Adds 3 damage to Mara&#39;s Strike while equipped\./);

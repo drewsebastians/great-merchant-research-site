@@ -139,6 +139,7 @@ const UI_PHRASES = [
   ["SELECTED", "DIPILIH"], ["SET OUT AGAIN", "BERANGKAT LAGI"], ["BEGIN THE JOURNEY", "MULAI PERJALANAN"], ["MAKE", "BUAT"],
   ["Strike", "Serang"], ["Brace", "Bertahan"], ["TURN", "GILIRAN"], ["ACTIVE", "AKTIF"], ["RETURN TO HEARTHCROSS", "KEMBALI KE HEARTHCROSS"]
 ].sort((a, b) => b[0].length - a[0].length);
+const COMPLETE_UI_PHRASES = UI_PHRASES.filter(([english]) => english.length >= 45);
 const PRESERVED_GAME_COPY = [
   ...ROUTES.flatMap((route) => [route.name, route.title, route.summary, route.terrain, route.encounter, route.foeLabel, route.coordinate, route.opening, route.victoryTitle, route.victoryCopy, route.recovery]),
   ...QUESTS.flatMap((quest) => [quest.title, quest.summary, ...quest.stages.map((stage) => stage.label)]),
@@ -160,6 +161,7 @@ function localizeUI(value) {
     preservedSegments.push(segment);
     return marker;
   });
+  for (const [english, indonesian] of COMPLETE_UI_PHRASES) localized = localized.replaceAll(english, indonesian);
   for (const segment of PRESERVED_GAME_COPY) preserve(segment);
   for (const [english, indonesian] of UI_PHRASES) {
     const escaped = english.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
