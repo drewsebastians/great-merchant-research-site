@@ -17,6 +17,7 @@ const guideLayer = document.querySelector("#guide-layer");
 const $ = (selector) => document.querySelector(selector);
 let guideOpen = !state.onboardingSeen;
 let guideStep = 0;
+let guideTrigger = null;
 const GUIDE_STEPS = [
   { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
   { kicker: "02 · PICK A ROAD", title: "Choose a route.", copy: "Select an open card on the travel board. Clear the Courier's Mark on Mosswind Road to open Amber Quarry." },
@@ -322,6 +323,15 @@ function renderPreferences() {
     '<div class="preference-row"><div class="preference-copy"><small>COMBAT INPUT</small><h3>Combat number shortcuts</h3><p>Use 1, 2 and 3 during combat to issue orders. You can still choose an order with the on-screen buttons.</p></div><button type="button" class="preference-toggle ' + (state.combatShortcutsEnabled ? "enabled" : "") + '" data-action="toggle-shortcuts" aria-pressed="' + state.combatShortcutsEnabled + '">' + (state.combatShortcutsEnabled ? "ON" : "OFF") + '</button></div>' +
     '<p class="preferences-note">Preferences save with this local journey and stay on this device.</p></section>';
 }
+function closeGuide() {
+  guideOpen = false;
+  guideStep = 0;
+  state = { ...state, onboardingSeen: true };
+  render();
+  const focusTarget = guideTrigger || $(".guide-replay");
+  guideTrigger = null;
+  focusTarget?.focus?.();
+}
 function renderGuide() {
   const topbar = document.querySelector(".topbar");
   const gameLayout = document.querySelector(".game-layout");
@@ -361,10 +371,7 @@ document.addEventListener("click", (event) => {
   if (guideOpen && !guideAction) {
     const backdrop = event.target.closest(".guide-backdrop");
     if (backdrop && !event.target.closest(".guide-dialog")) {
-      guideOpen = false;
-      guideStep = 0;
-      state = { ...state, onboardingSeen: true };
-      render();
+      closeGuide();
     }
     return;
   }
@@ -392,13 +399,14 @@ document.addEventListener("click", (event) => {
   else if (["strike", "brace", "technique"].includes(action)) transition(performAction(state, action));
   else if (action === "return-town") transition(returnToTown(state));
   else if (action === "recover") transition(recoverInTown(state));
-  else if (action === "onboarding-replay") { guideStep = 0; guideOpen = true; render(); }
+  else if (action === "onboarding-replay") { guideTrigger = button; guideStep = 0; guideOpen = true; render(); }
   else if (action === "onboarding-next") { guideStep = Math.min(guideStep + 1, GUIDE_STEPS.length - 1); render(); }
   else if (action === "onboarding-back") { guideStep = Math.max(guideStep - 1, 0); render(); }
-  else if (action === "onboarding-close") { guideOpen = false; guideStep = 0; state = { ...state, onboardingSeen: true }; render(); }
+  else if (action === "onboarding-close") closeGuide();
   else if (action === "reset" && window.confirm("Start a fresh journey? This clears only this game's save on this device.")) {
     clearGame();
     state = resetJourney();
+    guideTrigger = button;
     guideStep = 0;
     guideOpen = true;
     render();
@@ -407,13 +415,24 @@ document.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
   if (guideOpen && event.key === "Escape") {
     event.preventDefault();
-    guideOpen = false;
-    guideStep = 0;
-    state = { ...state, onboardingSeen: true };
-    render();
+    closeGuide();
     return;
   }
-  if (guideOpen) return;
+  if (guideOpen) {
+    if (event.key === "Tab") {
+      const focusable = [...(guideLayer.querySelectorAll?.('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])') || [])];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus?.();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus?.();
+      }
+    }
+    return;
+  }
   if (state.phase !== "battle" || !state.combatShortcutsEnabled || event.altKey || event.ctrlKey || event.metaKey) return;
   const orders = { "1": "strike", "2": "brace", "3": "technique" };
   if (!orders[event.key]) return;

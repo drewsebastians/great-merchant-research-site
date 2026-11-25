@@ -6,10 +6,11 @@ const elements = new Map();
 const clickHandlers = [];
 const keyHandlers = [];
 const storage = new Map();
+const guideFocusables = ["close", "skip", "next"].map((name) => ({ name, focus() { document.activeElement = this; } }));
 function element(selector) {
   if (!elements.has(selector)) elements.set(selector, {
     innerHTML: "", textContent: "", disabled: false, style: {}, dataset: {},
-    classList: { toggle() {} }, setAttribute() {}
+    classList: { toggle() {} }, setAttribute() {}, focus() { document.activeElement = this; }
   });
   return elements.get(selector);
 }
@@ -19,11 +20,14 @@ const navButtons = ["journey", "market", "roster", "inventory", "journal", "pref
 }));
 globalThis.document = {
   documentElement: { lang: "en" },
+  activeElement: null,
   querySelector: element,
   querySelectorAll: () => navButtons,
   addEventListener(type, handler) { (type === "click" ? clickHandlers : keyHandlers).push(handler); },
   body: { dataset: {} }
 };
+element("#guide-layer").querySelector = (selector) => selector === "[data-guide-next]" ? guideFocusables[2] : null;
+element("#guide-layer").querySelectorAll = () => guideFocusables;
 globalThis.window = {
   confirm: () => true,
   localStorage: {
@@ -61,9 +65,17 @@ test("route board and rendered journey flow select the distinct quarry encounter
   assert.match(element("#guide-layer").innerHTML, /FIELD GUIDE/);
   assert.match(element("#guide-layer").innerHTML, /Start from Hearthcross/);
   assert.match(element("#guide-layer").innerHTML, /CLICK OUTSIDE TO CLOSE/);
+  assert.equal(document.activeElement, guideFocusables[2]);
+  let focusTrapPrevented = false;
+  keyHandlers.at(-1)({ key: "Tab", shiftKey: false, preventDefault() { focusTrapPrevented = true; } });
+  assert.equal(focusTrapPrevented, true);
+  assert.equal(document.activeElement, guideFocusables[0]);
+  keyHandlers.at(-1)({ key: "Tab", shiftKey: true, preventDefault() { focusTrapPrevented = true; } });
+  assert.equal(document.activeElement, guideFocusables[2]);
   click({ backdrop: true, dataset: {} });
   assert.equal(savedState().onboardingSeen, true);
   assert.equal(element("#guide-layer").innerHTML, "");
+  assert.equal(document.activeElement, element(".guide-replay"));
 
   click({ dataset: { tab: "journal" } });
   assert.match(element("#game-content").innerHTML, /QUEST JOURNAL/);
