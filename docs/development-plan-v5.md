@@ -51,6 +51,7 @@ The research corpus contains version-scoped and community-reported findings. Cur
 - Original hand-authored SVG scenes, portraits, marks and interface icons.
 - Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
 - Responsive game HUD: show active errand progress when the desktop status rail is hidden, keep crew vitality visible during combat, and reflow the market into larger tap-target cards on narrow phones.
+- While the field guide is open, keep keyboard focus inside the dialog and return focus to its opener or guide control when it closes.
 
 ### Deliberately deferred
 
@@ -100,7 +101,8 @@ The first slice is complete when a new player can:
 20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
 21. Install the game from the production URL as an Edge PWA, load the saved app shell offline after the initial online cache fill, and retain the same origin-scoped local save.
 22. After a new deployment, the updated game shell and modules load on an ordinary online visit without requiring a cache-busting URL; offline launch continues to use the saved shell.
-22. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
+23. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
+24. Tab and Shift+Tab remain inside the open field guide; Escape, skip, finish or outside click closes it and returns focus to a useful guide control.
 
 ## Release guardrails
 

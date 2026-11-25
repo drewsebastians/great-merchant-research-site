@@ -26,6 +26,7 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - Show every crew member's current/max HP and vitality bar in the encounter scene, so combat status stays visible on tablets and phones.
 - At widths up to 430px, reflow market rows into compact trade cards and enlarge the buy/sell tap targets.
 - Render the quest catalog in Journal, marking completed, current, upcoming and prerequisite-locked objectives; the Journey button returns to route selection.
+- Keep keyboard focus within the open field guide and return focus to the guide trigger when it closes.
 - Retain the desktop side rail and existing save schema; this is a presentation-only change.
 
 ## Verification
@@ -36,7 +37,8 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - Responsive CSS is checked at 1160px, 760px and 430px breakpoints. Actual device rendering still needs a device-level review.
 - Live production smoke check confirms that tapping outside the first-run guide closes it and that Crew navigation responds afterward.
 - Live Journal content initially appeared only after a cache-busted reload, revealing that an existing browser HTTP cache could keep an older app module after deployment. The service worker now uses a versioned shell cache, reloads shell requests on install and revalidates online files; after deployment, the normal production URL rendered the current Journal on reload.
+- The production guide focus loop was checked with Tab, Shift+Tab and Escape. At 400% browser zoom, the compact bottom navigation and a market purchase action also responded; physical phone rendering remains unverified.
 
 ## Next review target
 
-Continue narrow-screen and keyboard interaction checks in Cloud Chromium. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.
+Continue screen-by-screen interaction checks in Cloud Chromium. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.

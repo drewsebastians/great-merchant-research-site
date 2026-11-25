@@ -20,6 +20,7 @@ Plan: Development Plan v5.0
 - [x] Review each screen against confirmed high-level interface patterns and implement the highest-impact responsive gaps while keeping all artwork original: visible errand progress, combat vitality and narrow-phone market cards.
 - [x] Add a data-driven quest board to Journal with ordered stage states, prerequisite locks and a Journey shortcut.
 - [x] Verify guide outside-tap dismissal and screen navigation on the live production page in Cloud Chromium.
+- [x] Verify guide Tab/Shift+Tab focus containment, Escape focus return, and narrow-layout navigation and market purchase in production Chromium.
 - [ ] Verify the guide, mobile market cards and combat controls on a physical phone after production deploy.
 - [x] Add a second route with a distinct encounter and an optional route choice.
 - [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
