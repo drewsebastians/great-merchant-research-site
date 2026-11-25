@@ -103,6 +103,8 @@ The first slice is complete when a new player can:
 22. After a new deployment, the updated game shell and modules load on an ordinary online visit without requiring a cache-busting URL; offline launch continues to use the saved shell.
 23. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
 24. Tab and Shift+Tab remain inside the open field guide; Escape, skip, finish or outside click closes it and returns focus to a useful guide control.
+25. In Indonesian mode, settings headings, helper text, toggle state and local-save copy display in Indonesian while story and item descriptions remain in English.
+26. In Indonesian mode, the shared Market and Crew interface labels, helper copy, trade actions and accessible trade labels display in Indonesian; whole-word matching does not alter longer words, and item names and descriptions remain in English.
 
 ## Release guardrails
 

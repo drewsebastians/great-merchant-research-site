@@ -27,6 +27,8 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - At widths up to 430px, reflow market rows into compact trade cards and enlarge the buy/sell tap targets.
 - Render the quest catalog in Journal, marking completed, current, upcoming and prerequisite-locked objectives; the Journey button returns to route selection.
 - Keep keyboard focus within the open field guide and return focus to the guide trigger when it closes.
+- Translate all user-facing settings labels and helper text in Indonesian mode, including the shortcut toggle state; leave story and item descriptions in English.
+- Translate the shared Market and Crew interface copy, including market actions' accessible labels; use word boundaries so translating `open` never corrupts a word such as `opens`, and preserve item names and descriptions as English.
 - Retain the desktop side rail and existing save schema; this is a presentation-only change.
 
 ## Verification
@@ -38,7 +40,8 @@ This review compares the prototype to the broad, confirmed patterns already tran
 - Live production smoke check confirms that tapping outside the first-run guide closes it and that Crew navigation responds afterward.
 - Live Journal content initially appeared only after a cache-busted reload, revealing that an existing browser HTTP cache could keep an older app module after deployment. The service worker now uses a versioned shell cache, reloads shell requests on install and revalidates online files; after deployment, the normal production URL rendered the current Journal on reload.
 - The production guide focus loop was checked with Tab, Shift+Tab and Escape. At 400% browser zoom, the compact bottom navigation and a market purchase action also responded; physical phone rendering remains unverified.
+- Production Indonesian screen checks found mixed English Market and Crew labels and a partial-word replacement defect (`opens` became `terbukas`). The localization pass now uses word boundaries, fills the shared Market/Crew labels and trade actions, and skips item name/description fragments. The rendered-flow test covers both screens; production reload verification is pending.
 
 ## Next review target
 
-Continue screen-by-screen interaction checks in Cloud Chromium. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.
+Continue screen-by-screen interaction checks in Cloud Chromium. Verify Indonesian Market/Crew copy after deployment, then review the remaining shared screens for mismatched labels and preserve the existing rule that item and story descriptions stay English. Verify the compact Town Exchange cards, quest journal and guide dismissal on a physical phone; verify PWA installation and offline launch in Edge when an appropriate Windows device is available.

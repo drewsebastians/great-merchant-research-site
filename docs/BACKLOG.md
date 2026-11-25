@@ -29,6 +29,8 @@ Plan: Development Plan v5.0
 - [x] Add a settlement ledger showing trip cost, cargo value and net proceeds.
 - [x] Add a small production recipe that converts gathered materials into a trade item.
 - [x] Add language and input preferences that persist locally.
+- [x] Complete Indonesian settings headings, helper copy, local-save note and shortcut toggle state while leaving story and item descriptions in English.
+- [x] Translate the shared Indonesian Market and Crew interface, use word-boundary matching to prevent partial-word corruption, and preserve English item names and descriptions.
 
 ## Priority 2 — broader game architecture
 
