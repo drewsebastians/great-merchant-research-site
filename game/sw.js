@@ -1,4 +1,4 @@
-const CACHE_NAME = "wayfarers-ledger-shell-v4";
+const CACHE_NAME = "wayfarers-ledger-shell-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -11,12 +11,12 @@ const APP_SHELL = [
   "./storage.mjs",
   "./assets/app-icon-192.png",
   "./assets/app-icon-512.png",
-  "./assets/amber-quarry.svg",
+  "./assets/amber-quarry.jpg",
   "./assets/coin.svg",
   "./assets/hearthcross.svg",
   "./assets/hearthcross-field.jpg",
   "./assets/mark.svg",
-  "./assets/mosswind-road.svg",
+  "./assets/mosswind-road.jpg",
   "./assets/quarry-warden.svg",
   "./assets/raider.svg",
   "./assets/scout.svg",

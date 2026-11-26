@@ -53,8 +53,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 #world-content { position: absolute; inset: 0; }
 .world-scene { position: absolute; inset: 0; overflow: hidden; isolation: isolate; background-color: #596a5b; background-position: center 51%; background-size: cover; }
 .world-scene.town-scene { background-image: url("./assets/hearthcross-field.jpg"); }
-.world-scene.road-scene { background-image: url("./assets/mosswind-road.svg"); }
-.world-scene.quarry-scene { background-image: url("./assets/amber-quarry.svg"); }
+.world-scene.road-scene { background-image: url("./assets/mosswind-road.jpg"); }
+.world-scene.quarry-scene { background-image: url("./assets/amber-quarry.jpg"); }
 .scene-vignette { position: absolute; z-index: 0; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(8,17,18,.26), transparent 30%, rgba(7,14,15,.08) 48%, rgba(9,16,18,.79) 100%), linear-gradient(90deg, rgba(8,16,17,.22), transparent 35%, transparent 75%, rgba(8,16,17,.22)); }
 .scene-location { position: absolute; z-index: 1; top: 14px; left: 17px; max-width: min(46%, 400px); padding: 8px 12px 9px; border: 1px solid rgba(241,225,188,.28); background: rgba(14,27,29,.72); box-shadow: 0 3px 12px rgba(0,0,0,.2); backdrop-filter: blur(4px); }
 .scene-location small { color: #e0c17f; font: 7px var(--mono); letter-spacing: .14em; }

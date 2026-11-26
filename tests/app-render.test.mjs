@@ -106,6 +106,8 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.equal(element("#client-window-root").innerHTML, "");
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
   assert.match(gameStyles, /\.world-scene\.town-scene \{ background-image: url\("\.\/assets\/hearthcross-field\.jpg"\); \}/);
+  assert.match(gameStyles, /\.world-scene\.road-scene \{ background-image: url\("\.\/assets\/mosswind-road\.jpg"\); \}/);
+  assert.match(gameStyles, /\.world-scene\.quarry-scene \{ background-image: url\("\.\/assets\/amber-quarry\.jpg"\); \}/);
   assert.match(gameHtml, /class="topbar" aria-label="Client controls"/);
   assert.match(gameHtml, /class="client-heading sr-only" aria-live="polite"/);
   assert.doesNotMatch(gameHtml, /class="brand"/);
