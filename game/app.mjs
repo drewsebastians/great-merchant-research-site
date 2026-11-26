@@ -538,7 +538,7 @@ function renderClientWindow() {
     results: state.phase === "victory" ? label("Encounter complete", "Pertemuan selesai") : label("Crew retreat", "Awak mundur")
   };
   const isResult = name === "results";
-  root.innerHTML = '<div class="window-scrim"><section class="client-window ' + (name === "market" ? "shop-window" : "") + '" role="dialog" aria-modal="true" aria-labelledby="client-window-title"><header class="window-titlebar"><span class="window-mark">◇</span><div><small>' + label("WAYFARER CLIENT WINDOW", "JENDELA KLIEN WAYFARER") + '</small><h2 id="client-window-title">' + titles[name] + '</h2></div>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content">' + localizeUI(renderWindowContent(name)) + '</div></section></div>';
+  root.innerHTML = '<div class="window-scrim"><section class="client-window ' + (name === "market" ? "shop-window" : "") + '" role="dialog" aria-modal="true" aria-labelledby="client-window-title"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="client-window-title">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content">' + localizeUI(renderWindowContent(name)) + '</div></section></div>';
 }
 function openWindow(name) {
   if (state.phase === "battle" && ["travel", "market", "character", "property"].includes(name)) return;

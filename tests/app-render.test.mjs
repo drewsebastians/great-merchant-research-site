@@ -89,7 +89,9 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /\.topbar \{ height: 28px; display: flex;/);
   assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 118px/);
   assert.match(gameStyles, /\.lower-hud \{[^}]*padding: 4px 6px;/);
-  assert.match(gameStyles, /\.window-titlebar \{ min-height: 40px;/);
+  assert.match(gameStyles, /\.client-window::before \{[^}]*background:/);
+  assert.match(gameStyles, /\.window-titlebar \{ min-height: 32px;/);
+  assert.match(gameStyles, /\.window-titlebar h2 \{[^}]*font: 14px\/1\.1 var\(--serif\);/);
   assert.match(gameStyles, /\.screen-status \{ display: none; \}/);
   assert.match(gameStyles, /@media \(max-width: 900px\)/);
   assert.match(gameStyles, /@media \(max-height: 700px\) and \(min-width: 901px\)/);
@@ -153,6 +155,7 @@ test("context windows open and close without returning to dashboard pages", () =
 
   openWindow("quest");
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
+  assert.doesNotMatch(element("#client-window-root").innerHTML, /WAYFARER CLIENT WINDOW/);
   assert.match(element("#client-window-root").innerHTML, /The Courier&#39;s Mark/);
   let prevented = false;
   keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
