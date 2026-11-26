@@ -380,7 +380,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .client-menu-button small { font-size: 5px; }
   .client-heading > strong { max-width: 150px; }
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   body { overflow: auto; }
   .game-shell { height: auto; min-height: 100vh; }
   .topbar { height: 48px; grid-template-columns: minmax(135px,1fr) minmax(0,1fr) auto; padding: 0 8px; gap: 5px; }
@@ -491,7 +491,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .market-banner, .roster-banner, .pack-banner, .journal-banner, .preferences-banner { padding: 8px; }
   .quest-stage { min-width: 80px; }
 }
-@media (max-height: 700px) and (min-width: 761px) {
+@media (max-height: 700px) and (min-width: 901px) {
   .game-layout { grid-template-rows: minmax(300px,1fr) 158px; }
   .lower-hud { grid-template-columns: minmax(220px,.85fr) minmax(195px,.8fr) minmax(440px,1.6fr) 76px; }
   .battle-command-deck { bottom: 10px; }
