@@ -13,6 +13,8 @@ The live production comparison found a modern dashboard composition: persistent 
 
 This blueprint replaces that generic layout as the controlling design specification. Until the criteria below are met, describe the current build as a playable prototype inspired by some merchant-party systems, not as a TGM-faithful interface.
 
+The current deployed client now uses the broad scene-first zones, an independently authored illustrated town background, a 28px utility strip without the project wordmark, a 118px desktop lower HUD and contextual windows with original corner bevels and a layered 32px title bar. The 14 Jan 2017 Xian field screenshot remains a historical comparator with unknown capture date and client patch; exact window ornament and HUD proportions have not passed the visual-treatment gate.
+
 ## Reference set and confidence
 
 | Reference | What it supports | Confidence and limits |
@@ -90,7 +92,7 @@ A release may call itself “Xian TGM interface-inspired” only after all of th
 4. The battlefield exposes the verified TGM command families; unverified timing/keys are not stated as fact.
 5. The main loop is playable with prototype-owned content and persists after reload.
 6. Screen comparison against the cited official guide and Xian-specific reference frames is recorded in the fidelity review with publication dates and client-version uncertainty.
-7. The scene and client-window visual hierarchy are compared with a usable Xian field frame. Material differences in scene density, panel framing, persistent chrome or lower-HUD proportions are addressed with independently authored styling; unresolved material differences keep the gate closed.
+7. The scene and client-window visual hierarchy are compared with a usable Xian field frame. The latest passes add original illustrated scene art, remove the separate project wordmark, shorten the desktop HUD and refine the window frame with original geometric detail. Exact HUD proportions and any remaining material visual differences still require comparison and refinement; unresolved differences keep the gate closed.
 8. All imagery, names, map tiles, sounds, text, item values and tuning shipped in the public game are independently authored or properly licensed. No private research record or unauthorized TGM asset is copied.
 
 Until all eight checks pass, retain the status “playable prototype; TGM interface fidelity in progress.” A dated field screenshot with unknown patch can support a version-scoped comparison, but it cannot verify current Xian client details by itself.
