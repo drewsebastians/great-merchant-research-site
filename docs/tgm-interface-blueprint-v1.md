@@ -89,7 +89,8 @@ A release may call itself “Xian TGM interface-inspired” only after all of th
 3. Field, shop and battlefield have separate layouts and mode-specific controls.
 4. The battlefield exposes the verified TGM command families; unverified timing/keys are not stated as fact.
 5. The main loop is playable with prototype-owned content and persists after reload.
-6. Screen comparison against the cited official guide and Xian-specific reference frames is recorded in the fidelity review.
-7. All imagery, names, map tiles, sounds, text, item values and tuning shipped in the public game are independently authored or properly licensed. No private research record or unauthorized TGM asset is copied.
+6. Screen comparison against the cited official guide and Xian-specific reference frames is recorded in the fidelity review with publication dates and client-version uncertainty.
+7. The scene and client-window visual hierarchy are compared with a usable Xian field frame. Material differences in scene density, panel framing, persistent chrome or lower-HUD proportions are addressed with independently authored styling; unresolved material differences keep the gate closed.
+8. All imagery, names, map tiles, sounds, text, item values and tuning shipped in the public game are independently authored or properly licensed. No private research record or unauthorized TGM asset is copied.
 
-Until all seven checks pass, retain the status “playable prototype; TGM interface fidelity in progress.”
+Until all eight checks pass, retain the status “playable prototype; TGM interface fidelity in progress.” A dated field screenshot with unknown patch can support a version-scoped comparison, but it cannot verify current Xian client details by itself.

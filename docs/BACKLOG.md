@@ -13,7 +13,7 @@
 - [x] Replace the generic V5.0 interface claim with the V5.1 blueprint and screen review.
 - [x] Record dated official references and available Xian-specific screenshot/video leads with version limits.
 - [x] Compare the dated Xian quest and mercenary windows with the official guide; keep their old version scope explicit.
-- [ ] Compare a usable Xian field-screen frame with the official guide; none of the inspected Xian images shows the main field HUD.
+- [x] Compare a usable Xian field-screen frame with the official guide; the 14 Jan 2017 tutorial screenshot shows the full client HUD. Its capture date and Xian client patch are unstated, so it is a historical comparator only.
 - [x] Record the macro screen-zone map for field, shop, battlefield and core windows; label Xian-specific geometry unresolved.
 - [x] Replace the persistent web dashboard shell with a scene-first desktop client shell.
 - [x] Add the persistent left character/mercenary portrait stack and upper-right minimap.
@@ -23,8 +23,12 @@
 - [x] Add clickable Move, Attack, Hold, Stop, group-selection and Withdraw controls; keep source-game key mappings and timing unclaimed.
 - [x] Reconnect recruitment, travel, trade, objective progress, results, recovery and local saving to the redesigned client.
 - [x] Verify the deployed scene and context windows in the production browser after corrected Pages run 45767255947; save progression remains day 5 and 102 marks.
-- [ ] Check responsive desktop/mobile browser behavior, focus, accessible controls and PWA offline operation.
-- [ ] Compare the deployed screenshot against an accessible Xian field frame before claiming TGM interface fidelity.
+- [x] Compare the deployed screenshot with the dated Xian field frame and record visible differences: matching broad zones, but flatter original scene art, simpler window framing and an extra top brand/location bar.
+- [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
+- [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
+- [ ] Verify on a physical narrow device, check keyboard focus and accessible labels, and test actual PWA offline behavior. The browser's organization policy blocked DevTools, so the live offline toggle was not attempted; automated service-worker tests are mocked.
+- [x] Shorten top/header chrome and lower HUD; use a darker double border and tighter title spacing for original contextual windows. Commit `05c2607` deployed in Pages run 45786650163.
+- [ ] Increase original field-scene density and continue reviewing panel/HUD proportions against the dated Xian comparison. The extra brand strip and divided lower bars remain visible differences; current Xian client version and exact styling remain unverified.
 
 ## Retained V5.0 playable work
 
@@ -49,4 +53,6 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] 38/38 Node tests, including shell/window coverage, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check`.
 - [x] Production desktop browser visual verification and context-window smoke checks.
-- [ ] Narrow-viewport, focus and actual offline-PWA verification remain pending.
+- [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
+- [x] Post-fix CSS-width browser smoke checks at 779px, 681px and 340px after Pages runs 45784931192 and 45787017262; no visible horizontal scrolling, and the 779px location title is legible.
+- [ ] Physical-device, keyboard-focus and live offline-PWA verification remain open.

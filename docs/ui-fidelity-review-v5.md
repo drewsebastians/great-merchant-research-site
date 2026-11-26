@@ -1,14 +1,14 @@
 # Interface Fidelity Review — V5.1 Xian TGM Reset
 
 **Updated:** 26 November 2026
-**Scope:** V5.0 production baseline, V5.1 implementation candidate and available Xian/TGM references
+**Scope:** V5.0 production baseline, V5.1 deployed client and available Xian/TGM references
 **Authority:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
 ## Finding
 
 The V5.0 production screen did not closely resemble Xian The Great Merchant. It was a playable original game, but the previous review used broad genre patterns as evidence of interface fidelity. That assessment is retired.
 
-The pre-change production page was inspected in its Pack state. The official interface guide screenshot and official shortcut guide were also reviewed. The V5.1 implementation now replaces the modern dashboard with a scene-first client structure. Corrected commit `c80eaa217568dee3c6fd4be50736e8d63d3807a5` deployed in Pages run 45767255947 and was visually checked in the production browser. The first UI build exposed a stale dashboard lookup; it was fixed and redeployed before this verification.
+The pre-change production page was inspected in its Pack state. The official interface guide screenshot and official shortcut guide were also reviewed. The V5.1 implementation replaces the modern dashboard with a scene-first client structure. Corrected commit `c80eaa217568dee3c6fd4be50736e8d63d3807a5` deployed in Pages run 45767255947 and was visually checked in the production browser. The first UI build exposed a stale dashboard lookup; it was fixed and redeployed before that verification. Tablet-width fix commit `da6a5cf89ce7865a7169d75d3ab8cabf54c4dd9f` deployed in Pages run 45784931192. Visual pass commit `05c2607a22aa0c7596d83b4ebaa0079fb648fd28` deployed in run 45786650163, and duplicate-header-label fix `ca683f0b1fe2d6de4af7f95cd626a5312df63006` deployed in run 45787017262. The latest client was visually checked at desktop and at 779px, 681px and 340px CSS-width browser-zoom emulations.
 
 ## Public reference review
 
@@ -22,11 +22,12 @@ Reviewed 26 November 2026. Dates below are publication or access dates, not veri
 | [Xian newbie-camp walkthrough, Part 1](https://www.youtube.com/watch?v=Sbo_Ec8vNuA&t=404s) | Published 28 Mar 2025. Description labels 06:44 “UI Xian” and 18:58 “Prologue”; its “Full Client 10/06/26” wording does not identify the footage build. | Page and chapter labels were accessible; the player stayed on a black buffering frame, so no field frame was visually inspected. | Dated lead only; cannot close the field-layout comparison. |
 | [Xian quest-window screenshot, Jawoonbi guide](https://lasthero-xian2.blogspot.com/2016/01/quest-npc-jawoonbi-danau-1000-tahun.html) | Article dated 17 Jan 2016; capture date and client patch are not stated. | Screenshot was visually inspected. A compact dark, metal-framed “Quest Info” window overlays the field and groups task text, prerequisites, NPC, task goals, rewards and action buttons into narrow rows. | Dated Xian comparator for contextual-window density and layering. It is old and does not verify today's Xian field HUD, exact dimensions or current controls. Nothing was copied. |
 | [Xian mercenary-book screenshot in the 2019 beginner guide](https://repeatloop.blogspot.com/2019/08/Tips-Newbie-Xian-Online.html) | Article dated 26 Aug 2019; capture date and client patch are unstated. | Screenshot was inspected. It shows a centered “Pictorial book of mercenaries” window with a dark panel, dense list, small labels and ornate border over an in-game scene. | Dated comparator for compact framed windows only; it does not verify current field geometry. Nothing was copied. |
+| [Xian King Shinsu tutorial field screenshot](https://xiantgmgalery.blogspot.com/2017/01/tutorial-membuat-king-shinsu-blak.html) | Article dated 14 Jan 2017; the screenshot capture date and client patch are unstated. It is 1024×768. Its in-game clock reads `08. DEC. 1543. 13:00`; this is fictional game time, not the screenshot date. | Full client screenshot visually inspected. It shows the world scene, a left portrait stack, an upper-right minimap, two centered dark framed windows, compact status/currency at lower left, chat along the bottom, and menu/date controls at lower right. | Historical Xian field-layout comparator. It establishes only what is visible in this screenshot, not current Xian geometry, exact controls or client version. No image or assets were copied. |
 | [“Beberapa UI Interface In Game” Xian video](https://www.youtube.com/watch?v=CM98PnuvXuI) | Published 11 Jan 2023; capture patch is not identified. | Search metadata identifies a Xian UI walkthrough, but footage was unavailable for frame-by-frame inspection. | Secondary candidate; not evidence for current controls or layout until a specific frame is accessible. |
 
 ## Screen-zone comparison and implementation candidate
 
-The official guide directly supports the macro arrangement below. The production screenshot after run 45767255947 shows the central scene, portrait strip, minimap, lower HUD and contextual windows in their intended broad relationships, without the old navigation rail or permanent quest sidebar. A current Xian field-screen comparison remains incomplete: the 2016 and 2019 Xian screenshots show only contextual windows, and the 2025 video's UI chapter did not render in the review browser.
+The official guide directly supports the macro arrangement below. On 26 Nov 2026, the production screenshot was compared with the 14 Jan 2017 Xian field screenshot. Both place the field scene in the center, portraits at left, a minimap at upper right, and status/chat/menu/date controls along the bottom. The deployed client removes the old navigation rail and permanent quest sidebar. Its visual pass shortens the top/header chrome and lower HUD and darkens the contextual-window frame. Material differences remain: original scene art is still flat geometric vector work; the separate brand/title strip is extra; the lower HUD remains split into broad panels; and the dark double frame is simpler than the screenshot's ornate window trim. The comparison uses broad composition only; the old screenshot does not prove current Xian client geometry or styling.
 
 | Zone | Official-guide relationship | V5.1 implementation | Verification at this update |
 | --- | --- | --- | --- |
@@ -36,6 +37,10 @@ The official guide directly supports the macro arrangement below. The production
 | Lower HUD | Compact overview, chat/menu and date/time | Overview strip, local-only note field, client menu and fictional day counter | Production screenshot and render test pass |
 | Contextual windows | Opened from client controls | Inventory, character, status, property, quest, community, system, route and shop panels | Quest/route/shop smoke checks and open/close tests pass |
 | Shop and battlefield | Separate control contexts | Framed shop mode; tactical scene and command deck for battlefield | Shop mode checked in production; battle state-flow tested automatically |
+
+### Field-screen visual comparison
+
+The 2017 Xian frame is a 1024×768 field view with portraits and minimap integrated into the scene, compact controls on the lower edge, and two overlapping, dark, ornate windows. The current production client keeps those broad zones; its field scene remains geometric vector art, its identity strip is separate above the client, and the lower HUD uses broad adjacent panels. Contextual windows now use a dark double border and tighter title spacing, but remain less ornate than the historical frame. This is a useful, version-scoped structural comparison, not a visual match to a known current Xian build. Further work should enrich the original scene and reduce extra client chrome while keeping all artwork and ornament independently authored.
 
 The V5.1 candidate uses original illustrations, portrait art, fictional content and prototype values. The general official battle guide specifies Ctrl+number group assignment and Esc → Withdraw, with an experience penalty for withdrawal within the first 20 seconds. It does not identify Xian or a client patch, so these are not claimed as current Xian mappings or timing, and the prototype does not implement that penalty. Exact Xian key bindings, selection gestures, battle timing and current-build field/window geometry remain unresolved.
 
@@ -52,19 +57,26 @@ The V5.1 candidate uses original illustrations, portrait art, fictional content 
 | Chat and status HUD | Save/currency in header; no persistent in-game chat | Compact character overview, chat, date/time and menu | Major mismatch |
 | Visual treatment | Spacious HTML cards and persistent navigation | Dense, framed client chrome around the playfield | Major mismatch |
 
-The corrected production rendering was checked after Pages run 45767255947. The existing browser save still showed day 5 and 102 marks, with the saved indicator active. No battle or trade action was run against that local journey.
+The corrected production rendering was checked after Pages run 45767255947, and the breakpoint fix after run 45784931192. The existing browser save still showed day 5 and 102 marks, with the saved indicator active. No battle, trade or reset action was run during this review; prior sale and purchase entries were already visible in its local field log.
 
 ## Acceptance checks
 
-- [ ] A usable Xian field-screen frame is compared with the official guide. Available inspected Xian images show a 2016 quest window and 2019 mercenary window; video frames remain inaccessible.
 - [x] Deployed desktop screenshot confirms a dominant in-world scene with no persistent dashboard rail or quest sidebar.
 - [x] Deployed screenshot confirms the portrait strip, minimap, lower HUD/chat/menu/date and contextual windows in the intended broad relationships.
 - [x] Code and automated render tests confirm distinct field, shop and battlefield modes.
 - [x] Code and engine tests confirm clickable Move, Attack, Hold, Stop, group-selection and Withdraw controls; the official general guide documents Ctrl+number grouping and Esc → Withdraw with a first-20-second XP penalty, but their applicability to Xian remains unverified.
 - [x] Existing gameplay transitions and save/reload/migration paths pass automated tests (38/38 total).
+- [x] Comparison against the official guide and a usable Xian field frame is recorded with publication date and client-version uncertainty. The 14 Jan 2017 tutorial screenshot was visually inspected; its capture date and Xian client patch are unknown.
+- [ ] Material visual differences are resolved: the production top identity strip, broad lower HUD bars, flatter scene art and simpler translucent panels still differ from the dated Xian frame.
 - [x] No source-client assets or private research records were added; the game continues to use original project artwork, fiction and fictional values.
 
-The acceptance gate is not passed. Keep the description “playable prototype; TGM interface fidelity in progress” until every blueprint criterion is verified.
+The blueprint gate is not passed because the visual-treatment item remains open: the scene art, separate brand strip and broad divided lower HUD remain material differences. Keep the description “playable prototype; TGM interface fidelity in progress.”
+
+## Additional release checks
+
+- [x] After Pages runs 45784931192 and 45787017262, browser-zoom emulations at 779px, 681px and 340px CSS widths showed no visible horizontal scrolling. The duplicated mode chip is hidden and the 779px location title remains legible. These emulations are not physical-device checks.
+- [ ] Physical narrow-device, keyboard-focus and accessible-control checks remain open.
+- [ ] Live PWA offline behavior remains unverified. The managed browser blocked DevTools under organization policy, so no live offline toggle or workaround was attempted. Automated service-worker tests use a mocked offline path.
 
 ## Scope note
 
