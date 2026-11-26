@@ -9,6 +9,7 @@
 **Production game:** https://drewsebastians.github.io/great-merchant-research-site/game/  
 **Production game-code commit:** 55d22522d3cba7b6c9b5286bdcb195034ab21ae3  
 **Last verified Pages run for game code:** 45543428008 succeeded.  
+**V5.1 specification commit:** c2cb72dc84bfcf9e93bf51e4f587b55f349d950e; Pages run 45762703141 succeeded. This was a documentation-only change.
 **Status:** the V5.0 prototype remains playable in production. Its current interface is a generic web dashboard and is not yet TGM-faithful. This reset updates specifications and backlog; gameplay UI redesign remains the highest-priority work.
 
 **Pre-reset repository baseline:** main and development/v5-first-playable-slice at c57ac16f4ed32f4636b20cc07c814a4805c580f3.  
@@ -42,7 +43,7 @@ These features remain useful prototype systems. Their screen arrangement and cur
 - Official guide screenshot and interface descriptions were inspected directly; the official shortcuts page was reviewed.
 - This update changes documentation only. It does not change the running game code, save schema or research repository.
 - The last code verification remains 35/35 Node tests and a passing game-content validator, as recorded in the preceding status. Re-run them when implementation files change.
-- Production game code was last deployed in Pages run 45543428008. Verify the documentation commit's Pages workflow after push; the game interface itself remains V5.0 pending the P0 redesign.
+- The specification commit deployed successfully through Pages run 45762703141. The production game interface remains V5.0 pending the P0 redesign.
 
 ## Evidence boundary
 

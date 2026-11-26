@@ -17,6 +17,7 @@
 - Research repo: drewsebastians/great-merchant-research. Read-only; do not modify it.
 - Pre-reset main/development baseline: c57ac16f4ed32f4636b20cc07c814a4805c580f3.
 - Rollback branch: checkpoint/pre-tgm-fidelity-reset-2026-11-26 at that baseline.
+- V5.1 specification commit: c2cb72dc84bfcf9e93bf51e4f587b55f349d950e; Pages run 45762703141 succeeded.
 - Previous game checkpoints: checkpoint/pre-v5-2026-11-19, checkpoint/pre-v5-025-2026-11-25, checkpoint/pre-v5-026-2026-11-25, checkpoint/pre-v5-027-2026-11-25 and checkpoint/pre-v5-028-2026-11-25.
 - Last production game-code commit: 55d22522d3cba7b6c9b5286bdcb195034ab21ae3; last successful game-code Pages run: 45543428008.
 - data/vault.json is encrypted research. Preserve it byte-for-byte. Do not put private records, source IDs, excerpts or media into the public repository.
