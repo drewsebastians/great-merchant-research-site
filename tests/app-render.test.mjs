@@ -83,14 +83,17 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.equal(element("#client-window-root").innerHTML, "");
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
   assert.match(gameStyles, /\.world-scene\.town-scene \{ background-image: url\("\.\/assets\/hearthcross-field\.jpg"\); \}/);
-  assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 160px/);
+  assert.match(gameHtml, /class="topbar" aria-label="Client controls"/);
+  assert.match(gameHtml, /class="client-heading sr-only" aria-live="polite"/);
+  assert.doesNotMatch(gameHtml, /class="brand"/);
+  assert.match(gameStyles, /\.topbar \{ height: 28px; display: flex;/);
+  assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 118px/);
+  assert.match(gameStyles, /\.lower-hud \{[^}]*padding: 4px 6px;/);
   assert.match(gameStyles, /\.window-titlebar \{ min-height: 40px;/);
   assert.match(gameStyles, /\.screen-status \{ display: none; \}/);
-  assert.match(gameStyles, /\.client-heading > small \{ display: inline; font-size: 5px; \}/);
-  assert.match(gameStyles, /\.client-heading > small \{ display: none; \}/);
   assert.match(gameStyles, /@media \(max-width: 900px\)/);
   assert.match(gameStyles, /@media \(max-height: 700px\) and \(min-width: 901px\)/);
-  assert.match(gameStyles, /grid-template-rows: minmax\(300px,1fr\) 140px/);
+  assert.match(gameStyles, /grid-template-rows: minmax\(300px,1fr\) 120px/);
 });
 
 test("travel, recruitment, trade, battle commands, withdrawal and local saves remain connected", () => {
