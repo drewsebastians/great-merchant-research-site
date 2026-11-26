@@ -40,6 +40,8 @@ globalThis.window = {
 await import("../game/app.mjs?client-shell-test");
 const gameStyles = await readFile(new URL("../game/styles.css", import.meta.url), "utf8");
 const gameHtml = await readFile(new URL("../game/index.html", import.meta.url), "utf8");
+const gameApp = await readFile(new URL("../game/app.mjs", import.meta.url), "utf8");
+const staticIds = new Set([...gameHtml.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
 
 function savedState() { return JSON.parse(storage.get("wayfarers-ledger:v5:save")); }
 function fakeButton(dataset = {}, options = {}) {
@@ -63,6 +65,10 @@ function openWindow(name) { click(fakeButton({ window: name })); }
 function action(name, extra = {}) { click(fakeButton({ action: name, ...extra })); }
 
 test("desktop shell is scene-first with client portraits, minimap, HUD, chat and contextual windows", () => {
+  for (const id of ["screen-eyebrow", "screen-title", "phase-label", "day-count", "portrait-rail", "world-content", "mini-map-root", "overview-strip", "client-menu", "chat-feed", "client-window-root", "save-state"]) {
+    assert.match(gameHtml, new RegExp('id="' + id + '"'));
+  }
+  for (const [, id] of gameApp.matchAll(/(?:document\.querySelector|\$)\("#([^\"]+)"\)/g)) assert.ok(staticIds.has(id), `Missing static shell node: #${id}`);
   assert.match(gameHtml, /id="portrait-rail"/);
   assert.match(gameHtml, /id="mini-map-root"/);
   assert.match(gameHtml, /id="overview-strip"/);

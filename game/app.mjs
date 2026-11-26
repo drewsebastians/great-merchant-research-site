@@ -225,49 +225,6 @@ function unitCard(unit, compact) {
     '<div class="unit-info"><div class="unit-top"><strong>' + safe(unit.name) + '</strong><span>' + Math.max(0, unit.hp) + '<i> / ' + unit.maxHp + '</i></span></div><small>' + safe(unit.role) + '</small>' +
     bar(unit.hp, unit.maxHp, "health") + (!compact && unit.maxFocus ? '<div class="focus-row"><span>FOCUS</span>' + Array.from({ length: unit.maxFocus }, (_, i) => '<i class="' + (i < unit.focus ? "filled" : "") + '"></i>').join("") + '</div>' : "") + '</div></article>';
 }
-function renderSide() {
-  $("#day-count").textContent = String(state.day).padStart(2, "0");
-  $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
-  $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
-  $("#log-summary").innerHTML = state.log.slice(0, 3).map((entry) => '<div class="log-entry"><i></i><span>' + safe(localizeNotice(entry)) + '</span></div>').join("");
-  const route = findRoute(state.phase === "battle" || state.phase === "victory" || state.phase === "defeat" ? state.activeRoute : state.selectedRoute);
-  const questProgress = getQuestProgress(state, route.questId);
-  const quest = questProgress?.quest;
-  const total = questProgress?.totalStages || 0;
-  const completed = questProgress?.completedCount || 0;
-  const returned = questProgress?.complete || false;
-  const stageLabel = questProgress?.currentStage?.label || (returned ? "ERRAND DELIVERED" : "PREPARE YOUR CREW");
-  $("#objective-step").textContent = localizeUI(stageLabel);
-  $("#objective-count").textContent = completed + " / " + total;
-  $("#objective-progress").style.width = (total ? Math.round((completed / total) * 100) : 0) + "%";
-  $("#objective-title").textContent = localizeUI(quest?.title || route.title);
-  $("#objective-copy").textContent = localizeUI(quest?.summary || route.summary);
-}
-function setHeader(tab, phase) {
-  const names = {
-    journey: ["FIELD NOTES · CHAPTER 01", "A road opens"],
-    market: ["HEARTHCROSS · TOWN EXCHANGE", "Goods and provisions"],
-    roster: ["HEARTHCROSS · YOUR CREW", "A small crew, well chosen"],
-    inventory: ["TRAVEL KIT · PACK", "What you carry"],
-    journal: ["FIELD NOTES · LEDGER", "The journey so far"],
-    preferences: ["HEARTHCROSS · PLAYER SETTINGS", "Language and controls"]
-  };
-  const current = names[tab] || names.journey;
-  eyebrow.textContent = localizeUI(current[0]);
-  title.textContent = localizeUI(current[1]);
-  const route = findRoute(state.activeRoute || state.selectedRoute);
-  phaseLabel.innerHTML = '<span class="status-pip ' + (phase === "battle" ? "danger-pip" : "") + '"></span>' +
-    localizeUI(phase === "battle" ? safe(route.name.toUpperCase()) + " · ENCOUNTER" : phase === "victory" ? "ROUTE CLEARED" : phase === "defeat" ? "RETREAT" : "HEARTHCROSS");
-}
-function navState() {
-  document.querySelectorAll("[data-tab]").forEach((button) => {
-    const tab = button.dataset.tab;
-    button.classList.toggle("active", tab === state.activeTab);
-    const locked = state.phase !== "town" && ["market", "roster"].includes(tab);
-    button.disabled = locked;
-    button.setAttribute("aria-disabled", String(locked));
-  });
-}
 function renderTravelMap() {
   const paths = ROUTE_LINKS.map((link) => {
     const from = findRoute(link.from).mapPosition;
@@ -628,7 +585,6 @@ function render() {
   $("#screen-eyebrow").textContent = heading[0];
   $("#screen-title").textContent = heading[1];
   $("#phase-label").innerHTML = '<span class="status-pip ' + (mode === "battlefield" ? "danger-pip" : "") + '"></span>' + heading[0];
-  $("#coin-count").textContent = String(state.coin);
   $("#day-count").textContent = String(state.day).padStart(2, "0");
   $("#portrait-rail").innerHTML = renderPortraitRail();
   $("#world-content").innerHTML = renderWorldScene();
