@@ -7,9 +7,9 @@
 
 ## Current decision
 
-V5.0 produced a playable browser-game loop and a modular local-save/PWA foundation. The live interface is a modern web dashboard with a page-navigation rail, inventory cards and a persistent quest rail. That composition differs substantially from the field-first Xian/TGM client shown in the official interface guide. The V5.0 description overstated how closely its interface referred to TGM; that claim is withdrawn.
+V5.0 produced a playable browser-game loop and a modular local-save/PWA foundation. Before the V5.1 rebuild, its live interface was a modern web dashboard with a page-navigation rail, inventory cards and a persistent quest rail. That composition differed substantially from the field-first Xian/TGM client shown in the official interface guide. The V5.0 description overstated how closely its interface referred to TGM; that claim is withdrawn.
 
-V5.1 resets the UI target around Xian The Great Merchant's actual client organization: a central in-world scene, left-side character/mercenary portraits, an upper-right minimap, a compact lower HUD with status/chat/menu/date, contextual client windows, and separate field, shop and battlefield modes. The existing live build remains available as a playable prototype while the interface is redesigned.
+V5.1 resets the UI target around Xian The Great Merchant's actual client organization: a central in-world scene, left-side character/mercenary portraits, an upper-right minimap, a compact lower HUD with status/chat/menu/date, contextual client windows, and separate field, shop and battlefield modes. The scene-first implementation is live at commit `c80eaa217568dee3c6fd4be50736e8d63d3807a5` (Pages run 45767255947). It addresses the broad client structure, but does not yet pass the fidelity acceptance gate because an accessible Xian field-screen frame is still missing and narrow/offline behavior has not been verified.
 
 ## Research and reference translation
 
@@ -31,7 +31,7 @@ Keep the useful, independently authored V5.0 systems as a scaffold while replaci
 
 The current turn-based Strike/Brace/Technique battle screen is not evidence of TGM fidelity. The new battlefield should expose the command-oriented controls listed in the official shortcut guide. Exact selection gestures, battle timing, unit behavior and Xian-specific mechanics remain subject to Xian reference verification.
 
-## V5.1 delivery plan
+## V5.1 delivery plan and current progress
 
 ### P0 — Match the client interface
 
@@ -48,6 +48,8 @@ The current turn-based Strike/Brace/Technique battle screen is not evidence of T
 3. Verify the shell at desktop and narrow/mobile viewports, including keyboard focus and accessible labels.
 4. Re-run the browser/PWA and offline checks after UI changes; verify the deployed build before calling this milestone complete.
 
+The scene-first shell, contextual windows, shop and battlefield command surface, and existing save-backed loop are implemented. Automated verification passes 38/38 tests and content validation; production desktop checks covered the field, route/quest windows and shop mode. The Xian field-frame comparison, narrow viewport and actual offline checks remain open.
+
 ## Architecture
 
 Retain the existing static browser architecture under game/. Organize presentation and state around explicit modes—field/town, shop, battlefield and results—and active windows. Keep content catalogs, rules, persistence, rendering and original SVG assets separate. Refactor game/app.mjs and game/styles.css for the client shell; adapt game/engine.mjs and game/storage.mjs only where new command/mode state requires it. No new external runtime dependency is needed for the current scope.
@@ -56,4 +58,4 @@ Retain the existing static browser architecture under game/. Organize presentati
 
 Do not describe a release as TGM interface-inspired until it passes the seven-item acceptance gate in the blueprint: scene-first composition, correct client zones, separate field/shop/battle modes, documented battlefield commands, a playable persistent loop, recorded screenshot comparison, and original or licensed shipped assets. Exact Xian balance, source-game character/unit/item data, copied client files, logos, screenshots, sprites, maps, sounds, guide text or private research records are outside scope.
 
-The v5.0 game remains a useful playable baseline; its current screen is not accepted as the v5.1 interface target.
+The V5.0 dashboard remains a useful playable baseline, but it is not accepted as the V5.1 interface target. The deployed V5.1 shell is a playable prototype; TGM interface fidelity remains in progress until the full gate passes.

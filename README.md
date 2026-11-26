@@ -16,7 +16,7 @@ Then open http://localhost:8000/game/.
 
 ## Project notes
 
-- Development Plan v5.0: docs/development-plan-v5.md
+- Development Plan v5.1: docs/development-plan-v5.md
 - Current status: docs/STATUS.md
 - Backlog: docs/BACKLOG.md
 - Handoff: docs/HANDOFF.md
