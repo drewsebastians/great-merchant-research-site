@@ -1,4 +1,4 @@
-const CACHE_NAME = "wayfarers-ledger-shell-v5";
+const CACHE_NAME = "wayfarers-ledger-shell-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
