@@ -7,11 +7,23 @@ const clickHandlers = [];
 const submitHandlers = [];
 const keyHandlers = [];
 const storage = new Map();
+let scheduledNoticeTimer = null;
+let nextNoticeTimerId = 0;
 const guideFocusables = ["close", "skip", "next"].map((name) => ({ name, focus() { document.activeElement = this; } }));
 function element(selector) {
   if (!elements.has(selector)) elements.set(selector, {
     innerHTML: "", textContent: "", disabled: false, style: {}, dataset: {}, value: "",
-    classList: { toggle() {} }, setAttribute() {}, focus() { document.activeElement = this; }
+    classList: {
+      values: new Set(),
+      toggle(name, force) {
+        const enabled = force ?? !this.values.has(name);
+        if (enabled) this.values.add(name);
+        else this.values.delete(name);
+        return enabled;
+      },
+      contains(name) { return this.values.has(name); }
+    },
+    setAttribute() {}, focus() { document.activeElement = this; }
   });
   return elements.get(selector);
 }
@@ -31,12 +43,23 @@ element("#guide-layer").querySelector = (selector) => selector === "[data-guide-
 element("#guide-layer").querySelectorAll = () => guideFocusables;
 globalThis.window = {
   confirm: () => true,
+  setTimeout(callback, delay) {
+    const id = ++nextNoticeTimerId;
+    scheduledNoticeTimer = { id, callback, delay };
+    return id;
+  },
+  clearTimeout(id) { if (scheduledNoticeTimer?.id === id) scheduledNoticeTimer = null; },
   localStorage: {
     getItem(key) { return storage.has(key) ? storage.get(key) : null; },
     setItem(key, value) { storage.set(key, String(value)); },
     removeItem(key) { storage.delete(key); }
   }
 };
+function fireNoticeTimer() {
+  const timer = scheduledNoticeTimer;
+  scheduledNoticeTimer = null;
+  timer?.callback();
+}
 await import("../game/app.mjs?client-shell-test");
 const gameStyles = await readFile(new URL("../game/styles.css", import.meta.url), "utf8");
 const gameHtml = await readFile(new URL("../game/index.html", import.meta.url), "utf8");
@@ -127,11 +150,18 @@ test("travel, recruitment, trade, battle commands, withdrawal and local saves re
 
   action("move");
   assert.match(element("#world-content").innerHTML, /data-action="move-to"/);
+  assert.equal(element("#notice").classList.contains("show"), true);
+  fireNoticeTimer();
+  assert.equal(element("#notice").classList.contains("show"), false);
   click(fakeButton({ action: "move-to", zone: "east" }));
   assert.match(savedState().notice, /repositioned to the east position/);
+  assert.equal(element("#notice").classList.contains("show"), true);
+  fireNoticeTimer();
+  assert.equal(element("#notice").classList.contains("show"), false);
 
   click(fakeButton({ action: "select-group", group: "rear" }));
   assert.match(element("#world-content").innerHTML, /data-group="rear" class="selected"/);
+  assert.equal(element("#notice").classList.contains("show"), false);
   const turn = savedState().battle.turn;
   action("attack");
   assert.equal(savedState().battle.turn, turn + 1);
@@ -176,4 +206,20 @@ test("local chat is explicit and does not change game progression", () => {
   assert.match(element("#chat-feed").innerHTML, /Ready for the road/);
   assert.equal(savedState().phase, "town");
   assert.match(element("#chat-feed").innerHTML, /local/i);
+});
+
+test("reload clears a stale saved toast without changing journey progress", async () => {
+  const prior = savedState();
+  prior.day = 5;
+  prior.coin = 102;
+  prior.notice = "Old sale notification";
+  storage.set("wayfarers-ledger:v5:save", JSON.stringify(prior));
+
+  await import("../game/app.mjs?stale-notice-reload-test");
+
+  assert.equal(savedState().day, 5);
+  assert.equal(savedState().coin, 102);
+  assert.equal(savedState().notice, null);
+  assert.equal(element("#notice").textContent, "");
+  assert.equal(element("#notice").classList.contains("show"), false);
 });

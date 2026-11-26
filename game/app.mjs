@@ -7,7 +7,7 @@ if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {});
 }
 
-let state = loadGame() || createInitialState();
+let state = { ...(loadGame() || createInitialState()), notice: null };
 const notice = document.querySelector("#notice");
 const title = document.querySelector("#screen-title");
 const eyebrow = document.querySelector("#screen-eyebrow");
@@ -17,6 +17,8 @@ const $ = (selector) => document.querySelector(selector);
 let guideOpen = !state.onboardingSeen;
 let guideStep = 0;
 let guideTrigger = null;
+let noticeTimer = null;
+let dismissedNotice = null;
 const ui = {
   activeWindow: null,
   selectedUnitId: state.formationFrontId || state.party[0]?.id || "mara",
@@ -574,6 +576,19 @@ function renderGuide() {
   const next = guideLayer.querySelector?.("[data-guide-next]");
   next?.focus();
 }
+function showNotice(message) {
+  if (!message) return;
+  dismissedNotice = null;
+  if (noticeTimer !== null) window.clearTimeout(noticeTimer);
+  noticeTimer = window.setTimeout(() => {
+    if (state.notice === message) {
+      dismissedNotice = message;
+      notice.classList.toggle("show", false);
+    }
+    noticeTimer = null;
+  }, 3600);
+  noticeTimer?.unref?.();
+}
 function render() {
   document.documentElement.lang = state.language || "en";
   applyStaticLabels();
@@ -593,7 +608,7 @@ function render() {
   $("#client-menu").innerHTML = renderMenu();
   $("#chat-feed").innerHTML = renderChatFeed();
   notice.textContent = localizeNotice(state.notice);
-  notice.classList.toggle("show", Boolean(state.notice));
+  notice.classList.toggle("show", Boolean(state.notice) && state.notice !== dismissedNotice);
   renderClientWindow();
   renderGuide();
   const saved = saveGame(state);
@@ -604,6 +619,7 @@ function render() {
 function transition(next) {
   const previousPhase = state.phase;
   state = next;
+  showNotice(state.notice);
   if (state.phase === "victory" || state.phase === "defeat") ui.activeWindow = "results";
   else if (previousPhase !== "battle" && state.phase === "battle") ui.activeWindow = null;
   else if (previousPhase === "battle" && state.phase !== "battle") {
@@ -657,15 +673,16 @@ document.addEventListener("click", (event) => {
   else if (action === "strike" || action === "attack") transition(performAction(state, "strike"));
   else if (action === "brace" || action === "hold") transition(performAction(state, "brace"));
   else if (action === "technique") transition(performAction(state, action));
-  else if (action === "move") { ui.pendingCommand = "move"; state.notice = label("Choose a position for the selected unit.", "Pilih posisi untuk unit yang dipilih."); render(); }
+  else if (action === "move") { ui.pendingCommand = "move"; state.notice = label("Choose a position for the selected unit.", "Pilih posisi untuk unit yang dipilih."); showNotice(state.notice); render(); }
   else if (action === "move-to") {
     ui.unitZones[ui.selectedUnitId] = button.dataset.zone;
     ui.pendingCommand = null;
     const unitName = state.party.find((unit) => unit.id === ui.selectedUnitId)?.name || label("Selected unit", "Unit terpilih");
     state.notice = unitName + (state.language === "id" ? " dipindahkan ke posisi " + (button.dataset.zone === "west" ? "barat" : button.dataset.zone === "center" ? "tengah" : "timur") + ". Posisi dan waktu tempur hanya untuk prototipe." : " repositioned to the " + button.dataset.zone + " position. Prototype positioning only; battle timing is unverified.");
+    showNotice(state.notice);
     render();
   }
-  else if (action === "stop") { ui.pendingCommand = null; state.notice = label("The selected unit's pending order has stopped.", "Perintah tertunda untuk unit terpilih dihentikan."); render(); }
+  else if (action === "stop") { ui.pendingCommand = null; state.notice = label("The selected unit's pending order has stopped.", "Perintah tertunda untuk unit terpilih dihentikan."); showNotice(state.notice); render(); }
   else if (action === "select-group") { ui.selectedGroup = button.dataset.group; render(); }
   else if (action === "withdraw") transition(withdrawFromBattle(state));
   else if (action === "toggle-peace") { ui.peaceMode = !ui.peaceMode; render(); }
