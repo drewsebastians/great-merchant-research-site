@@ -27,12 +27,15 @@
 - [x] Replace the flat vector Hearthcross town background with an independently generated 1199×675 illustration; add the JPEG to PWA app-shell cache v4. Commit `a38cbdb` deployed in Pages run 45788583206 and was checked in the live game.
 - [x] Remove the separate project wordmark, reduce the utility strip from 40px to 28px and shorten the desktop lower HUD from 160px to 118px while preserving save/help/reset and scene location. Commit `b1b7b0e` is live.
 - [x] Refine contextual windows with original corner bevels, a layered 32px title bar and no repeated project eyebrow. Commit `6bcd76e` was confirmed in the live quest window.
+- [x] Fix transient notices that could persist across reloads or obscure the field on narrow screens; commit `f9e94a5` dismisses notices after 3.6 seconds and clears stale notices without changing saved journey progress.
+- [x] Add original 1199×675 Mosswind Road and Amber Quarry encounter scenes and include them in PWA app-shell cache v5. Commit `1784c24` is live in Pages run 45795440090; both deployed image assets loaded in the browser.
+- [x] Increase original contextual-window depth with stepped inset bevels, corner rivets and a doubled titlebar edge. Commit `23fa536` deployed in Pages run 45796646359; the shop window rendered and opened/closed in production without changing the saved journey.
 - [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
 - [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
-- [ ] Recheck 779px, 681px and 340px browser-width emulations after commit `b1b7b0e`; previous checks predate the compact utility/HUD pass.
+- [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
 - [ ] Verify on a physical narrow device, check keyboard focus and accessible labels, and test actual PWA offline behavior. The browser's organization policy blocked DevTools, so the live offline toggle was not attempted; automated service-worker tests are mocked.
 - [x] Shorten top/header chrome and lower HUD; use a darker double border and tighter title spacing for original contextual windows. Commit `05c2607` deployed in Pages run 45786650163.
-- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. Current Xian client version and exact geometry remain unverified.
+- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. The new frame is still simpler than the 2017 screenshot; current Xian client version and exact geometry remain unverified.
 
 ## Retained V5.0 playable work
 
@@ -54,10 +57,10 @@ These tasks remain complete as original prototype functionality. Their completio
 ## Verification recorded this update
 
 - [x] `node --check` on the app and engine modules.
-- [x] 38/38 Node tests, including shell/window coverage, the playable loop, withdrawal and save/PWA behavior.
+- [x] 39/39 Node tests, including shell/window coverage, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check`.
 - [x] Production desktop browser visual verification and context-window smoke checks.
-- [x] Post-`6bcd76e` production browser check: illustrated town art remains visible, the revised quest window opens, and the saved journey remains day 05 / 102 marks.
+- [x] Post-`23fa536` production browser check: illustrated town art and revised window frame are visible, the shop window opens and closes, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
-- [x] Post-fix CSS-width browser smoke checks at 779px, 681px and 340px after Pages runs 45784931192 and 45787017262; no visible horizontal scrolling, and the 779px location title is legible.
+- [x] CSS-width browser smoke checks at 779px, 681px and 340px after the compact-client and notice-fix deployments; no visible horizontal scrolling, and the 340px save values remain visible after the notice clears.
 - [ ] Physical-device, keyboard-focus and live offline-PWA verification remain open.
