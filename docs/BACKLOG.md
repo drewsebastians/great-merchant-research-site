@@ -1,65 +1,40 @@
 # Development Backlog
 
-Last updated: 25 November 2026  
-Plan: Development Plan v5.0
+**Updated:** 26 November 2026  
+**Plan:** Development Plan v5.1 — Xian TGM Interface-Fidelity Reset  
+**Specification:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
-## Priority 0 — first playable loop
+## Priority 0 — Xian/TGM interface fidelity reset
 
-- [x] Translate confirmed research patterns into a public, copyright-aware development specification.
-- [x] Create a separated browser game architecture under `/game/`.
-- [x] Build town, hiring, market, pack, journal and crew screens.
-- [x] Build repeatable turn-based encounters with target selection and combat orders.
-- [x] Connect victory, route rewards, return-to-town, selling and local save.
-- [x] Let the first-run guide close from an outside click so page controls are reachable if the modal is blocking navigation.
-- [x] Hand-author original scene art and portraits.
-- [x] Add automated engine, save and rendered-flow checks.
-- [x] Deploy and verify the playable route at the production URL.
+- [x] Inspect the current production screen and record the concrete interface mismatch.
+- [x] Review the official TGM interface and shortcut guides.
+- [x] Create rollback checkpoint before the fidelity reset.
+- [x] Replace the generic V5.0 interface claim with the V5.1 blueprint and screen review.
+- [ ] Compare current Xian client screenshots/frames with the official guide; record source and version scope.
+- [ ] Freeze a screen-zone map for field, shop, battlefield and core windows; keep unresolved details labeled.
+- [ ] Replace the persistent web dashboard shell with a scene-first desktop client shell.
+- [ ] Add the persistent left character/mercenary portrait stack and upper-right minimap.
+- [ ] Add the compact bottom status/chat/menu/date HUD.
+- [ ] Open character, inventory, status, property, quest and system views as contextual client windows.
+- [ ] Create distinct field/town, shop and battlefield modes.
+- [ ] Replace turn-based battle presentation with usable Move, Attack, Hold, Stop, group and Withdraw command affordances.
+- [ ] Reconnect recruitment, travel, trade, objective progress, results and local saving to the redesigned client.
+- [ ] Check responsive desktop/mobile browser behavior, focus, accessible controls and PWA offline operation.
+- [ ] Complete and record a deployed screenshot comparison before claiming TGM interface fidelity.
 
-## Priority 1 — next playable improvements
+## Retained V5.0 playable work
 
-- [x] Review each screen against confirmed high-level interface patterns and implement the highest-impact responsive gaps while keeping all artwork original: visible errand progress, combat vitality and narrow-phone market cards.
-- [x] Add a data-driven quest board to Journal with ordered stage states, prerequisite locks and a Journey shortcut.
-- [x] Verify guide outside-tap dismissal and screen navigation on the live production page in Cloud Chromium.
-- [x] Verify guide Tab/Shift+Tab focus containment, Escape focus return, and narrow-layout navigation and market purchase in production Chromium.
-- [ ] Verify the guide, mobile market cards and combat controls on a physical phone after production deploy.
-- [x] Add a second route with a distinct encounter and an optional route choice.
-- [x] Add a short onboarding overlay that can be skipped, dismissed and replayed.
-- [x] Make crew formation affect turn order and protection.
-- [x] Add an equipment slot and one original upgrade with a visible effect.
-- [x] Add a settlement ledger showing trip cost, cargo value and net proceeds.
-- [x] Add a small production recipe that converts gathered materials into a trade item.
-- [x] Add language and input preferences that persist locally.
-- [x] Complete Indonesian settings headings, helper copy, local-save note and shortcut toggle state while leaving story and item descriptions in English.
-- [x] Translate the shared Indonesian Market and Crew interface, use word-boundary matching to prevent partial-word corruption, and preserve English item names and descriptions.
-- [x] Translate shared Journey, Pack and Journal headings, labels, status text, controls and short helper copy while preserving story/quest prose and item descriptions.
-- [x] Translate Indonesian onboarding steps, combat controls/order labels and static shell notes, including accessible guide/reset names.
-- [x] Translate victory, retreat, and settlement interface labels and instructions while preserving original route copy and item names.
-- [x] Add rendered coverage for Indonesian defeat copy, recovery into town, crew restoration, cleared trip accounting and a subsequent route change.
-- [x] Tune the Quarry encounter so ordinary strikes still win while prolonged defensive play can cause a reachable defeat; these are original prototype values.
-- [x] Verify defeat recovery without route rewards, route switching and the standard Strike victory on production.
-- [x] Protect route/quest/item prose from broad Indonesian UI phrase replacement and translate route/buy/sell notices as complete messages; add rendered regression coverage.
-- [x] Translate route selection and buy/sell log entries consistently in the notice, field log and Journal.
-- [x] Verify localized route, purchase and sale messages plus intact narrative prose on production after restoring the full app module.
-- [x] Smoke-test Journey, Town Exchange, Crew, Pack, Journal and Preferences navigation and non-empty renders on production.
-- [x] Translate complete UI phrases before protecting catalog name fragments, with rendered regression coverage for the Field Tonic instruction.
-- [x] Verify the Pack instruction is translated in production while its item name and description stay English.
-- [ ] Verify responsive interaction on a physical phone and complete Windows Edge PWA install/offline checks when devices are available.
+These tasks remain complete as original prototype functionality. Their completion does not satisfy the new fidelity gate.
 
-## Priority 2 — broader game architecture
+- [x] Build a dependency-free web architecture, local save/migration, installable PWA shell and original SVG assets.
+- [x] Implement town/travel, recruitment, trading, inventory, quest journal, recovery and two-route gameplay.
+- [x] Add original equipment, workbench recipe, settlement ledger, interface localization and accessible onboarding.
+- [x] Verify the current turn-based encounters and other core flows with tests and production smoke checks.
+- [x] Preserve rollback checkpoints for the existing game state.
 
-- [x] Add a data-driven route/map catalog and accessible travel screen.
-- [x] Add a quest and progression schema with entry conditions, ordered objectives, one-time rewards and unlocks; connect the first errand and quarry gate.
-- [x] Compare static PWA, Tauri and Electron options; select and document the PWA path for the current static game.
-- [x] Add install metadata, original Windows app icons, and offline app-shell caching with a tested network fallback.
-- [x] Revalidate deployed files through the service worker, version the shell cache and test the offline fallback after the refresh change.
-- [ ] Verify PWA install and offline launch on Windows Edge after the online cache fill.
-- [x] Add versioned save migrations for route progress, onboarding and formation preferences.
-- [ ] Add combat status effects only when their rules are independently specified and tested.
-- [x] Add content validation for IDs, item references, balances and missing assets.
-- [x] Research and design the offline-first Windows packaging path; PWA selected for the current static game.
+## Deferred or evidence-gated
 
-## Deferred pending evidence, rights or scope
-
-- [ ] Exact current-game formulas, item prices, drop probabilities and route gates.
-- [ ] Import of third-party art, sound, guides, client files or screenshots.
-- [ ] Multiplayer, online account services, server persistence or anti-cheat interaction.
+- [ ] Exact Xian client version-specific formulas, prices, values, drop rates, map gates and skill details.
+- [ ] Exact Xian key bindings, click/drag selection gestures, battle timing and window sizing until verified.
+- [ ] Physical-phone interaction and Windows Edge install/offline checks after the redesigned shell is deployed.
+- [ ] Any use of third-party assets, client files, screenshots, music, maps or copied guide text.

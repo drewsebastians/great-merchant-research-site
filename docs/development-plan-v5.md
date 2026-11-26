@@ -1,122 +1,59 @@
-# Development Plan v5.0
+# Development Plan v5.1 — Xian TGM Interface-Fidelity Reset
 
-**Project:** Wayfarer's Ledger — a browser-first, single-player trading and party-adventure prototype  
-**Started:** 19 November 2026  
-**Phase:** playable core iteration  
-**Game repository:** drewsebastians/great-merchant-research-site
+**Project:** Wayfarer's Ledger, an original browser game using Xian The Great Merchant as a direct interface reference  
+**Updated:** 26 November 2026  
+**Repository:** drewsebastians/great-merchant-research-site  
+**Controlling specification:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
-## Direction
+## Current decision
 
-Build an independently authored game that captures broad interface and play patterns of a classic merchant-led party RPG. The first milestone favors a familiar game-client structure—location scene, navigation rail, party status, inventory, combat orders, market board, journal and quest progress—alongside a complete short gameplay loop.
+V5.0 produced a playable browser-game loop and a modular local-save/PWA foundation. The live interface is a modern web dashboard with a page-navigation rail, inventory cards and a persistent quest rail. That composition differs substantially from the field-first Xian/TGM client shown in the official interface guide. The V5.0 description overstated how closely its interface referred to TGM; that claim is withdrawn.
 
-The site remains browser-based and works on desktop and mobile. The local prototype is an original adaptation. It does not use source-game client code, screenshots, sprites, logos, maps, guide text or private research records.
+V5.1 resets the UI target around Xian The Great Merchant's actual client organization: a central in-world scene, left-side character/mercenary portraits, an upper-right minimap, a compact lower HUD with status/chat/menu/date, contextual client windows, and separate field, shop and battlefield modes. The existing live build remains available as a playable prototype while the interface is redesigned.
 
-## Research translated into specifications
+## Research and reference translation
 
-Only system-level findings are carried into the public development repo. The private evidence ledger, source identifiers, guide excerpts and media stay in the research repo.
-
-| Confirmed system pattern | Development specification | Boundary |
+| Evidence | Specification | Boundary |
 | --- | --- | --- |
-| Tutorial and nearby tasks introduce money, purchasing, production, storage, travel and hiring | Teach the first loop through a short errand: recruit a partner, pack a supply, travel, resolve an encounter, recover cargo and trade it back in town | This prototype uses its own fictional town, task, prices and values |
-| A party/roster supports recruitment, storage, ordering and progression | Give the player a crew screen, a small formation, visible vitality and a recruit action | The first slice has one optional companion; deeper formation rules remain in backlog |
-| Combat has direct movement/attack orders and contextual skills | Present explicit Strike, Brace and Technique orders with target selection and visible focus | Click controls are used; no source-game key mapping or damage formula is claimed |
-| Items enter through several routes and can be traded or used in production | Separate supplies, healing items, trade goods and quest items; expose buy, sell and use actions | Quotes and item effects are prototype balance, not copied live-game values |
-| Encounters connect monsters, item acquisition and progression | Make two original routes reward distinct cargo and reputation; unlock the second after the introductory route | No drop probability or exact source-game route is represented |
+| Official TGM interface guide | Build the main client around the field scene, character/mercenary window, overview values, chat, menu functions, date/time, minimap and NPC/GM markers. | Official page does not identify the Xian client patch; use it for structure and compare with Xian-specific screens before freezing detailed styling. |
+| Official TGM shortcuts guide | Treat field, shop and battlefield as distinct control contexts. Add the documented movement, party/window, trade, shop, attack/hold/stop/group and withdraw affordances. | Confirm exact bindings and Xian behavior using Xian-specific references; do not infer a universal timing model from the shortcut list alone. |
+| Xian walkthrough videos | Compare the official guide layout with visible Xian client screens, especially the introductory interface and play flow. | Community evidence is dated/version-scoped and is not a source of exact game balance. |
+| Existing research repository | Reuse broad system findings only where the specification identifies their game/server scope and they fit the independently authored prototype. | Korean main-server findings do not automatically describe Xian UI, names, values or current rules. Private source records/media remain in the research repository. |
 
-The research corpus contains version-scoped and community-reported findings. Current client behavior and exact balance are not assumed by this prototype. Where evidence is unresolved, the game uses clearly labelled original placeholder rules.
+## Playable core to retain
 
-## V5.0 scope
+Keep the useful, independently authored V5.0 systems as a scaffold while replacing their presentation and correcting mode behavior:
 
-### Included in the first playable slice
+- Dependency-free web game with local versioned saves, migration and PWA offline shell.
+- Original town/travel loop, recruitment, party status, routes, errands, rewards, inventory, trade, recovery and quest progress.
+- Original prototype equipment, production recipe and settlement ledger, if they fit the new client windows and remain clearly prototype systems.
+- English and Indonesian common interface labels, keyboard accessibility, browser zoom and touch operation.
 
-- Static, dependency-free web app under /game/.
-- A version 8 local save with migrations from versions 1–7 and a fresh-journey reset.
-- Hearthcross as a town hub with a short errand and journey status.
-- A four-step optional field guide that can be skipped, dismissed and replayed.
-- A compact crew board; hiring a trail scout is required before the route.
-- A small market with buy/sell quotes, an inventory and usable healing supply.
-- Two data-driven route choices with distinct art, encounters and rewards.
-- Turn-based combat with target selection, Strike, Brace, a focus-gated technique and a consumable.
-- A selectable crew front member that changes the action opening, first target and rear-line damage protection.
-- One original weapon with an equipment slot, local equip/unequip and a visible +3 Strike effect.
-- A settlement ledger that separates ration cost, route reward, total cargo value, cargo sold and net proceeds.
-- A Hearthcross workbench recipe that converts route-earned Bronze Fittings into an original, sellable Quarry Tool Roll.
-- Saved English/Indonesian interface language choice for shared shell, journey, market, crew, pack, journal, guide and combat labels/controls, plus an independent combat-number-shortcut toggle; route/quest prose and item descriptions remain English.
-- A Journal quest board that shows each unlocked contract, ordered objective states and prerequisite-locked errands.
-- An accessible, data-driven region map with original route positions, connections and locked/selected state beside the route cards.
-- A data-driven quest catalog with stable IDs, entry conditions, ordered objectives, one-time completion rewards, prerequisites and unlocks; the first errand's objective counter and quarry gate read from this catalog.
-- A content-validation pass for item/route/quest/recipe IDs, references, route and quest rewards, prerequisite cycles, map positions, encounter data and referenced art files.
-- An installable Windows PWA shell with original app icons, a repository-subdirectory-aware manifest, and a same-origin service worker that supports offline game loading after its first online cache fill.
-- Victory, retreat, loot, return-to-town recovery, reputation and repeatable route flow.
-- Original hand-authored SVG scenes, portraits, marks and interface icons.
-- Responsive desktop and mobile navigation, keyboard combat shortcuts and accessible button labels.
-- Responsive game HUD: show active errand progress when the desktop status rail is hidden, keep crew vitality visible during combat, and reflow the market into larger tap-target cards on narrow phones.
-- While the field guide is open, keep keyboard focus inside the dialog and return focus to its opener or guide control when it closes.
+The current turn-based Strike/Brace/Technique battle screen is not evidence of TGM fidelity. The new battlefield should expose the command-oriented controls listed in the official shortcut guide. Exact selection gestures, battle timing, unit behavior and Xian-specific mechanics remain subject to Xian reference verification.
 
-### Deliberately deferred
+## V5.1 delivery plan
 
-- Full map traversal, pathfinding, online services, multiplayer, accounts and server saves.
-- Source-game names, exact unit/stat/item data, exact prices, drop odds or formulas.
-- Long-form quest chains, production professions, multi-step crafting and advanced promotion.
-- Full translation of story, item descriptions and all narrative content; the current Indonesian setting covers navigation, common interface labels and controls.
-- Imported screenshots, client files, music, copyrighted sprites or guide images.
-- User data collection; the save stays in this browser's local storage.
+### P0 — Match the client interface
 
-## Web architecture
+1. Complete the screen-zone comparison in the blueprint and review Xian-specific public reference frames.
+2. Rebuild the desktop field shell as a scene-first client with portrait strip, minimap overlay, lower HUD/chat/menu and hidden-until-open client windows.
+3. Add separate field/town, shop and battlefield modes with distinct control surfaces.
+4. Make the battlefield command affordances visible and usable, while keeping any unverified timing or key semantics out of the specification.
+5. Preserve the existing core loop through the redesigned views; use fictional names, art and balance data.
 
-| Layer | Files | Responsibility |
-| --- | --- | --- |
-| Content | game/data.mjs | Original item, route, quest, route-connection and recipe catalogs, guide copy, starting state and encounter definitions |
-| Rules | game/engine.mjs, game/quests.mjs | State transitions for hiring, trade, production, supplies, combat and route rewards; quest stages, entry gates and unlock evaluation |
-| Persistence | game/storage.mjs | Versioned local-storage read/write, v1–v7 migrations and safe fallback |
-| Presentation | game/app.mjs, game/index.html, game/styles.css, game/manifest.webmanifest, game/sw.js | Screen rendering, input handling, responsive layout, accessibility, install metadata and offline caching |
-| Original art | game/assets/*.svg | Hand-authored scenes, portraits and UI symbols |
-| Verification | tests/*.test.mjs, game/validation.mjs, scripts/validate-game-content.mjs | Node tests for rules, quests, save migrations and rendered flow, plus ID/reference/balance/asset checks |
+### P1 — Complete the playable adaptation
 
-No runtime library or build step is required. The game module is isolated under /game/ so the existing encrypted research library and its files remain unchanged.
+1. Reconnect quest, recruitment, trading, route access, reward and recovery flows to in-client windows and world interaction.
+2. Migrate existing local saves without losing progress.
+3. Verify the shell at desktop and narrow/mobile viewports, including keyboard focus and accessible labels.
+4. Re-run the browser/PWA and offline checks after UI changes; verify the deployed build before calling this milestone complete.
 
-## Acceptance criteria
+## Architecture
 
-The first slice is complete when a new player can:
+Retain the existing static browser architecture under game/. Organize presentation and state around explicit modes—field/town, shop, battlefield and results—and active windows. Keep content catalogs, rules, persistence, rendering and original SVG assets separate. Refactor game/app.mjs and game/styles.css for the client shell; adapt game/engine.mjs and game/storage.mjs only where new command/mode state requires it. No new external runtime dependency is needed for the current scope.
 
-1. Open the game without a password or account.
-2. Hire the scout and see the crew and currency update.
-3. Set out only when the crew and ration requirements are met.
-4. Select an enemy and win or lose with visible turn-by-turn outcomes.
-5. Use a tonic, earn route cargo and return to town after victory.
-6. Sell cargo and see the ledger balance update.
-7. Reload the page and continue from the saved state.
-8. Reset only this game's local save.
-9. Complete the same loop on a narrow mobile layout, with errand progress and combat vitality visible and market actions easy to tap.
-10. Verify that the public build contains no private research records or unauthorized assets.
-11. Choose between routes, unlock the second route and play its distinct encounter.
-12. Skip or complete the field guide, replay it later, dismiss it with Escape or an outside click, and keep that choice across reloads.
-13. Change the front member and see the action order, first target and rear protection change in combat.
-14. Buy, equip and unequip an original weapon; see its damage effect in the crew, pack and combat UI.
-15. Return from either route and review its costs, reward, cargo sale progress and net proceeds.
-16. Convert a route material at the workbench, see its output and resale value, and sell the crafted good.
-17. Choose English or Indonesian for common interface labels, switch combat number shortcuts off/on, and keep both settings across reloads.
-18. Select routes from the regional map or route cards and hear whether a location is open, selected, cleared or locked.
-19. Run the catalog checker and receive a clear failure for invalid references, balances, positions or missing route/portrait artwork.
-20. Track each errand's ordered objectives, entry requirements, first-completion rewards and next-route unlock from the quest catalog; returning home completes the quest and repeat runs do not duplicate its one-time reward.
-21. Install the game from the production URL as an Edge PWA, load the saved app shell offline after the initial online cache fill, and retain the same origin-scoped local save.
-22. After a new deployment, the updated game shell and modules load on an ordinary online visit without requiring a cache-busting URL; offline launch continues to use the saved shell.
-23. Open Journal to review every errand's ordered objectives, current step, completed stages and locked/unlocked state.
-24. Tab and Shift+Tab remain inside the open field guide; Escape, skip, finish or outside click closes it and returns focus to a useful guide control.
-25. In Indonesian mode, settings headings, helper text, toggle state and local-save copy display in Indonesian while story and item descriptions remain in English.
-26. In Indonesian mode, the shared Market and Crew interface labels, helper copy, trade actions and accessible trade labels display in Indonesian; whole-word matching does not alter longer words, and item names and descriptions remain in English.
-27. In Indonesian mode, Journey, Pack and Journal headings, status text, controls and concise helper copy display in Indonesian; route/quest/story prose and item descriptions remain in English.
-28. In Indonesian mode, onboarding steps, combat orders, encounter controls, static save/scope notes and guide/reset accessibility labels display in Indonesian; game actions remain operable and item/story text stays English.
-29. In Indonesian mode, victory, retreat and settlement labels/actions/helper text display in Indonesian while route victory copy, quest text, item names and item descriptions remain English.
-30. Amber Quarry remains winnable with ordinary attack orders and can reach defeat through prolonged defensive play; after defeat, the player can read the retreat result, recover in Hearthcross, restore the crew, receive no route reward or trip settlement, and choose another unlocked route.
-31. In Indonesian mode, route-selection and buy/sell messages display as complete Indonesian text in the notice, field log and Journal, while route, quest and item catalog prose remains unchanged even when it contains words also used by the interface.
-32. In Indonesian mode, complete UI sentences that mention an item name still translate; the item's catalog name and description remain unchanged.
+## Definition of done
 
-## Release guardrails
+Do not describe a release as TGM interface-inspired until it passes the seven-item acceptance gate in the blueprint: scene-first composition, correct client zones, separate field/shop/battle modes, documented battlefield commands, a playable persistent loop, recorded screenshot comparison, and original or licensed shipped assets. Exact Xian balance, source-game character/unit/item data, copied client files, logos, screenshots, sprites, maps, sounds, guide text or private research records are outside scope.
 
-- Keep the private research repo read-only during game work.
-- Keep the existing encrypted vault byte-for-byte unchanged.
-- Do not copy research source IDs, provenance metadata, private claims, guide text or research records into this public repo.
-- Treat all newly introduced prices, damage, HP, rewards and timings as original prototype tuning.
-- Keep artwork original and generated from authored SVG markup.
-- Push the implementation branch for review, then fast-forward the Pages branch only after tests and content checks pass.
+The v5.0 game remains a useful playable baseline; its current screen is not accepted as the v5.1 interface target.

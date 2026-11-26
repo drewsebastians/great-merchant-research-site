@@ -1,35 +1,39 @@
 # Development Handoff
 
-Updated: 25 November 2026  
-Next task: V5-029 — complete responsive and device-specific verification when suitable devices are available
+**Updated:** 26 November 2026  
+**Next task:** P0 — verify Xian-specific reference frames, then rebuild the desktop client shell
 
 ## Start here
 
-- Read `docs/development-plan-v5.md` for scope, research translation and implementation boundaries.
-- Read `docs/STATUS.md` for deployed commit, rollback point and verification evidence.
-- Read `docs/BACKLOG.md` and continue with the highest-priority unchecked item.
-- Start a static HTTP server from the repository root and open `/game/`. No dependencies or build step are required.
+1. Read docs/tgm-interface-blueprint-v1.md. It is the controlling specification for interface structure, evidence limits and the acceptance gate.
+2. Read docs/ui-fidelity-review-v5.md for the production-to-reference gap matrix.
+3. Read docs/STATUS.md and docs/BACKLOG.md, then continue the highest-priority unchecked V5.1 task.
+4. Open the current production game at https://drewsebastians.github.io/great-merchant-research-site/game/ for a baseline. It remains the V5.0 dashboard build until the shell redesign is deployed.
+5. Use the repository's dependency-free static server when checking local UI; preserve the existing local save until the new interface migration is ready.
 
-## Repository and rollback
+## Repository and recovery
 
-- Development repo: `drewsebastians/great-merchant-research-site`.
-- Research repo is read-only for this project; do not change it.
-- Checkpoint branch: `checkpoint/pre-v5-2026-11-19` → pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.
-- Latest production code commit: `55d22522d3cba7b6c9b5286bdcb195034ab21ae3`.
-- Latest game-code deploy: Pages run `45543428008` succeeded for this commit.
-- Pre-tuning rollback checkpoint: `checkpoint/pre-v5-025-2026-11-25` at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.
-- Pre-localization-boundary checkpoint: `checkpoint/pre-v5-026-2026-11-25` at `3c463e506829818125c0f497f0da410ee250468f`.
-- Pre-log-localization checkpoint: `checkpoint/pre-v5-027-2026-11-25` at `0635af9b4311ef580196797d53da30af1a19eea3`.
-- Pre-item-copy-order checkpoint: `checkpoint/pre-v5-028-2026-11-25` at `6758a4fa0a598e3dfab1386b41c9dee7cd412a63`.
-- `data/vault.json` is encrypted research material. Leave it byte-for-byte unchanged.
-- Public files may contain original game code, prototype tuning and high-level system specifications. Never copy source IDs, source records, private claims, guide text or media.
+- Development repo: drewsebastians/great-merchant-research-site.
+- Research repo: drewsebastians/great-merchant-research. Read-only; do not modify it.
+- Pre-reset main/development baseline: c57ac16f4ed32f4636b20cc07c814a4805c580f3.
+- Rollback branch: checkpoint/pre-tgm-fidelity-reset-2026-11-26 at that baseline.
+- Previous game checkpoints: checkpoint/pre-v5-2026-11-19, checkpoint/pre-v5-025-2026-11-25, checkpoint/pre-v5-026-2026-11-25, checkpoint/pre-v5-027-2026-11-25 and checkpoint/pre-v5-028-2026-11-25.
+- Last production game-code commit: 55d22522d3cba7b6c9b5286bdcb195034ab21ae3; last successful game-code Pages run: 45543428008.
+- data/vault.json is encrypted research. Preserve it byte-for-byte. Do not put private records, source IDs, excerpts or media into the public repository.
 
-## Current verification
+## Current technical baseline
 
-Run `node --test tests/*.test.mjs` (35 tests currently pass) and `node scripts/validate-game-content.mjs`. Run `node --check` on the app, engine, data, quests, storage, service worker and validation modules. The service-worker shell installs with HTTP-cache reload, online game files revalidate, and the previous cache version is removed; the guide focus loop works live in Chromium. Indonesian Preferences, Market, Crew, Journey, Pack, Journal, onboarding, battle, victory, retreat, settlement and transaction notices translate shared interface copy. Rendered-flow tests cover a normal Quarry win, reachable Brace-driven defeat, recovery and route switching. In Indonesian mode, route and trade notices are complete across the notice, field log and Journal; catalog route/quest/item prose remains English. Production verified a normal Strike victory, reachable defeat, recovery without route reward, route switching, live purchase and sale notices, and working navigation/content on all six tabs. PWA refresh/offline fallback have a Node simulation; physical-phone interaction and Windows Edge install/offline tests remain open.
+The game has original route, crew, inventory, trading, quest, recovery, recipe, settlement, PWA and local-save systems. Recorded code verification is 35/35 Node tests plus a passing content validator. Production browser checks covered navigation, encounter outcomes, recovery and trade.
 
-Tests cover route and quest unlocking, ordered objective progress, entry requirements, first-completion quest rewards, PWA metadata/precache/offline fallback, formation order and rear protection, onboarding skip/replay/completion, weapon buy/equip/unequip and Strike bonus, route settlement calculations, recipe conversion and sale, language switching, combat shortcut toggling, accessible map state, content-validation failures, storage handling and migration from versions 1–7 to version 8.
+The current presentation is a modern web dashboard. It does not match Xian/TGM's documented client layout. Its turn-based Strike/Brace/Technique UI must be treated as a temporary playable scaffold until the battlefield command view is rebuilt.
 
-## Next increment
+The official interface and shortcut guides provide a primary macro-layout/control reference. Xian-specific videos are community-produced and version-scoped; compare their visible frames before asserting exact keys, timing or window behavior. See links in the blueprint.
 
-The screen-by-screen review is recorded in `docs/ui-fidelity-review-v5.md`. Journal now shows quest stages and locked prerequisites; production browser testing confirmed guide dismissal, core navigation, purchasing, keyboard focus containment, Indonesian result screens, reachable defeat, recovery, route switching and ordinary Strike victory. It also confirmed that route and buy/sell messages are fully localized across notices and logs, while route/quest prose stays intact. All six tabs render in production. The Field Tonic helper sentence is Indonesian while its catalog name and detail remain English. Continue responsive checks that can be automated; keep physical-phone and Windows Edge PWA verification open until suitable devices are available. Do not invent combat status effects while their rules lack independent support.
+## Next implementation increment
+
+- Record Xian reference frame URLs/timestamps and a screen-zone comparison, without copying source imagery into the repo.
+- Replace persistent website navigation and the permanent quest rail with the scene-first field client shell.
+- Add the left character/mercenary portraits, minimap overlay, lower status/chat/menu/date HUD and contextual windows.
+- Create distinct shop and battlefield modes; expose verified movement/attack/hold/stop/group/withdraw command families.
+- Reconnect the existing local gameplay loop after the shell is working.
+- Run the existing tests and content validator when code changes; deploy and verify the resulting production screen before marking backlog items complete.

@@ -1,78 +1,57 @@
 # Development Status
 
-Updated: 25 November 2026  
-Task: V5-029 — continue responsive and device-specific verification
-Plan: Development Plan v5.0
+**Updated:** 26 November 2026  
+**Task:** V5-030 — reset the interface target to Xian The Great Merchant  
+**Plan:** Development Plan v5.1
 
 ## Current state
 
-**Production:** live at https://drewsebastians.github.io/great-merchant-research-site/game/  
-**Latest production code commit:** `55d22522d3cba7b6c9b5286bdcb195034ab21ae3` from `main`.
-**Latest game-code deployment:** Pages run `45543428008` succeeded for this commit.
-**Rollback checkpoint:** `checkpoint/pre-v5-2026-11-19` remains at pre-change commit `a1bfc98df853ace84e4894c91361dcc3c5120935`.  
-**Pre-tuning checkpoint:** `checkpoint/pre-v5-025-2026-11-25` is saved at `ccaae5a52f1694dc76be599dd0789f0b8f116423`.  
-**Pre-localization-boundary checkpoint:** `checkpoint/pre-v5-026-2026-11-25` is saved at `3c463e506829818125c0f497f0da410ee250468f`.  
-**Pre-log-localization checkpoint:** `checkpoint/pre-v5-027-2026-11-25` is saved at `0635af9b4311ef580196797d53da30af1a19eea3`.  
-**Pre-item-copy-order checkpoint:** `checkpoint/pre-v5-028-2026-11-25` is saved at `6758a4fa0a598e3dfab1386b41c9dee7cd412a63`.  
-**Research source:** reviewed read-only at `great-merchant-research` main commit `f52446e6a8f25a9cff4fe15a21e63b976df85317`, dated 17 November 2026.  
-**Encrypted vault:** unchanged; `data/vault.json` remains blob `748f8863212c1a2911c53569e7c934293c5e4205`. No research records, source IDs or private media are included in the game.
+**Production game:** https://drewsebastians.github.io/great-merchant-research-site/game/  
+**Production game-code commit:** 55d22522d3cba7b6c9b5286bdcb195034ab21ae3  
+**Last verified Pages run for game code:** 45543428008 succeeded.  
+**Status:** the V5.0 prototype remains playable in production. Its current interface is a generic web dashboard and is not yet TGM-faithful. This reset updates specifications and backlog; gameplay UI redesign remains the highest-priority work.
 
-## Delivered
+**Pre-reset repository baseline:** main and development/v5-first-playable-slice at c57ac16f4ed32f4636b20cc07c814a4805c580f3.  
+**New rollback checkpoint:** checkpoint/pre-tgm-fidelity-reset-2026-11-26 at c57ac16f4ed32f4636b20cc07c814a4805c580f3.  
+**Earlier checkpoints:** checkpoint/pre-v5-2026-11-19 (a1bfc98df853ace84e4894c91361dcc3c5120935); checkpoint/pre-v5-025-2026-11-25 (ccaae5a52f1694dc76be599dd0789f0b8f116423); checkpoint/pre-v5-026-2026-11-25 (3c463e506829818125c0f497f0da410ee250468f); checkpoint/pre-v5-027-2026-11-25 (0635af9b4311ef580196797d53da30af1a19eea3); checkpoint/pre-v5-028-2026-11-25 (6758a4fa0a598e3dfab1386b41c9dee7cd412a63).
 
-- Original browser-game architecture under `game/`, with content, rules, persistence, presentation and hand-authored SVG art.
-- Complete town-to-route-to-town loop with two distinct routes, route rewards and trading.
-- Four-step field guide that can be skipped, dismissed, replayed or closed with Escape; completion saves locally.
-- Formation choice between Mara and Tarin. The front member opens, receives first contact, and screens the rear member from 2 damage on rear attacks.
-- Buyable Wayfarer's Edge, one weapon slot, equip/unequip from Pack, and +3 damage to Mara's Strike. The effect is visible in Crew, Pack and combat orders.
-- Settlement ledger on Town, Market and Journal showing trip cost, route reward, full cargo value, cargo sold and net proceeds. Selling cargo updates the latest trip total.
-- Hearthcross workbench recipe converts one trip-earned Bronze Fittings into a Quarry Tool Roll. The output stays sellable, and the latest trip ledger reprices linked cargo from 22 to 28 marks.
-- Preferences screen switches common interface labels between English and Indonesian and persists the choice; narrative and item descriptions stay English.
-- Indonesian Preferences now translates the settings banner, help copy, local-settings badge, saved-on-device note and shortcut on/off state alongside the existing labels; story and item copy remain English.
-- Indonesian Market and Crew screens now translate the shared headings, helper copy, formation rules, hiring controls, trade note and accessible buy/sell labels. Word-boundary matching prevents partial-word corruption (for example, `opens`), and item names and descriptions stay English.
-- Indonesian Journey, Pack and Journal now translate their shared headers, progress/status labels, inventory controls and concise helper text. Route/quest prose and item descriptions remain English; common replacements use word boundaries.
-- Indonesian onboarding and combat now translate all four guide steps, guide actions, target/turn/party labels, order instructions and recovery/status labels. The static reset button's accessible name, guide title and save/scope notes follow the selected language.
-- Indonesian victory, retreat and settlement screens now translate results headings, return/recover actions, cargo/reward/proceeds labels and ledger helper text. Route victory copy and item names/descriptions stay English.
-- Combat number shortcuts can be disabled/re-enabled from Preferences, including during an encounter.
-- Original region map draws route positions and connections from the data catalog, marks locked/selected/cleared locations, and supports the same accessible route action as the existing cards.
-- A quest catalog drives entry requirements, ordered objective progress, first-completion rewards and route unlocks. The Courier's Mark completes on return to Hearthcross, grants its Courier's Seal once, and unlocks the Quarry Ledger; replaying a completed route does not duplicate the quest reward.
-- The game is installable as a Windows PWA from Edge. Its game-scoped manifest and service worker cache the app shell and original assets, revalidate online files against the deployment, and serve the saved shell when offline.
-- The Amber Quarry encounter uses original prototype tuning at 64 HP and 18 damage. A standard Strike plan still wins; repeated Brace actions can defeat the crew, making retreat and recovery reachable through normal play.
-- Indonesian UI localization protects complete route, quest and item prose from word-level substitutions; route selection and buy/sell confirmations are rendered as complete Indonesian notices.
-- Route-selection and buy/sell messages now use the same complete Indonesian wording in the confirmation, field log and Journal. The English route and quest source copy remains intact.
-- Complete UI sentences are translated before standalone catalog names are protected, so Pack instructions can mention an English item name while the actual item name and description remain unchanged.
-- Cache refresh reliability is hardened: a v2 shell cache installs with HTTP-cache reload and successful online requests revalidate, addressing older modules persisting after a new deployment.
-- The first-run guide still opens on a new save, but tapping outside its dialog now closes it, records the choice and releases the page controls. Escape, the close button and Skip Guide remain available.
-- The guide keeps Tab and Shift+Tab within the open dialog and returns focus to the guide trigger after dismissal, including when the user presses Escape.
-- At widths up to 1160px, the Journey screen shows a compact active-errand strip with stage and progress when the desktop status rail is hidden.
-- Combat portraits display each crew member's current/max HP and vitality bar, including on tablet and phone layouts.
-- At widths up to 430px, Town Exchange rows reflow into trade cards with larger buy/sell tap targets.
-- Journal now renders the quest catalog with completed/current/upcoming objective states, locked prerequisites, and a direct Journey action.
-- Live production checks in Cloud Chromium confirmed outside-tap guide dismissal, Crew and Journal navigation, a market purchase, and the quest Journal after a normal reload. At 400% browser zoom, the compact bottom navigation and market purchase target responded; this is a narrow-width browser check, not a physical-device test.
-- `docs/ui-fidelity-review-v5.md` records the screen-by-screen high-level interface review, completed gaps and device checks still pending.
-- `docs/windows-offline-packaging.md` records the PWA recommendation, trade-offs against Tauri and Electron, setup limits and release checks.
-- Catalog validation checks duplicate IDs, item/route/quest/recipe references, prices and rewards, quest prerequisite cycles, recipe quantities, map coordinates, enemy stats and scene/portrait asset paths. `node scripts/validate-game-content.mjs` gives a clear nonzero failure on invalid content.
-- Version 8 local saves migrate v1–v7 data while preserving journey progress, equipment, settlement, language and input settings.
-- Public plan, status, backlog and handoff documents.
+**Research source:** great-merchant-research main commit f52446e6a8f25a9cff4fe15a21e63b976df85317, reviewed read-only.  
+**Encrypted vault:** data/vault.json remains blob 748f8863212c1a2911c53569e7c934293c5e4205. It and all research records/media remain unchanged and excluded from the public game.
+
+## Interface-fidelity reset
+
+The live Pack screen was compared with the public official TGM interface guide. V5.0's persistent page rail, inventory card grid and right-side quest panel differ substantially from the reference's field-first scene, left portrait strip, upper-right minimap, lower HUD/chat/menu and contextual game windows. The official shortcut guide further separates field, shop and battlefield controls.
+
+The earlier claim that V5.0 represented TGM's general interface is withdrawn. Read [the TGM interface blueprint](tgm-interface-blueprint-v1.md) and [the screen-by-screen review](ui-fidelity-review-v5.md) for the new design authority and acceptance gate. Official guide links and Xian-specific visual comparators are recorded there.
+
+The official guide establishes the broad client structure, but its exact build applicability to Xian and detailed key/timing behavior remain unresolved. Comparing Xian-specific public screenshots/video frames against that structure is still a P0 task.
+
+## V5.0 playable foundation retained
+
+- Dependency-free browser/PWA architecture with original SVG scenes and portraits.
+- Local versioned save/migrations; town, route, hiring, crew, inventory, trading, quests, recovery and two-route game loop.
+- Original encounters, equipment, workbench recipe and settlement ledger.
+- English/Indonesian shared UI labels, accessible onboarding, responsive breakpoints and local progress.
+- 35 automated tests, content validation, production navigation checks, combat/result/recovery and buy/sell verification were recorded before this documentation reset.
+
+These features remain useful prototype systems. Their screen arrangement and current turn-based combat presentation do not pass the new interface-fidelity gate.
 
 ## Verification
 
-- `node --test tests/*.test.mjs`: **35/35 pass**, including a normal Strike victory and a reachable Brace-driven Quarry defeat, Indonesian victory/settlement/defeat rendering, recovery, route switching, preserved English route/item/quest copy, safe word matching, focus/dismissal, quest progress, PWA refresh/offline fallback, workbench and v1–v7 save migration.
-- `node scripts/validate-game-content.mjs`: catalog checks pass; seven route/party scene and portrait paths exist.
-- JavaScript syntax checks pass. SVG/XML art checks passed for new assets.
-- The Indonesian victory/settlement deployment is live. Cloud Chromium confirmed the result copy, return-to-town action, and preserved English route victory text and item names; Pages workflow run `45537422625` succeeded.
-- Production Cloud Chromium confirmed a Brace-driven Amber Quarry defeat, Indonesian retreat result, recovery into Hearthcross with no reward settlement, route switching, and a normal Strike victory. Pages workflow run `45539788548` succeeded for the tuning.
-- The follow-up copy-boundary fix preserves full English story prose and localizes route selection and buy/sell notices. All 35 automated tests and the content validator passed; Pages workflow run `45540650380` succeeded. Production verification of these latest notice changes is the next task.
-- A truncated app-module upload briefly caused the latest production screen to render blank. The full 553-line source was restored, locally validated and checkpointed; Pages run `45541878333` succeeded. The follow-up log fix is deployed in run `45542156190`.
-- Production Cloud Chromium verified the game screen and controls render, route-selection copy is wholly Indonesian in the notice, side log and Journal, purchase and sale confirmations are wholly Indonesian, and English narrative text remains unchanged. No production `game/app.mjs` runtime errors were observed.
-- A final production navigation sweep opened Journey, Town Exchange, Crew, Pack, Journal and Preferences; each rendered its expected screen content and no app script errors were logged.
-- Production verified the translated Pack sentence that mentions Field Tonic while its catalog name and item description remain in English; Pages run `45543428008` succeeded.
-- Production tree retains the original encrypted research vault blob SHA unchanged.
-- Automated rendered-flow and offline-cache simulations pass. A physical phone review of guide dismissal, trade cards and combat controls plus Windows Edge install/offline verification remain pending.
+- Production route was opened and visually inspected in a desktop browser; the Pack screen and persistent dashboard shell rendered.
+- Official guide screenshot and interface descriptions were inspected directly; the official shortcuts page was reviewed.
+- This update changes documentation only. It does not change the running game code, save schema or research repository.
+- The last code verification remains 35/35 Node tests and a passing game-content validator, as recorded in the preceding status. Re-run them when implementation files change.
+- Production game code was last deployed in Pages run 45543428008. Verify the documentation commit's Pages workflow after push; the game interface itself remains V5.0 pending the P0 redesign.
 
 ## Evidence boundary
 
-Research supports broad patterns for onboarding, hiring and roster management, tactical orders, trade and reward progression. Exact current-game values and several behaviors remain version-scoped or unresolved. This prototype uses original fictional content and placeholder tuning; it makes no claims about current live-game balance.
+Use the official interface and shortcut guides for visible client structure and control categories. Use Xian-specific community screens only as dated, version-scoped comparators. The private research repository's Korean-server findings are not a source for Xian-specific interface, values or rules. Do not publish private research records, source IDs or media. Do not copy TGM client code, screenshots, sprites, logos, maps, music or guide text into the game; author original visual assets and keep prototype values fictional.
 
 ## Next work
 
-Continue responsive and device-specific behavior checks. The six-tab screen navigation, Pack instruction, defeat, recovery, route switch, ordinary Strike victory, route/trade notices and preserved story copy are verified live. Physical-phone review of the guide, market cards and combat controls and Windows Edge PWA install/offline checks still need suitable devices. Status effects remain deferred because the research repository contains no independently specified rule set.
+1. Complete the Xian-specific screenshot/frame comparison and mark each unresolved version detail.
+2. Build the scene-first desktop shell with a portrait strip, minimap, compact lower HUD/chat/menu and contextual windows.
+3. Add distinct field/town, shop and battlefield modes.
+4. Replace turn-based-only presentation with the verified command families, then reconnect the existing playable progression and save.
+5. Test, deploy and compare the new production screenshots against the blueprint before restoring any fidelity claim.
