@@ -30,6 +30,7 @@
 - [x] Fix transient notices that could persist across reloads or obscure the field on narrow screens; commit `f9e94a5` dismisses notices after 3.6 seconds and clears stale notices without changing saved journey progress.
 - [x] Add original 1199×675 Mosswind Road and Amber Quarry encounter scenes and include them in PWA app-shell cache v5. Commit `1784c24` is live in Pages run 45795440090; both deployed image assets loaded in the browser.
 - [x] Increase original contextual-window depth with stepped inset bevels, corner rivets and a doubled titlebar edge. Commit `23fa536` deployed in Pages run 45796646359; the shop window rendered and opened/closed in production without changing the saved journey.
+- [x] Bump the service-worker app-shell cache from v5 to v6 so installed clients re-fetch the updated window styling. Commit `2a78f5c` deployed in Pages run 45797607295; the live game reloaded and the shop still opened/closed with the save at day 05 / 102 marks.
 - [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
 - [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
 - [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
@@ -60,7 +61,7 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] 39/39 Node tests, including shell/window coverage, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check`.
 - [x] Production desktop browser visual verification and context-window smoke checks.
-- [x] Post-`23fa536` production browser check: illustrated town art and revised window frame are visible, the shop window opens and closes, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
+- [x] Post-`2a78f5c` production browser check: the cache-v6 build reloads into the illustrated town, the shop opens and closes, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
 - [x] CSS-width browser smoke checks at 779px, 681px and 340px after the compact-client and notice-fix deployments; no visible horizontal scrolling, and the 340px save values remain visible after the notice clears.
 - [ ] Physical-device, keyboard-focus and live offline-PWA verification remain open.

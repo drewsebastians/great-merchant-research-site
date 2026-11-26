@@ -13,7 +13,7 @@ The live production comparison found a modern dashboard composition: persistent 
 
 This blueprint replaces that generic layout as the controlling design specification. Until the criteria below are met, describe the current build as a playable prototype inspired by some merchant-party systems, not as a TGM-faithful interface.
 
-The current deployed client now uses the broad scene-first zones and independently authored 1199×675 town, road and quarry illustrations. PWA shell v5 precaches the road and quarry scenes. It also has a 28px utility strip without the project wordmark, a 118px desktop lower HUD and contextual windows with an original stepped inset bevel, corner rivets and layered title edge. The 14 Jan 2017 Xian field screenshot remains a historical comparator with unknown capture date and client patch; its window treatment is still denser and exact HUD proportions have not passed the visual-treatment gate.
+The current deployed client now uses the broad scene-first zones and independently authored 1199×675 town, road and quarry illustrations. PWA shell v6 precaches these scene assets and refreshes the shell after the latest window-style update. It also has a 28px utility strip without the project wordmark, a 118px desktop lower HUD and contextual windows with an original stepped inset bevel, corner rivets and layered title edge. The 14 Jan 2017 Xian field screenshot remains a historical comparator with unknown capture date and client patch; its window treatment is still denser and exact HUD proportions have not passed the visual-treatment gate.
 
 ## Reference set and confidence
 
