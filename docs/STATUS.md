@@ -28,7 +28,7 @@ The pre-change V5.0 Pack screen was compared with the public official TGM interf
 
 The earlier claim that V5.0 represented TGM's general interface is withdrawn. Read [the TGM interface blueprint](tgm-interface-blueprint-v1.md) and [the screen-by-screen review](ui-fidelity-review-v5.md) for the new design authority and acceptance gate. Official guide links and Xian-specific visual comparators are recorded there.
 
-The official guide establishes the broad client structure, but its exact build applicability to Xian and detailed key/timing behavior remain unresolved. Public Xian evidence inspected includes a 17 Jan 2016 quest window and a 26 Aug 2019 mercenary-book window. Neither shows the main field HUD. The 2025 walkthrough's UI chapter would not load in the review browser. Comparing an accessible Xian field frame against the implementation remains a P0 task.
+The official interface guide establishes the broad client structure. The general official battle guide documents Ctrl+number group assignment and Esc → Withdraw, with an experience penalty for withdrawing in the first 20 seconds. Neither guide identifies a current Xian client build, so those controls and timing are not treated as verified Xian behavior or implemented as game rules. Public Xian evidence inspected includes a 17 Jan 2016 quest window and a 26 Aug 2019 mercenary-book window. Neither shows the main field HUD. The 2025 walkthrough's UI chapter would not load in the review browser. Comparing an accessible Xian field frame against the implementation remains a P0 task.
 
 ## V5.0 playable foundation retained
 
@@ -44,7 +44,7 @@ These features remain useful prototype systems. The old dashboard arrangement fa
 
 - Baseline production page showed the V5.0 dashboard and a 102-mark save. After deployment, the corrected client rendered the town scene, left portrait stack, minimap, lower HUD and context windows. Quest and route windows opened and closed; the shop opened in its own mode.
 - Production progression remained at day 5 and 102 marks with the save indicator active. No battle, trade or reset action was run against that saved journey.
-- Official guide screenshot and interface descriptions were inspected directly; the official shortcuts page was reviewed. Public Xian references and version limits are recorded in `docs/ui-fidelity-review-v5.md`.
+- Official interface, shortcut and battle-system guides were reviewed. The generic battle guide's Ctrl+number grouping and first-20-second withdrawal penalty are documented with an explicit Xian-version caveat in `docs/ui-fidelity-review-v5.md`.
 - `node --check game/app.mjs`, `node --check game/engine.mjs`, `node --test` (38/38), `validateGameContent()` and `git diff --check` all pass.
 - Tests cover the redesigned shell, contextual windows, party/travel/trade/quest/battle flow, withdrawal, reload persistence, migrations and PWA cache shell.
 - The pre-scene-first checkpoint is anchored at the old remote head; the research repository remains read-only at f52446e6a8f25a9cff4fe15a21e63b976df85317.

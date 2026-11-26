@@ -8,6 +8,7 @@
 
 - [x] Inspect the current production screen and record the concrete interface mismatch.
 - [x] Review the official TGM interface and shortcut guides.
+- [x] Review the official battle-system guide and record its generic group/withdraw timing with an explicit Xian-version caveat.
 - [x] Create rollback checkpoint before the fidelity reset.
 - [x] Replace the generic V5.0 interface claim with the V5.1 blueprint and screen review.
 - [x] Record dated official references and available Xian-specific screenshot/video leads with version limits.
@@ -38,7 +39,7 @@ These tasks remain complete as original prototype functionality. Their completio
 ## Deferred or evidence-gated
 
 - [ ] Exact Xian client version-specific formulas, prices, values, drop rates, map gates and skill details.
-- [ ] Exact Xian key bindings, click/drag selection gestures, battle timing and window sizing until verified.
+- [ ] Exact Xian key bindings, click/drag selection gestures, battle timing and window sizing until verified. The general official guide says Ctrl+number assigns battle groups and Esc → Withdraw can incur an XP loss during the first 20 seconds, but it does not identify Xian or a client patch.
 - [ ] Physical-phone interaction and Windows Edge install/offline checks after the redesigned shell is deployed.
 - [ ] Any use of third-party assets, client files, screenshots, music, maps or copied guide text.
 

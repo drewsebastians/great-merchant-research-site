@@ -18,7 +18,7 @@
 - Pre-reset main/development baseline: c57ac16f4ed32f4636b20cc07c814a4805c580f3.
 - Pre-scene-first checkpoint: checkpoint/pre-scene-first-ui-2026-11-26 at 79197de751e66580257d7c5c042b2290b7201a08.
 - Code commits: `edde45034b85c93fc900d77d0efbfb345f87ddca` (scene-first rebuild) and `c80eaa217568dee3c6fd4be50736e8d63d3807a5` (production render fix and DOM selector regression test).
-- `main` and `development/v5-first-playable-slice` are aligned at c80eaa217568dee3c6fd4be50736e8d63d3807a5.
+- `main` and `development/v5-first-playable-slice` carry the same corrected client and closeout documentation; fetch both remote heads before continuing.
 - Pages run 45767255947 succeeded. The first scene-first run 45766624535 also succeeded, but browser inspection found a stale dashboard element lookup; it was fixed before the corrected deploy.
 - `data/vault.json` is encrypted research. Preserve it byte-for-byte. Do not put private records, source IDs, excerpts or media into the public repository.
 
@@ -28,7 +28,7 @@ The client uses a scene-first town/field layout with left portraits, an upper-ri
 
 Production browser checks confirmed the field scene, quest/route windows, shop window and shop mode. The existing journey remained at day 5 and 102 marks. No battle, trade or reset was run against that save. Automated tests pass 38/38, the content validator passes, and `git diff --check` passes.
 
-Public references inspected include the official interface and shortcut guides; a Xian quest-window screenshot from 17 Jan 2016; a Xian mercenary-book screenshot from 26 Aug 2019; and 2023/2025 community videos whose footage could not be visually inspected in this review. Exact Xian keys, selection gestures, battle timing and current field geometry are not verified.
+Public references inspected include the official interface, shortcut and battle-system guides; a Xian quest-window screenshot from 17 Jan 2016; a Xian mercenary-book screenshot from 26 Aug 2019; and 2023/2025 community videos whose footage could not be visually inspected in this review. The general official battle guide states Ctrl+number group assignment and an Esc → Withdraw route with an XP penalty for withdrawal within 20 seconds; it does not establish that these mappings or timing apply to Xian. Exact Xian keys, selection gestures, battle timing and current field geometry remain unverified.
 
 ## Next concrete actions
 
