@@ -34,7 +34,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .client-heading { display: flex; align-items: center; gap: 10px; min-width: 0; justify-content: center; }
 .client-heading > small { color: var(--gold); font: 8px var(--mono); letter-spacing: .13em; white-space: nowrap; }
 .client-heading > strong { overflow: hidden; max-width: 240px; text-overflow: ellipsis; font: 19px/1 var(--serif); font-weight: 400; white-space: nowrap; }
-.screen-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 7px; border: 1px solid var(--line); color: #c6c6b5; font: 7px var(--mono); letter-spacing: .09em; white-space: nowrap; }
+.screen-status { display: none; }
 .status-pip, .save-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 7px rgba(131,171,130,.5); }
 .danger-pip { background: var(--red); box-shadow: 0 0 7px rgba(206,118,105,.65); }
 .topbar-tools { display: flex; align-items: center; justify-content: flex-end; gap: 9px; }
@@ -388,8 +388,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .brand strong { font-size: 8px; letter-spacing: .09em; }
   .brand small { display: none; }
   .client-heading { display: flex; justify-content: center; gap: 0; }
-  .client-heading > small, .client-heading .screen-status { display: none; }
-  .client-heading > strong { max-width: 150px; font-size: 15px; }
+  .client-heading { gap: 6px; }
+  .client-heading > small { display: inline; font-size: 5px; }
+  .client-heading > strong { max-width: 120px; font-size: 13px; }
   .topbar-tools { gap: 4px; }
   .save-state { font-size: 5px; }
   .guide-replay { height: 25px; padding: 0 5px; }
@@ -461,6 +462,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .brand img { width: 22px; height: 22px; }
   .brand strong { font-size: 7px; }
   .brand small { font-size: 4px; }
+  .client-heading > small { display: none; }
   .client-heading > strong { max-width: 95px; font-size: 12px; }
   .save-state { display: none; }
   .client-area { height: 64vh; min-height: 350px; }

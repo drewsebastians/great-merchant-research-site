@@ -84,7 +84,9 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
   assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 160px/);
   assert.match(gameStyles, /\.window-titlebar \{ min-height: 40px;/);
-  assert.match(gameStyles, /\.client-heading > small, \.client-heading \.screen-status \{ display: none; \}/);
+  assert.match(gameStyles, /\.screen-status \{ display: none; \}/);
+  assert.match(gameStyles, /\.client-heading > small \{ display: inline; font-size: 5px; \}/);
+  assert.match(gameStyles, /\.client-heading > small \{ display: none; \}/);
   assert.match(gameStyles, /@media \(max-width: 900px\)/);
   assert.match(gameStyles, /@media \(max-height: 700px\) and \(min-width: 901px\)/);
   assert.match(gameStyles, /grid-template-rows: minmax\(300px,1fr\) 140px/);
