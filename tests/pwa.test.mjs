@@ -84,7 +84,7 @@ test("service worker precaches the app shell and serves its saved page while off
   let activatePromise;
   listeners.get("activate")({ waitUntil(promise) { activatePromise = promise; } });
   await activatePromise;
-  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v2"]);
+  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v3"]);
 
   let onlineResponse;
   listeners.get("fetch")({

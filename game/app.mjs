@@ -1,5 +1,5 @@
 import { ITEMS, PARTY_LIMIT, QUESTS, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute, findQuest } from "./data.mjs";
-import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, setTarget, startRoute, useTonic } from "./engine.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setLanguage, setTarget, startRoute, useTonic, withdrawFromBattle } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
 import { getQuestProgress, isQuestUnlocked } from "./quests.mjs";
 
@@ -8,7 +8,6 @@ if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
 }
 
 let state = loadGame() || createInitialState();
-const content = document.querySelector("#game-content");
 const notice = document.querySelector("#notice");
 const title = document.querySelector("#screen-title");
 const eyebrow = document.querySelector("#screen-eyebrow");
@@ -18,10 +17,23 @@ const $ = (selector) => document.querySelector(selector);
 let guideOpen = !state.onboardingSeen;
 let guideStep = 0;
 let guideTrigger = null;
+const ui = {
+  activeWindow: null,
+  selectedUnitId: state.formationFrontId || state.party[0]?.id || "mara",
+  selectedGroup: "all",
+  pendingCommand: null,
+  unitZones: {},
+  mapZoom: 1,
+  tradeEnabled: false,
+  peaceMode: true,
+  chatLines: []
+};
+if (state.phase === "victory" || state.phase === "defeat") ui.activeWindow = "results";
+const label = (english, indonesian = english) => state.language === "id" ? indonesian : english;
 const GUIDE_STEPS = [
   { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
   { kicker: "02 · PICK A ROAD", title: "Choose a route.", copy: "Select an open card on the travel board. Clear the Courier's Mark on Mosswind Road to open Amber Quarry." },
-  { kicker: "03 · DIRECT THE CREW", title: "Choose a target, then act.", copy: "Front position sets who opens. The rear line softens incoming damage. Strike builds focus, Brace protects the front, and Wayfarer's Arc spends two focus." },
+  { kicker: "03 · DIRECT THE CREW", title: "Issue field commands.", copy: "Select a unit or group, then move, attack, hold or stop. You can also withdraw. Battle timing and source-game key mappings are not verified for this prototype." },
   { kicker: "04 · CLOSE THE LEDGER", title: "Bring your gains home.", copy: "After victory, return to Hearthcross to recover. Sell trade cargo, prepare again and continue. Your journey saves on this device." }
 ];
 const STATIC_LABELS = {
@@ -214,7 +226,6 @@ function unitCard(unit, compact) {
     bar(unit.hp, unit.maxHp, "health") + (!compact && unit.maxFocus ? '<div class="focus-row"><span>FOCUS</span>' + Array.from({ length: unit.maxFocus }, (_, i) => '<i class="' + (i < unit.focus ? "filled" : "") + '"></i>').join("") + '</div>' : "") + '</div></article>';
 }
 function renderSide() {
-  $("#coin-count").textContent = String(state.coin);
   $("#day-count").textContent = String(state.day).padStart(2, "0");
   $("#crew-count").textContent = state.party.length + " / " + PARTY_LIMIT;
   $("#crew-summary").innerHTML = state.party.map((unit) => unitCard(unit, true)).join("");
@@ -431,9 +442,153 @@ function renderSettlement() {
 function renderPreferences() {
   const language = state.language || "en";
   return '<section class="preferences-banner"><div><small>HEARTHCROSS · PLAYER SETTINGS</small><h2>Make the journey yours.</h2><p>Choose the interface language and the combat input that suit you.</p></div><span class="market-stamp">LOCAL<br>SETTINGS</span></section>' +
-    '<section class="panel preferences-panel"><div class="preference-row"><div class="preference-copy"><small>DISPLAY</small><h3>Choose an interface language</h3><p>The interface language updates navigation, controls and common labels. Story and item descriptions remain in English.</p></div><div class="language-options" role="group" aria-label="Interface language"><button type="button" data-language-option="en" class="' + (language === "en" ? "selected" : "") + '" aria-pressed="' + (language === "en") + '">English</button><button type="button" data-language-option="id" class="' + (language === "id" ? "selected" : "") + '" aria-pressed="' + (language === "id") + '">Bahasa Indonesia</button></div></div>' +
-    '<div class="preference-row"><div class="preference-copy"><small>COMBAT INPUT</small><h3>Combat number shortcuts</h3><p>Use 1, 2 and 3 during combat to issue orders. You can still choose an order with the on-screen buttons.</p></div><button type="button" class="preference-toggle ' + (state.combatShortcutsEnabled ? "enabled" : "") + '" data-action="toggle-shortcuts" aria-pressed="' + state.combatShortcutsEnabled + '">' + (state.language === "id" ? (state.combatShortcutsEnabled ? "AKTIF" : "MATI") : (state.combatShortcutsEnabled ? "ON" : "OFF")) + '</button></div>' +
-    '<p class="preferences-note">Preferences save with this local journey and stay on this device.</p></section>';
+    '<section class="panel preferences-panel"><div class="preference-row"><div class="preference-copy"><small>' + label("DISPLAY", "TAMPILAN") + '</small><h3>' + label("Choose an interface language", "Pilih bahasa antarmuka") + '</h3><p>' + label("Common interface labels change language. Story and item descriptions remain in English.", "Label antarmuka utama berubah sesuai bahasa. Cerita dan deskripsi barang tetap dalam bahasa Inggris.") + '</p></div><div class="language-options" role="group" aria-label="' + label("Interface language", "Bahasa antarmuka") + '"><button type="button" data-language-option="en" class="' + (language === "en" ? "selected" : "") + '" aria-pressed="' + (language === "en") + '">English</button><button type="button" data-language-option="id" class="' + (language === "id" ? "selected" : "") + '" aria-pressed="' + (language === "id") + '">Bahasa Indonesia</button></div></div>' +
+    '<div class="preference-row"><div class="preference-copy"><small>' + label("CONTROLS", "KONTROL") + '</small><h3>' + label("Pointer and touch commands", "Perintah dengan penunjuk dan sentuhan") + '</h3><p>' + label("Use the on-screen controls. Xian key mappings and battle timing remain unverified for this prototype.", "Gunakan kontrol di layar. Pemetaan tombol dan waktu pertempuran Xian belum terverifikasi untuk prototipe ini.") + '</p></div><span class="status-pill">' + label("KEYS UNVERIFIED", "TOMBOL BELUM TERVERIFIKASI") + '</span></div>' +
+    '<p class="preferences-note">' + label("Preferences save with this local journey and stay on this device.", "Preferensi tersimpan bersama perjalanan lokal ini di perangkat ini.") + '</p></section>';
+}
+function renderRouteWindow() {
+  const route = findRoute(state.selectedRoute);
+  const hasScout = state.party.some((unit) => unit.id === "scout");
+  const canSetOut = hasScout && state.inventory.ration > 0 && isRouteUnlocked(state, route.id);
+  return '<section class="route-window"><div class="window-intro"><small>' + label("REGION CHART · PROTOTYPE LOCATIONS", "PETA WILAYAH · LOKASI PROTOTIPE") + '</small><h2>' + label("Choose a road", "Pilih jalan") + '</h2><p>' + label("Select a route, review its errand, then set out from Hearthcross.", "Pilih rute, tinjau tugasnya, lalu berangkat dari Hearthcross.") + '</p></div>' + renderTravelMap() +
+    '<div class="route-options">' + ROUTES.map((entry, index) => {
+      const available = isRouteUnlocked(state, entry.id);
+      const selected = route.id === entry.id;
+      const routeDone = (state.completedRoutes || []).includes(entry.id);
+      return '<button type="button" class="route-card ' + (selected ? "selected" : "") + (!available ? " locked" : "") + '" data-route="' + entry.id + '" aria-pressed="' + selected + '" ' + (!available ? "disabled" : "") + '><span class="route-number">0' + (index + 1) + '</span><span class="route-card-copy"><small>' + safe(entry.terrain) + '</small><strong>' + safe(entry.name) + '</strong><span>' + safe(entry.summary) + '</span></span><span class="route-card-status">' + (!available ? label("LOCKED", "TERKUNCI") : routeDone ? label("CLEARED", "SELESAI") : selected ? label("SELECTED", "DIPILIH") : label("OPEN", "TERBUKA")) + '</span></button>';
+    }).join("") + '</div><div class="route-departure"><span>' + label("Selected route", "Rute pilihan") + ': <strong>' + safe(route.name) + '</strong> · ' + (state.inventory.ration > 0 ? label("ration ready", "ransum tersedia") : label("buy a ration first", "beli ransum dahulu")) + '</span><button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + label("SET OUT", "BERANGKAT") + '</span><b>→</b></button></div></section>';
+}
+function renderStatusWindow() {
+  const hp = state.party.reduce((total, unit) => total + unit.hp, 0);
+  const maxHp = state.party.reduce((total, unit) => total + unit.maxHp, 0);
+  const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
+  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("STAMINA", "STAMINA") + '</small><strong>' + Math.round((hp / Math.max(1, maxHp)) * 100) + '%</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party">' + state.party.map((unit) => unitCard(unit, false)).join("") + '</div></section>';
+}
+function renderPropertyWindow() {
+  return '<section class="property-window"><div class="window-intro"><small>' + label("HEARTHCROSS · PROPERTY & LEDGER", "HEARTHCROSS · PROPERTI & BUKU") + '</small><h2>' + label("Local holdings", "Aset lokal") + '</h2><p>' + label("This original prototype tracks your coin and the results of each completed route.", "Prototipe orisinal ini mencatat uang dan hasil dari setiap rute yang selesai.") + '</p></div>' +
+    (renderSettlement() || '<div class="empty-window">' + label("No settlement recorded yet. Complete a route to add an entry.", "Belum ada catatan hasil. Selesaikan rute untuk menambahkan catatan.") + '</div>') +
+    '<div class="property-summary"><span>' + label("CURRENT FUNDS", "DANA SAAT INI") + '</span><strong>' + state.coin + ' M</strong><small>' + label("Prototype marks", "Mark prototipe") + '</small></div></section>';
+}
+function renderCommunityWindow() {
+  return '<section class="community-window"><div class="window-intro"><small>' + label("TOWN BOARD · LOCAL ONLY", "PAPAN KOTA · LOKAL") + '</small><h2>' + label("Messages from Hearthcross", "Pesan dari Hearthcross") + '</h2><p>' + label("This is a local prototype board. It does not connect to other players or send messages online.", "Ini papan prototipe lokal. Papan ini tidak terhubung dengan pemain lain dan tidak mengirim pesan ke internet.") + '</p></div><div class="notice-board"><article><b>⌂</b><span><strong>' + label("Exchange Keeper", "Penjaga Bursa") + '</strong><small>' + label("Supplies and trade are available in the shop window.", "Perbekalan dan perdagangan tersedia di jendela toko.") + '</small></span></article><article><b>♙</b><span><strong>' + label("Route Steward", "Pengelola Rute") + '</strong><small>' + label("Open the region chart to choose your next road.", "Buka peta wilayah untuk memilih jalan berikutnya.") + '</small></span></article></div></section>';
+}
+function renderPortraitRail() {
+  return state.party.map((unit, index) => {
+    const active = ui.selectedUnitId === unit.id;
+    return '<button type="button" class="portrait-slot ' + (active ? "selected" : "") + '" data-unit-select="' + unit.id + '" aria-label="' + safe(unit.name) + ', ' + safe(unit.role) + ', ' + Math.max(0, unit.hp) + ' of ' + unit.maxHp + (state.phase === "battle" ? "" : ", open inventory") + '" aria-pressed="' + active + '"><span class="portrait-index">' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><strong>' + safe(unit.name.split(" ")[0]) + '</strong><span class="portrait-role">' + safe(unit.role) + '</span>' + bar(unit.hp, unit.maxHp, "health") + '</button>';
+  }).join("") + '<button type="button" class="portrait-add" data-window="character" aria-label="' + label("Open character and mercenary window", "Buka jendela karakter dan pengawal") + '">＋<small>' + state.party.length + '/' + PARTY_LIMIT + '</small></button>';
+}
+function renderOverview() {
+  const hp = state.party.reduce((total, unit) => total + unit.hp, 0);
+  const maxHp = state.party.reduce((total, unit) => total + unit.maxHp, 0);
+  const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
+  return '<div class="overview-heading">' + label("PROTOTYPE VALUES · LOCAL", "NILAI PROTOTIPE · LOKAL") + '</div><div class="overview-cell"><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div class="overview-cell"><small>' + label("STAMINA", "STAMINA") + '</small><strong>' + Math.round((hp / Math.max(1, maxHp)) * 100) + '%</strong></div><div class="overview-cell"><small>' + label("ATTACK", "SERANGAN") + '</small><strong>' + attack + '</strong></div><div class="overview-cell"><small>' + label("CREDIT", "KREDIT") + '</small><strong>01</strong></div><div class="overview-cell money-cell"><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + '<i> M</i></strong></div>';
+}
+function renderMenu() {
+  const inBattle = state.phase === "battle";
+  const menu = [
+    ["inventory", "▤", label("Inventory", "Inventaris")],
+    ["status", "◉", label("Status", "Status")],
+    ["property", "⌂", label("Property", "Properti")],
+    ["character", "♙", label("Character", "Karakter")],
+    ["quest", "✦", label("Quest", "Misi")],
+    ["community", "☷", label("Community", "Komunitas")],
+    ["system", "⚙", label("System", "Sistem")]
+  ];
+  return menu.map(([name, glyph, titleText]) => '<button type="button" class="client-menu-button" data-window="' + name + '" aria-label="' + titleText + '" title="' + titleText + '"><span>' + glyph + '</span><small>' + titleText + '</small></button>').join("") +
+    '<button type="button" class="client-menu-button state-toggle" data-action="toggle-peace" aria-pressed="' + ui.peaceMode + '"><span>◈</span><small>' + (ui.peaceMode ? label("Peace", "Penuh") : label("Battle", "Siaga")) + '</small></button>' +
+    '<button type="button" class="client-menu-button state-toggle" data-action="toggle-trade" aria-pressed="' + ui.tradeEnabled + '"><span>⇄</span><small>' + label("Trade", "Dagang") + ' ' + (ui.tradeEnabled ? "ON" : "OFF") + '</small></button>';
+}
+function renderChatFeed() {
+  const lines = [...ui.chatLines.slice(-2).map((entry) => ({ text: entry, type: "local" })), ...state.log.slice(0, 2).map((entry) => ({ text: localizeNotice(entry), type: "event" }))];
+  return lines.map((entry) => '<div class="chat-line ' + entry.type + '"><i></i><span>' + safe(entry.text) + '</span></div>').join("") || '<div class="chat-line"><i></i><span>' + label("The road is quiet.", "Jalan sedang tenang.") + '</span></div>';
+}
+function renderTownHotspots() {
+  return '<div class="town-hotspots"><button type="button" class="npc-hotspot route-hotspot" data-window="travel"><span class="npc-medallion">⌖</span><small>' + label("ROUTE STEWARD", "PENGELOLA RUTE") + '</small><strong>' + label("Region chart", "Peta wilayah") + '</strong></button>' +
+    '<button type="button" class="npc-hotspot market-hotspot" data-window="market"><span class="npc-medallion">¤</span><small>' + label("EXCHANGE KEEPER", "PENJAGA BURSA") + '</small><strong>' + label("Shop & provisions", "Toko & bekal") + '</strong></button>' +
+    '<button type="button" class="npc-hotspot crew-hotspot" data-window="character"><span class="npc-medallion">♙</span><small>' + label("RECRUITMENT BOARD", "PAPAN REKRUTMEN") + '</small><strong>' + label("Meet the crew", "Temui awak") + '</strong></button></div>';
+}
+function renderMiniMap() {
+  const activeRoute = findRoute(state.phase === "battle" ? state.activeRoute : state.selectedRoute);
+  const zoom = Math.max(0, Math.min(2, ui.mapZoom));
+  return '<aside class="mini-map" aria-label="' + label("Original local map", "Peta lokal orisinal") + '"><div class="map-title"><span>' + label("AREA MAP", "PETA AREA") + '</span><button type="button" data-action="map-zoom" data-delta="-1" aria-label="' + label("Zoom out", "Perkecil") + '">−</button><button type="button" data-action="map-zoom" data-delta="1" aria-label="' + label("Zoom in", "Perbesar") + '">＋</button></div><div class="map-disc zoom-' + zoom + '"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M12 70 Q28 57 40 63T68 43T91 29" /><path class="map-branch" d="M40 63 Q48 76 74 83" /></svg><i class="map-marker home"></i><i class="map-marker current"></i><i class="map-marker destination"></i><span class="map-north">N</span></div><button type="button" class="map-location" data-window="travel">' + safe(activeRoute.name) + ' <span>↗</span></button></aside>';
+}
+function renderBattlefield() {
+  const battle = state.battle;
+  const route = findRoute(battle?.routeId || state.activeRoute);
+  const zones = { west: { left: 25, top: 53 }, center: { left: 39, top: 59 }, east: { left: 52, top: 52 } };
+  const party = state.party.map((unit, index) => {
+    const zone = ui.unitZones[unit.id] || (index === 0 ? "west" : "center");
+    const pos = zones[zone] || zones.west;
+    const selected = unit.id === ui.selectedUnitId;
+    const memberGroup = unit.id === state.formationFrontId ? "front" : "rear";
+    const groupSelected = ui.selectedGroup === "all" || ui.selectedGroup === memberGroup;
+    return '<button type="button" class="battle-token party-token ' + (selected ? "selected" : "") + (groupSelected ? " in-group" : "") + '" style="left:' + pos.left + '%;top:' + pos.top + '%" data-unit-select="' + unit.id + '" aria-pressed="' + selected + '"><img src="' + portrait(unit.id) + '" alt=""><strong>' + safe(unit.name.split(" ")[0]) + '</strong><small>' + Math.max(0, unit.hp) + '/' + unit.maxHp + '</small></button>';
+  }).join("");
+  const enemies = (battle?.enemies || []).map((enemy, index) => {
+    const selected = battle.targetId === enemy.id;
+    const left = 67 + (index % 2) * 14;
+    const top = index > 1 ? 56 : 35;
+    return '<button type="button" class="battle-token enemy-token ' + (selected ? "selected" : "") + (enemy.hp <= 0 ? " defeated" : "") + '" style="left:' + left + '%;top:' + top + '%" data-target="' + enemy.id + '" ' + (enemy.hp <= 0 ? "disabled" : "") + '><img src="' + portrait(enemy.id) + '" alt=""><strong>' + safe(enemy.name.split(" ")[0]) + '</strong><small>' + Math.max(0, enemy.hp) + '/' + enemy.maxHp + '</small>' + bar(enemy.hp, enemy.maxHp, "enemy-health") + '</button>';
+  }).join("");
+  const destinations = ui.pendingCommand === "move" ? '<div class="move-destinations"><span>' + label("Choose a prototype position", "Pilih posisi prototipe") + '</span>' + ["west", "center", "east"].map((zone) => '<button type="button" data-action="move-to" data-zone="' + zone + '">' + label(zone.toUpperCase(), zone === "west" ? "BARAT" : zone === "center" ? "TENGAH" : "TIMUR") + '</button>').join("") + '</div>' : "";
+  const target = battle?.enemies.find((enemy) => enemy.id === battle.targetId && enemy.hp > 0);
+  return '<div class="battlefield-view"><div class="battle-scene-title"><small>' + safe(route.name.toUpperCase()) + ' · ' + label("PROTOTYPE ENCOUNTER", "PERTEMUAN PROTOTIPE") + '</small><strong>' + safe(route.encounter) + '</strong><span>' + label("Round", "Ronde") + ' ' + (battle?.turn || 1) + '</span></div><div class="battle-lanes" aria-label="' + label("Battlefield positions", "Posisi medan tempur") + '"><span class="lane-label left">' + label("CREW", "AWAK") + '</span><span class="lane-label right">' + label("OPPONENTS", "LAWAN") + '</span></div>' + party + enemies + destinations +
+    '<section class="battle-command-deck"><div class="command-deck-top"><div><small>' + label("BATTLEFIELD COMMANDS", "PERINTAH MEDAN TEMPUR") + '</small><span>' + label("Selected", "Dipilih") + ': ' + safe(state.party.find((unit) => unit.id === ui.selectedUnitId)?.name || state.party[0].name) + (target ? ' · ' + label("Target", "Sasaran") + ': ' + safe(target.name) : "") + '</span></div><span class="prototype-tag">' + label("PROTOTYPE TIMING", "WAKTU PROTOTIPE") + '</span></div><div class="group-select"><span>' + label("SELECT GROUP", "PILIH KELOMPOK") + '</span>' + [["all", label("All", "Semua")], ["front", label("Front", "Depan")], ["rear", label("Support", "Pendukung")]].map(([id, text]) => '<button type="button" data-action="select-group" data-group="' + id + '" class="' + (ui.selectedGroup === id ? "selected" : "") + '" aria-pressed="' + (ui.selectedGroup === id) + '">' + text + '</button>').join("") + '</div><div class="command-row">' +
+    '<button type="button" class="command-button" data-action="move"><b>↗</b><span>' + label("Move", "Bergerak") + '</span></button><button type="button" class="command-button" data-action="attack" ' + (!target ? "disabled" : "") + '><b>⚔</b><span>' + label("Attack", "Serang") + '</span></button><button type="button" class="command-button" data-action="hold"><b>⬟</b><span>' + label("Hold", "Tahan") + '</span></button><button type="button" class="command-button" data-action="stop"><b>■</b><span>' + label("Stop", "Berhenti") + '</span></button><button type="button" class="command-button withdraw-command" data-action="withdraw"><b>↶</b><span>' + label("Withdraw", "Mundur") + '</span></button></div><p class="battle-note">' + label("Click an opponent to target it. Move repositions a selected unit; Attack and Hold advance the original prototype combat turn. No Xian key or timing claim is made.", "Klik lawan untuk memilih sasaran. Bergerak memindahkan posisi unit; Serang dan Tahan melanjutkan giliran tempur prototipe. Tidak ada klaim tombol atau waktu Xian.") + '</p></section></div>';
+}
+function renderWorldScene() {
+  const inBattle = state.phase === "battle";
+  const onRoad = ["battle", "victory", "defeat"].includes(state.phase);
+  const route = findRoute(onRoad ? state.activeRoute : state.selectedRoute);
+  const area = onRoad ? route.name : "Hearthcross";
+  const theme = onRoad ? (route.id === "amber-quarry" ? "quarry-scene" : "road-scene") : "town-scene";
+  const caption = inBattle ? label("Command your crew in the encounter.", "Berikan perintah kepada awak dalam pertempuran.") :
+    onRoad ? label("The field report is ready. Return to town to continue.", "Laporan perjalanan siap. Kembali ke kota untuk melanjutkan.") :
+      label("Visit a town character or choose a road to continue.", "Temui warga kota atau pilih jalan untuk melanjutkan.");
+  return '<section class="world-scene ' + theme + (inBattle ? " in-battle" : "") + '" aria-label="' + safe(area) + ' ' + label("world scene", "pemandangan dunia") + '"><div class="scene-vignette"></div><div class="scene-coordinate">' + (inBattle ? safe(route.coordinate) : label("NORTH GATE · MARKET WARD", "GERBANG UTARA · KAWASAN PASAR")) + '</div><div class="scene-location"><small>' + (inBattle ? label("BATTLEFIELD", "MEDAN TEMPUR") : label("FIELD · TOWN", "LAPANGAN · KOTA")) + ' · ' + label("DAY", "HARI") + ' ' + String(state.day).padStart(2, "0") + '</small><h1>' + safe(area) + '</h1><p>' + caption + '</p></div>' +
+    (inBattle ? renderBattlefield() : renderTownHotspots()) +
+    '<div class="scene-bottomline"><span>' + (inBattle ? label("Local encounter · original prototype rules", "Pertemuan lokal · aturan prototipe orisinal") : label("Original local setting · prototype values", "Latar lokal orisinal · nilai prototipe")) + '</span><span>' + label("LOCAL SAVE", "SIMPANAN LOKAL") + '</span></div></section>';
+}
+function renderWindowContent(name) {
+  if (name === "travel") return renderRouteWindow();
+  if (name === "market") return renderMarket();
+  if (name === "character") return renderRoster();
+  if (name === "inventory") return renderInventory();
+  if (name === "status") return renderStatusWindow();
+  if (name === "property") return renderPropertyWindow();
+  if (name === "quest") return renderQuestJournal();
+  if (name === "community") return renderCommunityWindow();
+  if (name === "system") return renderPreferences();
+  if (name === "results") return state.phase === "victory" ? renderVictory() : renderDefeat();
+  return "";
+}
+function renderClientWindow() {
+  const name = ui.activeWindow || ((state.phase === "victory" || state.phase === "defeat") ? "results" : null);
+  const root = $("#client-window-root");
+  if (!root) return;
+  if (!name) { root.innerHTML = ""; return; }
+  const titles = {
+    travel: label("World map · route chart", "Peta dunia · pilihan rute"),
+    market: label("Town shop · Hearthcross", "Toko kota · Hearthcross"),
+    character: label("Character & mercenaries", "Karakter & pengawal"),
+    inventory: label("Inventory · party pack", "Inventaris · bekal awak"),
+    status: label("Overview and status", "Ringkasan dan status"),
+    property: label("Property and ledger", "Properti dan buku"),
+    quest: label("Quest information", "Informasi misi"),
+    community: label("Community · local board", "Komunitas · papan lokal"),
+    system: label("System settings", "Pengaturan sistem"),
+    results: state.phase === "victory" ? label("Encounter complete", "Pertemuan selesai") : label("Crew retreat", "Awak mundur")
+  };
+  const isResult = name === "results";
+  root.innerHTML = '<div class="window-scrim"><section class="client-window ' + (name === "market" ? "shop-window" : "") + '" role="dialog" aria-modal="true" aria-labelledby="client-window-title"><header class="window-titlebar"><span class="window-mark">◇</span><div><small>' + label("WAYFARER CLIENT WINDOW", "JENDELA KLIEN WAYFARER") + '</small><h2 id="client-window-title">' + titles[name] + '</h2></div>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content">' + localizeUI(renderWindowContent(name)) + '</div></section></div>';
+}
+function openWindow(name) {
+  if (state.phase === "battle" && ["travel", "market", "character", "property"].includes(name)) return;
+  const tabNames = { travel: "journey", market: "market", character: "roster", inventory: "inventory", status: "roster", property: "journal", quest: "journal", community: "journal", system: "preferences" };
+  if (tabNames[name]) state = changeTab(state, tabNames[name]);
+  ui.activeWindow = name;
+  render();
 }
 function closeGuide() {
   guideOpen = false;
@@ -465,19 +620,42 @@ function renderGuide() {
 function render() {
   document.documentElement.lang = state.language || "en";
   applyStaticLabels();
-  setHeader(state.activeTab, state.phase);
-  navState();
-  renderSide();
+  const mode = state.phase === "battle" ? "battlefield" : (ui.activeWindow === "market" ? "shop" : (state.phase === "victory" || state.phase === "defeat" ? "results" : "field"));
+  const heading = mode === "battlefield" ? [label("BATTLEFIELD", "MEDAN TEMPUR"), findRoute(state.activeRoute).name] :
+    mode === "shop" ? [label("SHOP", "TOKO"), label("Hearthcross Exchange", "Bursa Hearthcross")] :
+    mode === "results" ? [label("FIELD REPORT", "LAPORAN LAPANGAN"), label("Encounter results", "Hasil pertemuan")] :
+    [label("FIELD · TOWN", "LAPANGAN · KOTA"), "Hearthcross"];
+  $("#screen-eyebrow").textContent = heading[0];
+  $("#screen-title").textContent = heading[1];
+  $("#phase-label").innerHTML = '<span class="status-pip ' + (mode === "battlefield" ? "danger-pip" : "") + '"></span>' + heading[0];
+  $("#coin-count").textContent = String(state.coin);
+  $("#day-count").textContent = String(state.day).padStart(2, "0");
+  $("#portrait-rail").innerHTML = renderPortraitRail();
+  $("#world-content").innerHTML = renderWorldScene();
+  $("#mini-map-root").innerHTML = renderMiniMap();
+  $("#overview-strip").innerHTML = renderOverview();
+  $("#client-menu").innerHTML = renderMenu();
+  $("#chat-feed").innerHTML = renderChatFeed();
   notice.textContent = localizeNotice(state.notice);
   notice.classList.toggle("show", Boolean(state.notice));
-  const renderers = { journey: renderJourney, market: renderMarket, roster: renderRoster, inventory: renderInventory, journal: renderJournal, preferences: renderPreferences };
-  content.innerHTML = localizeUI(renderers[state.activeTab]());
+  renderClientWindow();
   renderGuide();
   const saved = saveGame(state);
-  $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + localizeUI(saved ? " SAVED HERE" : " SESSION ONLY");
+  $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + label(saved ? " SAVED HERE" : " SESSION ONLY", saved ? " TERSIMPAN" : " SESI SAJA");
   document.body.dataset.phase = state.phase;
+  document.body.dataset.mode = mode;
 }
-function transition(next) { state = next; render(); }
+function transition(next) {
+  const previousPhase = state.phase;
+  state = next;
+  if (state.phase === "victory" || state.phase === "defeat") ui.activeWindow = "results";
+  else if (previousPhase !== "battle" && state.phase === "battle") ui.activeWindow = null;
+  else if (previousPhase === "battle" && state.phase !== "battle") {
+    ui.activeWindow = null;
+    ui.pendingCommand = null;
+  }
+  render();
+}
 
 document.addEventListener("click", (event) => {
   const guideAction = event.target.closest('[data-action^="onboarding-"]');
@@ -486,6 +664,13 @@ document.addEventListener("click", (event) => {
     if (backdrop && !event.target.closest(".guide-dialog")) {
       closeGuide();
     }
+    return;
+  }
+  const unitButton = event.target.closest("[data-unit-select]");
+  if (unitButton) {
+    ui.selectedUnitId = unitButton.dataset.unitSelect;
+    if (state.phase === "town") openWindow("inventory");
+    else render();
     return;
   }
   const formationButton = event.target.closest("[data-formation-front]");
@@ -497,19 +682,40 @@ document.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button || button.disabled) return;
   if (button.dataset.languageOption) { transition(setLanguage(state, button.dataset.languageOption)); return; }
-  if (button.dataset.tab) { transition(changeTab(state, button.dataset.tab)); return; }
+  if (button.dataset.window) { openWindow(button.dataset.window); return; }
+  if (button.dataset.tab) {
+    const tabWindow = { journey: "travel", market: "market", roster: "character", inventory: "inventory", journal: "quest", preferences: "system" };
+    openWindow(tabWindow[button.dataset.tab] || "travel");
+    return;
+  }
   const action = button.dataset.action;
   if (!action) return;
   if (action === "start") transition(startRoute(state));
   else if (action === "hire") transition(hireScout(state));
   else if (action === "buy") transition(buyItem(state, button.dataset.item));
   else if (action === "craft") transition(craftRecipe(state, button.dataset.recipe));
-  else if (action === "toggle-shortcuts") transition(setCombatShortcutsEnabled(state, !state.combatShortcutsEnabled));
   else if (action === "equip") transition(equipItem(state, button.dataset.item));
   else if (action === "unequip") transition(equipItem(state, null));
   else if (action === "sell") transition(sellItem(state, button.dataset.item));
   else if (action === "use-tonic") transition(useTonic(state));
-  else if (["strike", "brace", "technique"].includes(action)) transition(performAction(state, action));
+  else if (action === "strike" || action === "attack") transition(performAction(state, "strike"));
+  else if (action === "brace" || action === "hold") transition(performAction(state, "brace"));
+  else if (action === "technique") transition(performAction(state, action));
+  else if (action === "move") { ui.pendingCommand = "move"; state.notice = label("Choose a position for the selected unit.", "Pilih posisi untuk unit yang dipilih."); render(); }
+  else if (action === "move-to") {
+    ui.unitZones[ui.selectedUnitId] = button.dataset.zone;
+    ui.pendingCommand = null;
+    const unitName = state.party.find((unit) => unit.id === ui.selectedUnitId)?.name || label("Selected unit", "Unit terpilih");
+    state.notice = unitName + (state.language === "id" ? " dipindahkan ke posisi " + (button.dataset.zone === "west" ? "barat" : button.dataset.zone === "center" ? "tengah" : "timur") + ". Posisi dan waktu tempur hanya untuk prototipe." : " repositioned to the " + button.dataset.zone + " position. Prototype positioning only; battle timing is unverified.");
+    render();
+  }
+  else if (action === "stop") { ui.pendingCommand = null; state.notice = label("The selected unit's pending order has stopped.", "Perintah tertunda untuk unit terpilih dihentikan."); render(); }
+  else if (action === "select-group") { ui.selectedGroup = button.dataset.group; render(); }
+  else if (action === "withdraw") transition(withdrawFromBattle(state));
+  else if (action === "toggle-peace") { ui.peaceMode = !ui.peaceMode; render(); }
+  else if (action === "toggle-trade") { ui.tradeEnabled = !ui.tradeEnabled; render(); }
+  else if (action === "map-zoom") { ui.mapZoom = Math.max(0, Math.min(2, ui.mapZoom + Number(button.dataset.delta || 0))); render(); }
+  else if (action === "close-window") { if (ui.activeWindow !== "results") { ui.activeWindow = null; render(); } }
   else if (action === "return-town") transition(returnToTown(state));
   else if (action === "recover") transition(recoverInTown(state));
   else if (action === "onboarding-replay") { guideTrigger = button; guideStep = 0; guideOpen = true; render(); }
@@ -519,11 +725,28 @@ document.addEventListener("click", (event) => {
   else if (action === "reset" && window.confirm("Start a fresh journey? This clears only this game's save on this device.")) {
     clearGame();
     state = resetJourney();
+    ui.activeWindow = null;
+    ui.selectedUnitId = state.formationFrontId;
+    ui.selectedGroup = "all";
+    ui.pendingCommand = null;
+    ui.unitZones = {};
+    ui.chatLines = [];
     guideTrigger = button;
     guideStep = 0;
     guideOpen = true;
     render();
   }
+});
+document.addEventListener("submit", (event) => {
+  if (event.target?.id !== "local-chat-form") return;
+  event.preventDefault();
+  const input = event.target.querySelector('[name="chat-message"]');
+  const message = String(input?.value || "").trim().slice(0, 160);
+  if (!message) return;
+  ui.chatLines.push(message);
+  ui.chatLines = ui.chatLines.slice(-4);
+  event.target.reset?.();
+  render();
 });
 document.addEventListener("keydown", (event) => {
   if (guideOpen && event.key === "Escape") {
@@ -546,10 +769,9 @@ document.addEventListener("keydown", (event) => {
     }
     return;
   }
-  if (state.phase !== "battle" || !state.combatShortcutsEnabled || event.altKey || event.ctrlKey || event.metaKey) return;
-  const orders = { "1": "strike", "2": "brace", "3": "technique" };
-  if (!orders[event.key]) return;
-  event.preventDefault();
-  transition(performAction(state, orders[event.key]));
+  if (event.key === "Escape" && ui.activeWindow && ui.activeWindow !== "results") {
+    ui.activeWindow = null;
+    render();
+  }
 });
 render();

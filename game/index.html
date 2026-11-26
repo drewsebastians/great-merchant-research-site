@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17252b">
-  <meta name="description" content="A playable, original browser prototype about a wayfarer, a small crew and a road worth taking.">
+  <meta name="description" content="An original browser game with a scene-first client, a travelling crew, local trade and tactical encounters.">
   <link rel="manifest" href="./manifest.webmanifest">
   <title>Wayfarer's Ledger — Playable Prototype</title>
   <link rel="icon" href="./assets/mark.svg" type="image/svg+xml">
@@ -14,46 +14,44 @@
   <div class="game-shell">
     <header class="topbar">
       <a class="brand" href="./" aria-label="Wayfarer's Ledger home">
-        <img src="./assets/mark.svg" alt="" width="36" height="36">
-        <span><strong>WAYFARER'S LEDGER</strong><small>V5.0 · PLAYABLE SLICE</small></span>
+        <img src="./assets/mark.svg" alt="" width="32" height="32">
+        <span><strong>WAYFARER'S LEDGER</strong><small>ORIGINAL BROWSER PROTOTYPE</small></span>
       </a>
-      <div class="topbar-center"><span class="live-dot"></span><span data-i18n="local.journey">LOCAL JOURNEY</span> <i>/</i> <span data-i18n="town.name">HEARTHCROSS</span></div>
+      <div class="client-heading">
+        <small id="screen-eyebrow">FIELD · TOWN</small>
+        <strong id="screen-title">Hearthcross</strong>
+        <span class="screen-status" id="phase-label"><i class="status-pip"></i> FIELD</span>
+      </div>
       <div class="topbar-tools">
         <span class="save-state" id="save-state"><span class="save-dot"></span> SAVED HERE</span>
-        <span class="wallet"><img src="./assets/coin.svg" alt=""><strong id="coin-count">60</strong><small data-i18n="currency.marks">MARKS</small></span>
         <button class="guide-replay" type="button" data-action="onboarding-replay" data-i18n-title="action.guideReplay" aria-haspopup="dialog" title="Replay the quick guide"><span>?</span><b data-i18n="guide.how">HOW TO PLAY</b></button>
         <button class="icon-button" type="button" data-action="reset" data-i18n-aria="action.reset" data-i18n-title="action.reset" aria-label="Start a new journey" title="Start a new journey">↻</button>
       </div>
     </header>
     <main class="game-layout">
-      <nav class="nav-rail" aria-label="Game screens">
-        <div class="nav-caption" data-i18n="ledger.yours">YOUR LEDGER</div>
-        <button class="nav-item active" type="button" data-tab="journey"><span class="nav-glyph">⌂</span><span data-i18n="tab.journey">Journey</span><kbd>01</kbd></button>
-        <button class="nav-item" type="button" data-tab="market"><span class="nav-glyph">◫</span><span data-i18n="tab.market">Town Exchange</span><kbd>02</kbd></button>
-        <button class="nav-item" type="button" data-tab="roster"><span class="nav-glyph">♙</span><span data-i18n="tab.crew">Crew</span><kbd>03</kbd></button>
-        <button class="nav-item" type="button" data-tab="inventory"><span class="nav-glyph">▤</span><span data-i18n="tab.pack">Pack</span><kbd>04</kbd></button>
-        <button class="nav-item" type="button" data-tab="journal"><span class="nav-glyph">≋</span><span data-i18n="tab.journal">Journal</span><kbd>05</kbd></button>
-        <button class="nav-item" type="button" data-tab="preferences"><span class="nav-glyph">⚙</span><span data-i18n="tab.preferences">Preferences</span><kbd>06</kbd></button>
-        <div class="rail-bottom"><div class="day-mark"><small data-i18n="day.label">DAY</small><strong id="day-count">01</strong></div><span class="build-tag" data-i18n="prototype.label">ORIGINAL PROTOTYPE</span></div>
-      </nav>
-      <section class="main-column">
-        <div class="page-heading"><div><div class="eyebrow" id="screen-eyebrow">FIELD NOTES · CHAPTER 01</div><h1 id="screen-title">A road opens</h1></div><div class="screen-status" id="phase-label"><span class="status-pip"></span> HEARTHCROSS</div></div>
-        <div id="notice" class="notice" role="status" aria-live="polite"></div>
-        <div id="game-content" aria-live="polite"></div>
-        <footer class="main-footer"><span>WAYFARER'S LEDGER · V5.0</span><span data-i18n="footer.brandline">Prototype balance · original artwork · browser save</span></footer>
+      <aside class="portrait-rail" id="portrait-rail" aria-label="Character and mercenary portraits"></aside>
+      <section class="client-area" aria-label="Game client">
+        <div class="client-stage">
+          <div id="notice" class="notice" role="status" aria-live="polite"></div>
+          <div id="world-content"></div>
+          <div id="mini-map-root"></div>
+          <div id="client-window-root"></div>
+        </div>
       </section>
-      <aside class="intel-panel" aria-label="Journey status">
-        <section class="side-section objective-card">
-          <div class="side-kicker"><span class="mini-star">✦</span> <span data-i18n="errand.active">ACTIVE ERRAND</span></div>
-          <h2 id="objective-title">The courier's mark</h2>
-          <p id="objective-copy">Hire a trail scout, pack a ration, then recover a sealed parcel from the ridge road.</p>
-          <div class="objective-progress"><span id="objective-progress"></span></div>
-          <div class="objective-meta"><span id="objective-step">PREPARE YOUR CREW</span><span id="objective-count">0 / 3</span></div>
+      <section class="lower-hud" aria-label="Character status, local chat and client menu">
+        <div class="hud-overview" id="overview-strip" aria-label="Character overview"></div>
+        <section class="chat-window" aria-label="Local chat and field log">
+          <div class="chat-heading"><strong>CHAT / FIELD LOG</strong><small>LOCAL ONLY</small></div>
+          <div class="chat-feed" id="chat-feed" aria-live="polite"></div>
+          <form id="local-chat-form" class="chat-entry">
+            <label class="sr-only" for="chat-message">Add a local note</label>
+            <input id="chat-message" name="chat-message" maxlength="160" autocomplete="off" placeholder="Write a local note…">
+            <button type="submit" aria-label="Add local note">↵</button>
+          </form>
         </section>
-        <section class="side-section crew-section"><div class="side-heading"><span data-i18n="crew.yours">YOUR CREW</span><small id="crew-count">1 / 3</small></div><div id="crew-summary" class="crew-list"></div></section>
-        <section class="side-section log-section"><div class="side-heading"><span data-i18n="log.field">FIELD LOG</span><button type="button" data-tab="journal" class="text-button" data-i18n="action.open">OPEN</button></div><div id="log-summary" class="log-list"></div></section>
-        <div class="side-foot"><span class="seal-icon">◈</span><span><span data-i18n="footer.save">Progress saves on this device.</span><br><span data-i18n="footer.scope">Prototype values are not source-game balance.</span></span></div>
-      </aside>
+        <nav class="client-menu" id="client-menu" aria-label="Client menu"></nav>
+        <div class="hud-date"><small>FIELD CALENDAR</small><strong><span id="day-count">01</span></strong><span>DAY</span><i>LOCAL TIME</i></div>
+      </section>
     </main>
     <div id="guide-layer"></div>
   </div>

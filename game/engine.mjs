@@ -296,6 +296,30 @@ export function performAction(state, kind) {
   if (!["strike", "brace", "technique"].includes(kind)) return reject(state, "Choose a combat order.");
   return resolveCrewAction(copy(state), kind, state.battle.targetId);
 }
+export function withdrawFromBattle(state) {
+  if (state.phase !== "battle" || !state.battle) return reject(state, "There is no active encounter to withdraw from.");
+  const next = copy(state);
+  next.party.forEach((unit) => { unit.hp = Math.max(1, Math.ceil(unit.maxHp * 0.55)); });
+  next.phase = "town";
+  next.activeTab = "journey";
+  next.day += 1;
+  next.battle = null;
+  next.routeCleared = false;
+  if (next.tripLedger) {
+    next.lastSettlement = {
+      routeId: next.tripLedger.routeId,
+      rationCost: next.tripLedger.rationCost,
+      rewardCoin: 0,
+      cargoValue: 0,
+      cargoSoldRevenue: 0,
+      cargoCount: 0,
+      cargoSoldCount: 0,
+      netProceeds: -next.tripLedger.rationCost
+    };
+  }
+  next.tripLedger = null;
+  return record(next, "The crew withdraws to Hearthcross and recovers. No route reward was collected.");
+}
 export function useTonic(state) {
   if (!["town", "battle"].includes(state.phase)) return reject(state, "Use supplies after returning to Hearthcross.");
   if ((state.inventory.tonic || 0) < 1) return reject(state, "You have no Field Tonic.");

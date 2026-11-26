@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createInitialState } from "../game/data.mjs";
-import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, startRoute, useTonic } from "../game/engine.mjs";
+import { buyItem, changeTab, craftRecipe, equipItem, hireScout, performAction, recoverInTown, returnToTown, selectRoute, sellItem, setCombatShortcutsEnabled, setFormationFront, setLanguage, startRoute, useTonic, withdrawFromBattle } from "../game/engine.mjs";
 import { getQuestProgress, isQuestComplete, isQuestUnlocked } from "../game/quests.mjs";
 
 function preparedState() { return hireScout(createInitialState()); }
@@ -222,6 +222,19 @@ test("using a tonic in battle spends the crew order", () => {
   assert.equal(healed.inventory.tonic, 0);
   assert.equal(healed.party[0].hp, 56);
   assert.equal(healed.battle.turn, 2);
+});
+test("withdrawing ends the encounter, preserves no route reward and returns a living crew", () => {
+  const state = startRoute(preparedState());
+  state.party[0].hp = 22;
+  const withdrawn = withdrawFromBattle(state);
+  assert.equal(withdrawn.phase, "town");
+  assert.equal(withdrawn.battle, null);
+  assert.equal(withdrawn.day, state.day + 1);
+  assert.equal(withdrawn.tripLedger, null);
+  assert.equal(withdrawn.lastSettlement.rewardCoin, 0);
+  assert.equal(withdrawn.lastSettlement.netProceeds, -6);
+  assert.ok(withdrawn.party.every((unit) => unit.hp > 0));
+  assert.equal(withdrawFromBattle(withdrawn).phase, "town");
 });
 
 test("a defeated crew can recover and retry without taking route rewards", () => {
