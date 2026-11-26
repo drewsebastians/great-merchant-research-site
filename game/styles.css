@@ -58,7 +58,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .client-stage { height: 100%; min-height: 0; position: relative; overflow: hidden; border: 1px solid rgba(222,205,163,.48); background: #263a3b; box-shadow: 0 5px 18px rgba(0,0,0,.25); }
 #world-content { position: absolute; inset: 0; }
 .world-scene { position: absolute; inset: 0; overflow: hidden; isolation: isolate; background-color: #596a5b; background-position: center 51%; background-size: cover; }
-.world-scene.town-scene { background-image: url("./assets/hearthcross.svg"); }
+.world-scene.town-scene { background-image: url("./assets/hearthcross-field.jpg"); }
 .world-scene.road-scene { background-image: url("./assets/mosswind-road.svg"); }
 .world-scene.quarry-scene { background-image: url("./assets/amber-quarry.svg"); }
 .scene-vignette { position: absolute; z-index: 0; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(8,17,18,.26), transparent 30%, rgba(7,14,15,.08) 48%, rgba(9,16,18,.79) 100%), linear-gradient(90deg, rgba(8,16,17,.22), transparent 35%, transparent 75%, rgba(8,16,17,.22)); }

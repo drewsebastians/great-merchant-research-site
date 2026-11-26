@@ -82,6 +82,7 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(element("#client-menu").innerHTML, /data-window="inventory"/);
   assert.equal(element("#client-window-root").innerHTML, "");
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
+  assert.match(gameStyles, /\.world-scene\.town-scene \{ background-image: url\("\.\/assets\/hearthcross-field\.jpg"\); \}/);
   assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 160px/);
   assert.match(gameStyles, /\.window-titlebar \{ min-height: 40px;/);
   assert.match(gameStyles, /\.screen-status \{ display: none; \}/);
