@@ -1,0 +1,151 @@
+name: HUD readability candidate validation
+on:
+  push:
+    branches: ['validation/hud-readability-2026-11-28']
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9c537e5e4973d645ebd9f546dce224758515196d
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact candidate, tests, preservation and content
+        run: |
+          test "$(git rev-parse HEAD)" = '9c537e5e4973d645ebd9f546dce224758515196d'
+          git diff --check 9efb48ad84b834da0a77754ca4301b26ade37691 HEAD
+          git diff --exit-code be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457 HEAD -- game/app.mjs game/data.mjs game/engine.mjs game/quests.mjs game/storage.mjs game/index.html game/manifest.webmanifest game/assets data
+          node --check game/app.mjs
+          node --check game/sw.js
+          node --test tests/*.test.mjs
+          node scripts/validate-game-content.mjs
+      - name: Verify deployed v24 stylesheet and worker baseline
+        run: |
+          git show be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457:game/styles.css > /tmp/base-style.css
+          git show be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457:game/sw.js > /tmp/base-sw.js
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/styles.css?v=24' -o /tmp/live-style.css
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/sw.js?v=24' -o /tmp/live-sw.js
+          cmp /tmp/base-style.css /tmp/live-style.css
+          cmp /tmp/base-sw.js /tmp/live-sw.js
+      - name: Install isolated browser-test dependency
+        run: npm install --no-save --no-package-lock playwright@1.55.0
+      - name: Browser checks on desktop and narrow viewports
+        run: |
+          mkdir -p /tmp/hud-readability-screens
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hud-readability-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS 'http://127.0.0.1:8765/game/' -o /dev/null; then break; fi
+            sleep 1
+          done
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+          const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
+          const origin='http://127.0.0.1:8765/game/';
+          const key='wayfarers-ledger:v5:save';
+          const menu=name=>'#client-menu [data-window="'+name+'"]';
+          const win=name=>'.client-window[data-window-name="'+name+'"]';
+          const stable=value=>{const copy=structuredClone(value);delete copy.activeTab;delete copy.language;delete copy.log;delete copy.notice;return copy;};
+          const documentWidth=page=>page.locator('html').evaluate(e=>e.scrollWidth);
+          try {
+            for (const [width,height,mobile] of [[1363,936,false],[390,844,true],[340,740,true]]) {
+              const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:1});
+              const page=await context.newPage();
+              const errors=[];
+              page.on('pageerror',error=>errors.push(error.message));
+              await page.goto(origin);
+              await page.locator(menu('inventory')).waitFor();
+              await page.evaluate(async key=>{
+                const {createInitialState}=await import('./data.mjs');
+                const s=createInitialState();
+                Object.assign(s,{day:5,coin:102,onboardingSeen:true,language:'en'});
+                s.party.push({id:'scout',name:'Tarin Reed',role:'Trail Scout',hp:34,maxHp:46,focus:1,maxFocus:2,portrait:'assets/scout.svg'});
+                s.inventory={ration:1,tonic:0,tea:3,fittings:1,'tool-roll':0,edge:0,seal:1};
+                localStorage.setItem(key,JSON.stringify(s));
+              },key);
+              await page.reload();
+              await page.locator(menu('inventory')).waitFor();
+              const baseline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(baseline.day,5);assert.equal(baseline.coin,102);assert.equal(baseline.party.length,2);
+              const hud=await page.locator('#client-menu').evaluate(el=>{
+                const buttons=[...el.querySelectorAll('.client-menu-button')].map(button=>{
+                  const r=button.getBoundingClientRect(),label=button.querySelector('small'),lr=label.getBoundingClientRect();
+                  return {height:r.height,width:r.width,labelFont:parseFloat(getComputedStyle(label).fontSize),labelHeight:lr.height,labelWidth:lr.width,buttonWidth:r.width,labelText:label.textContent.trim(),y:r.y};
+                });
+                return {columns:getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length,buttons};
+              });
+              assert.equal(hud.buttons.length,9);
+              assert.equal(hud.columns,5,JSON.stringify(hud));
+              assert.ok(hud.buttons.every(b=>b.height>=44&&b.labelFont>=8&&b.labelWidth<=b.buttonWidth+1),JSON.stringify(hud));
+              const rows=[...new Set(hud.buttons.map(b=>Math.round(b.y)))];
+              assert.equal(rows.length,2,JSON.stringify(hud));
+              assert.ok(hud.buttons.every(b=>b.labelHeight<=10),JSON.stringify(hud));
+              await page.screenshot({path:'/tmp/hud-readability-screens/hud-'+width+'.png',fullPage:true});
+              assert.equal(await documentWidth(page),width);
+              await page.locator(menu('inventory')).click();
+              await page.locator(win('inventory')+' .inventory-context-strip').waitFor();
+              assert.match(await page.locator(win('inventory')).innerText(),/Supplies and cargo/);
+              await page.locator(menu('status')).click();
+              await page.locator(win('status')+' .status-selected-profile').waitFor();
+              assert.equal(await page.locator(win('status')+' .status-member').count(),2);
+              const paired=await page.locator('.client-window').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return{name:e.dataset.windowName,x:r.x,y:r.y,right:r.right,bottom:r.bottom,display:getComputedStyle(e).display};}));
+              const visible=paired.filter(w=>w.display!=='none');
+              assert.ok(visible.every(w=>w.right<=width+1&&w.bottom<=height+1),JSON.stringify({width,height,visible}));
+              if(mobile) assert.equal(visible.length,1,JSON.stringify(paired));
+              else {const a=paired.find(w=>w.name==='inventory'),b=paired.find(w=>w.name==='status');assert.ok(visible.length===2&&(a.right<=b.x+1||b.right<=a.x+1),JSON.stringify(paired));}
+              const rawBefore=await page.evaluate(key=>localStorage.getItem(key),key);
+              await page.locator('[data-status-unit-select="scout"]').click();
+              assert.equal(await page.locator('.status-profile-name strong').innerText(),'Tarin Reed');
+              assert.equal(await page.locator('[data-status-unit-select="scout"]').getAttribute('aria-pressed'),'true');
+              assert.equal(await page.evaluate(key=>localStorage.getItem(key),key),rawBefore,'portrait selection must not change the persisted save');
+              await page.keyboard.press('Escape');await page.keyboard.press('Escape');
+              await page.locator(menu('system')).click();
+              await page.locator('[data-language-option="id"]').click();
+              await page.keyboard.press('Escape');
+              await page.locator(menu('status')).click();
+              const statusId=await page.locator(win('status')).innerText();
+              assert.match(statusId,/PROFIL KARAKTER/);assert.match(statusId,/VITALITAS/);
+              const indonesianLabels=await page.locator('#client-menu .client-menu-button small').evaluateAll(es=>es.map(el=>({text:el.textContent.trim(),height:el.getBoundingClientRect().height,width:el.getBoundingClientRect().width,buttonWidth:el.parentElement.getBoundingClientRect().width})));
+              assert.ok(indonesianLabels.every(b=>b.height<=10&&b.width<=b.buttonWidth+1),JSON.stringify(indonesianLabels));
+              const afterId=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(afterId.language,'id');assert.deepEqual(stable(afterId),stable(baseline));
+              await page.keyboard.press('Escape');await page.locator(menu('system')).click();
+              await page.locator('[data-language-option="en"]').click();
+              const afterEn=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(afterEn.language,'en');assert.deepEqual(stable(afterEn),stable(baseline));
+              await page.reload();await page.locator(menu('inventory')).waitFor();
+              const afterReload=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.deepEqual(stable(afterReload),stable(baseline));
+              await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
+              const caches=await page.evaluate(()=>caches.keys());
+              assert.ok(caches.includes('wayfarers-ledger-shell-v25'),JSON.stringify(caches));
+              assert.ok(!caches.includes('wayfarers-ledger-shell-v24'),JSON.stringify(caches));
+              assert.equal(await documentWidth(page),width);
+              await context.setOffline(true);await page.reload();
+              await page.locator(menu('inventory')).waitFor({timeout:10000});
+              await page.locator(menu('inventory')).click();
+              assert.match(await page.locator(win('inventory')).innerText(),/Supplies and cargo/);
+              const offline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.deepEqual(stable(offline),stable(baseline));
+              await context.setOffline(false);
+              assert.deepEqual(errors,[],JSON.stringify(errors));
+              console.log('PASS '+width+'x'+height+' '+(mobile?'mobile':'desktop')+' HUD='+JSON.stringify(hud)+' offline=v25 save-preserved');
+              await context.close();
+            }
+          } finally { await browser.close(); }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hud-readability-candidate-screens
+          path: /tmp/hud-readability-screens
+          if-no-files-found: ignore
