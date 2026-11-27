@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 1cbab01ab38c9fc44b9cd6b7e45249948b169a79
+          ref: c9b1047f54c8c80d0c37bacc24c6e6940b491cd7
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -19,19 +19,13 @@ jobs:
           node-version: '22'
       - name: Verify exact candidate, syntax, tests and content
         run: |
-          test "$(git rev-parse HEAD)" = "1cbab01ab38c9fc44b9cd6b7e45249948b169a79"
-          git diff --check b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd HEAD
-          git diff --exit-code b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd HEAD -- game/app.mjs game/engine.mjs game/data.mjs game/storage.mjs game/quests.mjs game/assets data
+          test "$(git rev-parse HEAD)" = "c9b1047f54c8c80d0c37bacc24c6e6940b491cd7"
+          git diff --check 1cbab01ab38c9fc44b9cd6b7e45249948b169a79 HEAD
+          git diff --exit-code 1cbab01ab38c9fc44b9cd6b7e45249948b169a79 HEAD -- game/app.mjs game/engine.mjs game/data.mjs game/storage.mjs game/quests.mjs game/assets data
           node --check game/app.mjs
           node --check game/sw.js
           node --test tests/*.test.mjs
           node scripts/validate-game-content.mjs
-      - name: Verify deployed v22 CSS and service worker
-        run: |
-          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/styles.css?v=22' -o /tmp/live-css
-          cmp game/styles.css /tmp/live-css
-          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/sw.js?v=22' -o /tmp/live-sw
-          cmp game/sw.js /tmp/live-sw
       - name: Install isolated browser-test dependency
         run: npm install --no-save --no-package-lock playwright@1.55.0
       - name: Browser smoke tests on exact game, with disposable saves
@@ -42,7 +36,7 @@ jobs:
           import { chromium } from 'playwright';
           import assert from 'node:assert/strict';
           const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
-          const origin='https://drewsebastians.github.io/great-merchant-research-site/game/';
+          const origin='http://127.0.0.1:8765/game/';
           const key='wayfarers-ledger:v5:save';
           const win=name=>'[data-window-name="'+name+'"]';
           const menu=name=>'#client-menu [data-window="'+name+'"]';
@@ -95,6 +89,11 @@ jobs:
             assert.equal(await page.locator(win('inventory')+'.window-active').count(),1);
             await page.screenshot({path:'/tmp/quest-screens/paired-'+width+'.png',fullPage:true});
             if(!mobile){
+              const paired=await page.locator('.quest-journal-layout').evaluate(e=>({columns:getComputedStyle(e).gridTemplateColumns,index:getComputedStyle(e.querySelector('.quest-contract-list')).gridTemplateColumns,detail:e.querySelector('.quest-contract-detail').getBoundingClientRect().width,layout:e.getBoundingClientRect().width}));
+              assert.equal(paired.columns.split(' ').length,1,JSON.stringify(paired));
+              assert.equal(paired.index.split(' ').length,2,JSON.stringify(paired));
+              assert.ok(paired.detail>=paired.layout-2,JSON.stringify(paired));
+              console.log('PASS paired quest geometry '+JSON.stringify(paired));
               const a=await page.locator(win('quest')).boundingBox(), b=await page.locator(win('inventory')).boundingBox();
               assert.ok(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1,JSON.stringify({a,b}));
               await page.locator(win('quest')+' .window-titlebar').click();
@@ -137,7 +136,7 @@ jobs:
             assert.deepEqual(stable(await save()),stable(baseline));
             assert.deepEqual((await save()).log,['Interface language changed to English.','Bahasa tampilan diubah ke Bahasa Indonesia.',...baseline.log]);
             await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
-            assert.ok((await page.evaluate(()=>caches.keys())).some(k=>k.endsWith('v22')));
+            assert.ok((await page.evaluate(()=>caches.keys())).some(k=>k.endsWith('v23')));
             await context.setOffline(true);
             await page.reload();
             await page.locator(menu('quest')).waitFor();
