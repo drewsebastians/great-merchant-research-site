@@ -65,6 +65,7 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] Production desktop browser visual verification and context-window smoke checks.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Documentation follow-up committed as `967f574` and deployed successfully in Pages run 45927330146.
+- [x] Final deployment record committed as `3366b2e` and deployed successfully in Pages run 45927567313; production workflow linked the run to that exact commit.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
 - [x] CSS-width browser smoke checks at 779px, 681px and 340px after the compact-client and notice-fix deployments; no visible horizontal scrolling, and the 340px save values remain visible after the notice clears.
 - [ ] Physical-device, keyboard-focus and live offline-PWA verification remain open.

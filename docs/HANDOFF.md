@@ -8,7 +8,7 @@
 1. Read docs/tgm-interface-blueprint-v1.md for the interface structure, evidence limits and acceptance gate.
 2. Read docs/ui-fidelity-review-v5.md for the dated sources, implementation comparison and unresolved checks.
 3. Read docs/STATUS.md and docs/BACKLOG.md, then continue the highest-priority unchecked task.
-4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. Latest code commit `4e1e930c338bce34e9b9e99064674f8e7e3d98a5` is live in Pages run 45926785566. Documentation commit `967f574` also deployed in run 45927330146. The cache-v8 build reloaded, two windows stayed open over the scene, clicking an exposed frame brought it forward, Escape closed only the front window, and shop mode remained distinct.
+4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. Latest code commit `4e1e930c338bce34e9b9e99064674f8e7e3d98a5` is live in Pages run 45926785566. Documentation commits `967f574` and `3366b2e` deployed in runs 45927330146 and 45927567313. The cache-v8 build reloaded, two windows stayed open over the scene, clicking an exposed frame brought it forward, Escape closed only the front window, and shop mode remained distinct.
 5. Preserve the user's existing local game progress. The browser check left it at day 5 and 102 marks, with its save indicator active.
 
 ## Repository and recovery
@@ -24,6 +24,7 @@
 - Pre-visual-refinement checkpoint: `checkpoint/pre-visual-refinement-pass-2026-11-26` at `6a53eee1582f41dba6df0d33fcf0cb21c3f8f289`.
 - Pre-route-art checkpoint: `checkpoint/pre-route-art-pass-2026-11-26` at `f9e94a5f01f4654c1adaa7fe1d2e72dfae6e4daa`.
 - Pre-multi-window checkpoint: `checkpoint/pre-multi-window-pass-2026-11-27` at `4f75932e0fd572b87590af47185c7f2f240859c6`.
+- Pre-window-ornament-detail checkpoint: `checkpoint/pre-window-ornament-detail-2026-11-27` at `3366b2ebf759a4f24c4cd2a3f3c6c563e025bbd8`.
 - Code commits include the scene-first rebuild `edde45034b85c93fc900d77d0efbfb345f87ddca`, production render fix `c80eaa217568dee3c6fd4be50736e8d63d3807a5`, tablet-width overflow fix `da6a5cf89ce7865a7169d75d3ab8cabf54c4dd9f`, compact styling `05c2607a22aa0c7596d83b4ebaa0079fb648fd28`, duplicate-header-label fix `ca683f0b1fe2d6de4af7f95cd626a5312df63006`, original town art/PWA v4 `a38cbdbeb0e35e57c580f524973e1cc26fcafd7d`, compact utility/HUD `b1b7b0ef6bf43087175bbcbcfab867fe344768f9`, refined window frame `6bcd76e1d2625015227216eb513f1deaa0da8c1f`, notice expiry `f9e94a5f01f4654c1adaa7fe1d2e72dfae6e4daa`, road/quarry art/PWA v5 `1784c24692fda4a904c12bafbd4a174b6773c078`, denser window frame `23fa5361fae682f37be5beb1f5b44d06dde92174`, and PWA shell v6 `2a78f5c27c6196565d01cccbd7ac9711c9bf2447`.
 - Latest implementation commits are `6830d0030bd011c75897d9bc1e44dd751fe2aefb` (nonmodal windows, PWA cache v7) and `4e1e930c338bce34e9b9e99064674f8e7e3d98a5` (click-to-focus, PWA cache v8). `main` and `development/v5-first-playable-slice` are aligned; 4e1e930 is the latest game-code commit. Fetch both heads before continuing.
 - Pages run 45767255947 succeeded for the scene-first interface; run 45784931192 succeeded for the responsive breakpoint fix. The first scene-first run 45766624535 also succeeded, but browser inspection found a stale dashboard element lookup; it was fixed before the corrected deploy.
