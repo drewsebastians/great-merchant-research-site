@@ -15,6 +15,8 @@
 - [x] Add the Xian-labelled stream published 22 May 2026 as a dated lead. Browser playback did not yield an inspectable frame and the capture build is unknown.
 - [x] Compare available dated Xian window evidence with the official guide; correct the source labels. The 17 Jan 2016 article image is field/NPC context; the 26 Aug 2019 Repeat Loop image is a quest panel. Both capture dates and client patches are unknown.
 - [x] Compare a usable Xian field-screen frame with the official guide; the 14 Jan 2017 tutorial screenshot shows the full client HUD. Its capture date and Xian client patch are unstated, so it is a historical comparator only.
+- [x] Recheck the official interface and shortcut guides and visually re-open the dated 14 Jan 2017 tutorial article. The embedded frame is inspectable, but its capture/build date and Xian patch remain unknown; publication date is recorded separately.
+- [x] Add an English/Indonesian System-window control guide grouped by field/town, shop and battlefield. It documents prototype on-screen actions and explicitly leaves Xian key mappings and timing unverified; advance the PWA shell to v21.
 - [x] Record the macro screen-zone map for field, shop, battlefield and core windows; label Xian-specific geometry unresolved.
 - [x] Replace the persistent web dashboard shell with a scene-first desktop client shell.
 - [x] Add the persistent left character/mercenary portrait stack and upper-right minimap.
@@ -58,7 +60,7 @@
 - [x] Verify Pages run `45979347526` in the production browser: the chart opens, both fictional route nodes render, Escape closes it, focus returns to the map button, and the visible save remains at day 05 / 102 marks.
 - [x] Record the official [Update Notice 19/NOV/2026](https://www.thegreatmerchant.com/board/bbsPatch.gs?GSbid=18202&GSuid=148&page=1): posted 18 Nov 2026 for a Global Server update scheduled 19 Nov, Patch V34411, it says Escape closes the UI when the map is maximized. The notice identifies the Global Server, not Xian; do not call this Xian-specific evidence.
 - [ ] Revisit the lower HUD and contextual-window comparison only when a newer or version-identifiable Xian screenshot/video frame is inspectable. Current reference captures and patches are unknown, so keep sizing and styling labeled as prototype choices.
-- [ ] Find a dated, inspectable Xian frame or video segment and record the footage/build uncertainty. The 22 May 2026 stream is not inspectable in the current player.
+- [ ] Seek a newer or version-identifiable Xian field/context-window frame. The 14 Jan 2017 image is inspectable but only the article publication date is known; the 22 May 2026 stream yielded no frame. Do not treat either as current-build evidence.
 
 ## Retained V5.0 playable work
 
@@ -98,6 +100,10 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] Before the map pass, fetch and confirm main and development at `b690d071317bea450abdf52cb72569ef3e1770b2`; verify `checkpoint/pre-expanded-local-map-2026-11-27` at that same head. Research main remains `f52446e6a8f25a9cff4fe15a21e63b976df85317`, and the vault fingerprint remains `748f8863212c1a2911c53569e7c934293c5e4205`.
 - [x] Publish map implementation commit `188d0c2b5456b0f51fa4b206663546bbb36c6117` to main and development; both branches align, Pages run `45979347526` succeeded, and the local tree was checked against remote Git blob/tree hashes.
 - [x] After the map pass, `node --check game/app.mjs`, `node --test` (41/41), `node scripts/validate-game-content.mjs` and `git diff --check` all passed.
+- [x] Before the mode-guide pass, fetch `main` and development at `3c60a4472b375358cf1886422d33c4bd6322ea59` and verify the rollback point. Create remote checkpoint `checkpoint/pre-mode-controls-guide-2026-11-27` at that head.
+- [x] Commit mode-guide implementation as `4c3ccbdea3be7b2e7f7b784649bcf02ef9e2661f`; update `main` and `development/v5-first-playable-slice` to the same commit. Pages run `45988310959` succeeded.
+- [x] After the mode-guide change, syntax checks, all 42 Node tests, game-content validation and `git diff --check` pass. The research vault Git blob remains `748f8863212c1a2911c53569e7c934293c5e4205`.
+- [x] Inspect the deployed System guide in English and Indonesian, close it, open/close the expanded map, and open/close shop without a transaction. Production remained at day 05 / 102 marks; restored the existing Indonesian preference.
 - [x] Production check after Pages run `45979347526`: expanded map rendered both fictional routes and statuses, Escape closed it and restored focus, and the day 05 / 102-mark save remained unchanged.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Post-`aa86f74` production screenshot and interaction check: the cache-v9 client shows the new inset rail, two windows remain over the field, clicking an exposed frame focuses it, Escape closes only the front window, and the save remains day 05 / 102 marks.
