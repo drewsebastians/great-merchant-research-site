@@ -59,7 +59,7 @@ jobs:
             const save=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
             const baseline=await save();
             assert.equal(baseline.day,5); assert.equal(baseline.coin,102);
-            const stable=s=>Object.fromEntries(Object.entries(s).filter(([k])=>!['activeTab','language','notice'].includes(k)));
+            const stable=s=>Object.fromEntries(Object.entries(s).filter(([k])=>!['activeTab','language','notice','log'].includes(k)));
             const click=async selector=>{const l=page.locator(selector).first(); if(mobile) await l.tap(); else await l.click();};
             await click(menu('quest'));
             await page.locator(win('quest')+' .quest-contract-detail').waitFor();
@@ -87,6 +87,7 @@ jobs:
             await click(menu('inventory'));
             assert.equal(await page.locator(win('quest')).count(),1);
             assert.equal(await page.locator(win('inventory')+'.window-active').count(),1);
+            await page.screenshot({path:'/tmp/quest-screens/paired-'+width+'.png',fullPage:true});
             if(!mobile){
               const a=await page.locator(win('quest')).boundingBox(), b=await page.locator(win('inventory')).boundingBox();
               assert.ok(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1,JSON.stringify({a,b}));
@@ -124,9 +125,11 @@ jobs:
             await click('[data-language-option="en"]');
             await page.keyboard.press('Escape');
             assert.deepEqual(stable(await save()),stable(baseline));
+            assert.deepEqual((await save()).log,['Interface language changed to English.','Bahasa tampilan diubah ke Bahasa Indonesia.',...baseline.log]);
             await page.reload();
             await page.locator(menu('quest')).waitFor();
             assert.deepEqual(stable(await save()),stable(baseline));
+            assert.deepEqual((await save()).log,['Interface language changed to English.','Bahasa tampilan diubah ke Bahasa Indonesia.',...baseline.log]);
             assert.deepEqual(errors,[]);
             console.log('PASS browser '+width+'x'+height+' '+JSON.stringify(geometry)+' save day '+baseline.day+' coin '+baseline.coin);
             await context.close();
