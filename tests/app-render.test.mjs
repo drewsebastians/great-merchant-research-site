@@ -107,7 +107,7 @@ function openWindow(name) { click(fakeButton({ window: name })); }
 function action(name, extra = {}) { click(fakeButton({ action: name, ...extra })); }
 
 test("desktop shell is scene-first with client portraits, minimap, HUD, chat and contextual windows", () => {
-  for (const id of ["screen-eyebrow", "screen-title", "phase-label", "day-count", "campaign-date", "campaign-season", "campaign-day-label", "device-time", "clock-label", "portrait-rail", "world-content", "mini-map-root", "overview-strip", "client-menu", "chat-feed", "client-window-root", "save-state"]) {
+  for (const id of ["screen-eyebrow", "screen-title", "phase-label", "day-count", "campaign-date", "campaign-season", "campaign-day-label", "device-time", "clock-label", "portrait-rail", "world-content", "mini-map-root", "map-overlay-root", "overview-strip", "client-menu", "chat-feed", "client-window-root", "save-state"]) {
     assert.match(gameHtml, new RegExp('id="' + id + '"'));
   }
   for (const [, id] of gameApp.matchAll(/(?:document\.querySelector|\$)\("#([^\"]+)"\)/g)) assert.ok(staticIds.has(id), `Missing static shell node: #${id}`);
@@ -120,6 +120,7 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(element("#world-content").innerHTML, /Hearthcross/);
   assert.match(element("#portrait-rail").innerHTML, /Mara/);
   assert.match(element("#mini-map-root").innerHTML, /mini-map/);
+  assert.match(element("#mini-map-root").innerHTML, /data-action="map-maximize"/);
   assert.match(element("#overview-strip").innerHTML, /TOTAL ATTACK|ATTACK/);
   assert.match(element("#overview-strip").innerHTML, /RATIONS/);
   assert.doesNotMatch(element("#overview-strip").innerHTML, /STAMINA/);
@@ -131,6 +132,7 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(element("#device-time").textContent, /^\d{2}:\d{2}$/);
   assert.match(element("#client-menu").innerHTML, /data-window="inventory"/);
   assert.equal(element("#client-window-root").innerHTML, "");
+  assert.match(gameHtml, /id="map-overlay-root"/);
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
   assert.match(gameStyles, /\.world-scene\.town-scene \{ background-image: url\("\.\/assets\/hearthcross-field\.jpg"\); \}/);
   assert.match(gameStyles, /\.world-scene\.road-scene \{ background-image: url\("\.\/assets\/mosswind-road\.jpg"\); \}/);
@@ -169,6 +171,47 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.doesNotMatch(element("#client-window-root").innerHTML, /STAMINA/);
   click(fakeButton({ action: "close-window", windowClose: "status" }));
   assert.equal(element("#client-window-root").innerHTML, "");
+});
+
+test("expanded original map traps focus, closes with Escape and preserves the journey", () => {
+  click(fakeButton({ action: "onboarding-close" }));
+  const before = savedState();
+  const overlayRoot = element("#map-overlay-root");
+  const first = element("#maximized-map-close");
+  const route = element("#map-route-focus-test");
+  const last = element("#maximized-map-footer-close");
+  overlayRoot.querySelectorAll = () => [first, route, last];
+  overlayRoot.querySelector = (selector) => selector === "#maximized-map-close" ? first : null;
+  element("#mini-map-root").querySelector = (selector) => selector === "#map-maximize-button" ? element("#map-maximize-button") : null;
+
+  action("map-maximize");
+  assert.match(overlayRoot.innerHTML, /role="dialog" aria-modal="true"/);
+  assert.match(overlayRoot.innerHTML, /The Ridgeway/);
+  assert.match(overlayRoot.innerHTML, /Mosswind Road/);
+  assert.match(overlayRoot.innerHTML, /Amber Quarry/);
+  assert.equal(element(".topbar").inert, true);
+  assert.equal(element(".game-layout").inert, true);
+  assert.equal(document.activeElement, element("#maximized-map-close"));
+
+  document.activeElement = last;
+  let prevented = false;
+  keyHandlers.at(-1)({ key: "Tab", preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(document.activeElement, first);
+  document.activeElement = first;
+  prevented = false;
+  keyHandlers.at(-1)({ key: "Tab", shiftKey: true, preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(document.activeElement, last);
+
+  prevented = false;
+  keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(overlayRoot.innerHTML, "");
+  assert.equal(element(".topbar").inert, false);
+  assert.equal(element(".game-layout").inert, false);
+  assert.equal(document.activeElement, element("#map-maximize-button"));
+  assert.deepEqual(savedState(), before);
 });
 
 test("travel, recruitment, trade, battle commands, withdrawal and local saves remain connected", () => {

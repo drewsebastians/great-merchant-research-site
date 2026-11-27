@@ -27,6 +27,7 @@ const ui = {
   pendingCommand: null,
   unitZones: {},
   mapZoom: 1,
+  mapMaximized: false,
   tradeEnabled: false,
   peaceMode: true,
   chatLines: [],
@@ -518,7 +519,11 @@ function renderTownHotspots() {
 function renderMiniMap() {
   const activeRoute = findRoute(state.phase === "battle" ? state.activeRoute : state.selectedRoute);
   const zoom = Math.max(0, Math.min(2, ui.mapZoom));
-  return '<aside class="mini-map" aria-label="' + label("Original local map", "Peta lokal orisinal") + '"><div class="map-title"><span>' + label("AREA MAP", "PETA AREA") + '</span><button type="button" data-action="map-zoom" data-delta="-1" aria-label="' + label("Zoom out", "Perkecil") + '">−</button><button type="button" data-action="map-zoom" data-delta="1" aria-label="' + label("Zoom in", "Perbesar") + '">＋</button></div><div class="map-disc zoom-' + zoom + '"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M12 70 Q28 57 40 63T68 43T91 29" /><path class="map-branch" d="M40 63 Q48 76 74 83" /></svg><i class="map-marker home"></i><i class="map-marker current"></i><i class="map-marker destination"></i><span class="map-north">N</span></div><button type="button" class="map-location" data-window="travel">' + safe(activeRoute.name) + ' <span>↗</span></button></aside>';
+  return '<aside class="mini-map" aria-label="' + label("Original local map", "Peta lokal orisinal") + '"><div class="map-title"><span>' + label("AREA MAP", "PETA AREA") + '</span><button type="button" data-action="map-zoom" data-delta="-1" aria-label="' + label("Zoom out", "Perkecil") + '">−</button><button type="button" data-action="map-zoom" data-delta="1" aria-label="' + label("Zoom in", "Perbesar") + '">＋</button><button type="button" id="map-maximize-button" data-action="map-maximize" aria-haspopup="dialog" aria-controls="map-overlay-root" aria-label="' + label("Expand local map", "Perluas peta lokal") + '" title="' + label("Expand local map", "Perluas peta lokal") + '">□</button></div><div class="map-disc zoom-' + zoom + '"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M12 70 Q28 57 40 63T68 43T91 29" /><path class="map-branch" d="M40 63 Q48 76 74 83" /></svg><i class="map-marker home"></i><i class="map-marker current"></i><i class="map-marker destination"></i><span class="map-north">N</span></div><button type="button" class="map-location" data-window="travel">' + safe(activeRoute.name) + ' <span>↗</span></button></aside>';
+}
+function renderMaximizedMap() {
+  if (!ui.mapMaximized) return "";
+  return '<div class="map-maximized-backdrop"><section class="map-maximized-dialog" role="dialog" aria-modal="true" aria-labelledby="maximized-map-title" aria-describedby="maximized-map-copy"><header class="map-maximized-header"><div><small>' + label("LOCAL CHART · ORIGINAL PROTOTYPE", "PETA LOKAL · PROTOTIPE ORISINAL") + '</small><h2 id="maximized-map-title">' + label("The Ridgeway", "Jalur Pegunungan") + '</h2><p id="maximized-map-copy">' + label("Review the open routes and their current status. Your journey stays in the field while this chart is open.", "Tinjau rute yang terbuka dan statusnya. Perjalanan tetap tersimpan saat peta ini terbuka.") + '</p></div><button type="button" id="maximized-map-close" class="window-close map-maximized-close" data-action="map-restore" aria-label="' + label("Close expanded map", "Tutup peta besar") + '">×</button></header><div class="map-maximized-content">' + localizeUI(renderTravelMap()) + '</div><footer class="map-maximized-footer"><span>' + label("Open routes are selectable. Locked routes remain unavailable until earned.", "Rute terbuka dapat dipilih. Rute terkunci belum tersedia.") + '</span><button type="button" id="maximized-map-footer-close" class="secondary-button" data-action="map-restore">' + label("CLOSE MAP", "TUTUP PETA") + '<kbd>ESC</kbd></button></footer></section></div>';
 }
 function renderBattlefield() {
   const battle = state.battle;
@@ -616,8 +621,9 @@ function closeGuide() {
 function renderGuide() {
   const topbar = document.querySelector(".topbar");
   const gameLayout = document.querySelector(".game-layout");
-  topbar.inert = guideOpen;
-  gameLayout.inert = guideOpen;
+  const modalOpen = guideOpen || ui.mapMaximized;
+  topbar.inert = modalOpen;
+  gameLayout.inert = modalOpen;
   if (!guideOpen) {
     guideLayer.innerHTML = "";
     return;
@@ -659,6 +665,7 @@ function render() {
   $("#portrait-rail").innerHTML = renderPortraitRail();
   $("#world-content").innerHTML = renderWorldScene();
   $("#mini-map-root").innerHTML = renderMiniMap();
+  $("#map-overlay-root").innerHTML = renderMaximizedMap();
   $("#overview-strip").innerHTML = renderOverview();
   $("#client-menu").innerHTML = renderMenu();
   $("#chat-feed").innerHTML = renderChatFeed();
@@ -715,6 +722,10 @@ document.addEventListener("click", (event) => {
     }
     return;
   }
+  if (ui.mapMaximized && event.target.closest(".map-maximized-backdrop") && !event.target.closest(".map-maximized-dialog")) {
+    closeMaximizedMap();
+    return;
+  }
   const clickedWindow = event.target.closest("[data-window-name]")?.dataset.windowName;
   if (clickedWindow && clickedWindow !== ui.activeWindow) {
     ui.openWindows = ui.openWindows.filter((name) => name !== clickedWindow);
@@ -732,7 +743,12 @@ document.addEventListener("click", (event) => {
   const formationButton = event.target.closest("[data-formation-front]");
   if (formationButton) { transition(setFormationFront(state, formationButton.dataset.formationFront)); return; }
   const routeButton = event.target.closest("[data-route]");
-  if (routeButton) { transition(selectRoute(state, routeButton.dataset.route)); return; }
+  if (routeButton) {
+    const routeId = routeButton.dataset.route;
+    transition(selectRoute(state, routeId));
+    if (ui.mapMaximized) document.querySelector('#map-overlay-root [data-route="' + routeId + '"]')?.focus?.();
+    return;
+  }
   const targetButton = event.target.closest("[data-target]");
   if (targetButton) { transition(setTarget(state, targetButton.dataset.target)); return; }
   const button = event.target.closest("button");
@@ -773,6 +789,12 @@ document.addEventListener("click", (event) => {
   else if (action === "withdraw") transition(withdrawFromBattle(state));
   else if (action === "toggle-peace") { ui.peaceMode = !ui.peaceMode; render(); }
   else if (action === "toggle-trade") { ui.tradeEnabled = !ui.tradeEnabled; render(); }
+  else if (action === "map-maximize") {
+    ui.mapMaximized = true;
+    render();
+    $("#map-overlay-root")?.querySelector?.("#maximized-map-close")?.focus?.();
+  }
+  else if (action === "map-restore") closeMaximizedMap();
   else if (action === "map-zoom") { ui.mapZoom = Math.max(0, Math.min(2, ui.mapZoom + Number(button.dataset.delta || 0))); render(); }
   else if (action === "close-window") {
     const closing = button.dataset.windowClose || ui.activeWindow;
@@ -805,6 +827,13 @@ document.addEventListener("click", (event) => {
   }
 });
 
+function closeMaximizedMap() {
+  if (!ui.mapMaximized) return;
+  ui.mapMaximized = false;
+  render();
+  $("#mini-map-root")?.querySelector?.("#map-maximize-button")?.focus?.();
+}
+
 document.addEventListener("contextmenu", (event) => {
   const portraitButton = event.target.closest("#portrait-rail [data-unit-select]");
   if (!portraitButton || guideOpen || state.phase === "battle") return;
@@ -833,6 +862,26 @@ document.addEventListener("keydown", (event) => {
   if (guideOpen) {
     if (event.key === "Tab") {
       const focusable = [...(guideLayer.querySelectorAll?.('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])') || [])];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus?.();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus?.();
+      }
+    }
+    return;
+  }
+  if (ui.mapMaximized) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMaximizedMap();
+      return;
+    }
+    if (event.key === "Tab") {
+      const focusable = [...($("#map-overlay-root")?.querySelectorAll?.('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])') || [])];
       const first = focusable[0];
       const last = focusable.at(-1);
       if (event.shiftKey && document.activeElement === first) {
