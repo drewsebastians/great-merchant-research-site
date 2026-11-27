@@ -1,14 +1,14 @@
 # Development Handoff
 
 **Updated:** 27 November 2026
-**Next task:** P0 — compare the deployed quest ledger and lower HUD against dated Xian interface references; refine original styling where supported, and keep the fidelity gate open
+**Next task:** P0 — seek an inspectable, dated Xian client frame before further visual tuning; keep the fidelity gate open
 
 ## Start here
 
 1. Read docs/tgm-interface-blueprint-v1.md for the interface structure, evidence limits and acceptance gate.
 2. Read docs/ui-fidelity-review-v5.md for the dated sources, implementation comparison and unresolved checks.
 3. Read docs/STATUS.md and docs/BACKLOG.md, then continue the highest-priority unchecked task.
-4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. Latest deployed game-code commit is `38834b8df1f19d80bd22f5ff3bcec8c5addfbda4` in Pages run `45962041736`, with PWA shell v17. The quest ledger filters and detail selection, route-chart action, Escape close, and shop return were checked in production; the visible save remained day 05 / 102 marks.
+4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. Latest deployed game-code commit is `11e1a0401d42520086b55ce8bc2cc68743ad76ce` in Pages run `45965078349`, with PWA shell v18. The single quest panel measured 880×580px (69%×75% of the 1271×772px client window layer) at 1363×936 CSS px. Contract selection, the empty Open filter, All restore and route-map action were checked; the visible save remained day 05 / 102 marks.
 5. Preserve the user's existing local game progress. The browser check left it at day 5 and 102 marks, with its save indicator active.
 
 ## Repository and recovery
@@ -31,8 +31,9 @@
 - Pre-client-density-pass checkpoint: `checkpoint/pre-client-density-pass-2026-11-27` at `eb007f632d0a5830015f33ca48b0391543e1e62e`.
 - Pre-window-refinement checkpoint: `checkpoint/pre-window-refinement-2026-11-27` at `1cf7dc454bb82c994914b68f78657df721f9edf7`.
 - Pre-quest-journal-refinement checkpoint: `checkpoint/pre-quest-journal-refinement-2026-11-27` at `71fbfc999115f9cb661629ce44fc9278277a1de9`.
+- Pre-quest-window-scale-pass checkpoint: `checkpoint/pre-quest-window-scale-pass-2026-11-27` at `096e1f9f8564419a3c2b75a553823cbd55d0d0d7`.
 - Code commits include the scene-first rebuild `edde45034b85c93fc900d77d0efbfb345f87ddca`, production render fix `c80eaa217568dee3c6fd4be50736e8d63d3807a5`, tablet-width overflow fix `da6a5cf89ce7865a7169d75d3ab8cabf54c4dd9f`, compact styling `05c2607a22aa0c7596d83b4ebaa0079fb648fd28`, duplicate-header-label fix `ca683f0b1fe2d6de4af7f95cd626a5312df63006`, original town art/PWA v4 `a38cbdbeb0e35e57c580f524973e1cc26fcafd7d`, compact utility/HUD `b1b7b0ef6bf43087175bbcbcfab867fe344768f9`, refined window frame `6bcd76e1d2625015227216eb513f1deaa0da8c1f`, notice expiry `f9e94a5f01f4654c1adaa7fe1d2e72dfae6e4daa`, road/quarry art/PWA v5 `1784c24692fda4a904c12bafbd4a174b6773c078`, denser window frame `23fa5361fae682f37be5beb1f5b44d06dde92174`, and PWA shell v6 `2a78f5c27c6196565d01cccbd7ac9711c9bf2447`.
-- Latest implementation chain: `c32d9bf` corrects the 2017 screenshot interpretation; `e7c7433` adds original titlebar engraving, equal-height paired windows, a 1:2:1 HUD ratio and shell v15; `d87e94d` refines the quest window as a route ledger; `38834b8` preserves structural controls during Indonesian localization and advances the shell to v17. The game-code head remains `38834b8`; a synced documentation update at `84e8851` also deployed successfully in Pages run `45963240569`.
+- Latest implementation chain: `c32d9bf` corrects the 2017 screenshot interpretation; `e7c7433` adds original titlebar engraving, equal-height paired windows, a 1:2:1 HUD ratio and shell v15; `d87e94d` refines the quest window as a route ledger; `38834b8` preserves structural controls during Indonesian localization and advances the shell to v17; `11e1a04` scales the single quest window for readability and advances the shell to v18. The game-code commit is deployed in Pages run `45965078349`. The pre-pass recovery point is `checkpoint/pre-quest-window-scale-pass-2026-11-27` at `096e1f9f8564419a3c2b75a553823cbd55d0d0d7`.
 - Pages run 45767255947 succeeded for the scene-first interface; run 45784931192 succeeded for the responsive breakpoint fix. The first scene-first run 45766624535 also succeeded, but browser inspection found a stale dashboard element lookup; it was fixed before the corrected deploy.
 - `data/vault.json` is encrypted research. Preserve it byte-for-byte. Do not put private records, source IDs, excerpts or media into the public repository.
 
@@ -40,7 +41,7 @@
 
 The client uses a scene-first town/field layout with left portraits, an upper-right minimap, lower status/chat/menu/date HUD and contextual windows. Field/town, shop and battlefield modes are distinct. The desktop keeps contextual windows side by side; clicking one brings it forward and Escape closes only the front window. Battlefield controls expose Move, Attack, Hold, Stop, group selection and Withdraw. Party, travel, trade, quests, recovery and local saves remain connected. The quest window now uses an original route-ledger hierarchy: All/Open/Completed filters, contract selection, focused detail, progress, milestones and a route-chart action. Filter state is UI-only and does not alter the saved journey. The localization fix keeps control classes and `data-*` values intact in Indonesian. The 2019 comparator remains denser and more ornate than this adaptation. The lower HUD and window sizing remain prototype measurements, not Xian dimensions.
 
-Pages run `45961499731` deployed quest-ledger commit `d87e94d`; run `45962041736` deployed commit `38834b8` and shell v17. At 1363×936 CSS px, production checks covered All/Open/Completed filters, contract selection/detail updates, the empty state, route-chart action, Escape close, shop mode returning to field, and the save remaining day 05 / 102 marks. No purchase or progression action was performed. The 39-test suite, syntax checks, content validator and `git diff --check` passed. Earlier browser-width emulations at about 779px, 681px and 340px CSS width showed no horizontal scrolling. Physical-device, keyboard/accessibility and live offline-PWA checks remain open.
+Pages run `45961499731` deployed quest-ledger commit `d87e94d`; run `45962041736` deployed commit `38834b8` and shell v17; run `45965078349` deployed `11e1a04` and shell v18. At 1363×936 CSS px, production checks covered filter changes and recovery, contract selection/detail, the empty state, route-map action and preserved day 05 / 102 marks. The single quest window measures 880×580px (69%×75% of the 1271×772px window layer), with a 21px heading. No purchase, travel, battle or progression action was performed. All 39 tests, syntax checks, content validation and `git diff --check` passed. Earlier browser-width emulations at about 779px, 681px and 340px CSS width showed no horizontal scrolling. Physical-device, keyboard/accessibility and live offline-PWA checks remain open.
 
 Recovery note: Pages run `45946939415` for `bc05a2c` completed, but its deployed app initially rendered blank. The browser console identified an `Unexpected identifier 'output'` parse error because the oversized `app.mjs` content passed through a truncated command result before blob creation. Restored the complete app file from `checkpoint/pre-overlap-window-layout-2026-11-27`, verified its Git blob SHA matched the local file, committed `eb007f6`, and confirmed the successful run and live app. For future large API-file writes, request sufficient output capacity and compare the created remote blob SHA to `git hash-object <path>` before moving refs.
 
@@ -48,7 +49,7 @@ Public references rechecked 27 Nov 2026 include the official interface, shortcut
 
 ## Next concrete actions
 
-- Compare the deployed route ledger and lower HUD with the 2019 quest-panel image and the 2017 full-client screenshot. Record which hierarchy differences remain, then make another original refinement only if the references support it; keep all dimensions labeled as prototype choices.
-- Revisit a newer Xian field reference only if a video frame or current-build screenshot becomes inspectable. Keep client-version uncertainty visible and do not claim exact Xian details.
+- Find an inspectable, dated Xian field/window screenshot or video frame that identifies or narrows the client version. The available 2017 field image and 2019 quest panel have unknown capture dates and patches; the 2023/2025 video players yielded no usable frames.
+- When stronger evidence is available, compare it with the deployed quest panel and lower HUD before changing proportions again. The new 880×580 window and 21px heading are prototype readability choices; the 1:2:1 HUD ratio and current-client geometry remain unresolved.
 - DevTools reported an organization policy block during the live offline check. Do not attempt to bypass it. The service-worker unit test passed using a mocked offline path; a permitted real offline workflow is still needed.
-- Continue to describe the product as “playable prototype; TGM interface fidelity in progress” until the blueprint gate, including the expanded visual-treatment comparison, is satisfied.
+- Continue to describe the product as “playable prototype; TGM interface fidelity in progress” until the blueprint gate, including the visual-treatment comparison, is satisfied.

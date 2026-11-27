@@ -49,7 +49,8 @@
 - [x] Reorganize the quest window as an original route ledger with All/Open/Completed filters, contract selection, focused detail, step progress, milestone rows and a route-chart action. Commit `d87e94d` deployed in Pages run `45961499731`.
 - [x] Preserve quest filter/control classes and `data-*` values while applying Indonesian UI text; add a regression check and bump the PWA shell from v16 to v17. Commit `38834b8` deployed in Pages run `45962041736`.
 - [x] Verify deployed quest filtering and selection in production: All/Open/Completed filters, selected-contract detail updates, empty state, route-chart action, Escape close, shop return to field, and retained day 05 / 102-mark save. No transaction or progression was performed.
-- [ ] Compare the deployed route ledger and lower HUD with the dated 2019 quest-panel image and 2017 full-client screenshot. Refine remaining hierarchy only where those public references support it; exact current-Xian proportions and client version remain unverified.
+- [x] Compare the deployed route ledger and lower HUD with the dated 2019 quest-panel image and 2017 full-client screenshot. The production quest panel is now 880×580px (69%×75% of the 1271×772px client layer) with a 21px heading at 1363×936 CSS px. Its original list/detail hierarchy is more readable but still simpler and less ornate than the 2019 image; the 1:2:1 lower-HUD ratio remains unverified against Xian. Run `45965078349` deployed commit `11e1a04`; production filters, selection, empty state and route-map action passed, and the day 05 / 102-mark save remained intact.
+- [ ] Revisit the lower HUD and contextual-window comparison only when a newer or version-identifiable Xian screenshot/video frame is inspectable. Current reference captures and patches are unknown, so keep sizing and styling labeled as prototype choices.
 
 ## Retained V5.0 playable work
 
