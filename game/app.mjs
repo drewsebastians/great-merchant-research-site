@@ -373,6 +373,8 @@ function renderRoster() {
 }
 function renderInventory() {
   const total = Object.values(state.inventory).reduce((sum, count) => sum + count, 0);
+  const selectedUnit = state.party.find((unit) => unit.id === ui.selectedUnitId) || state.party[0];
+  const weapon = findItem(state.equipment?.weapon);
   const itemCards = ITEMS.map((item) => {
     const quantity = state.inventory[item.id] || 0;
     const equipped = state.equipment?.weapon === item.id;
@@ -382,7 +384,10 @@ function renderInventory() {
     else if (item.sellPrice !== null) actions = '<button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (quantity < 1 || state.phase !== "town" ? "disabled" : "") + '>SELL</button>';
     return '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong data-locale-preserve>' + safe(item.name) + '</strong><small data-locale-preserve>' + safe(item.detail) + '</small><span class="inventory-quantity">' + (equipped ? "EQUIPPED" : "QUANTITY") + ' <b>' + (equipped ? "WEAPON SLOT" : quantity) + '</b></span></div>' + actions + '</article>';
   }).join("");
+  const focus = selectedUnit?.maxFocus ? '<div class="inventory-focus-row"><span>' + label("FOCUS", "FOKUS") + '</span><span class="focus-dots">' + Array.from({ length: selectedUnit.maxFocus }, (_, i) => '<i class="' + (i < selectedUnit.focus ? "filled" : "") + '"></i>').join("") + '</span></div>' : '';
   return '<section class="pack-banner"><div><small>TRAVEL KIT · CARRY LIMIT 20 EACH</small><h2>Every item has a purpose.</h2><p>Use a Field Tonic to restore the crew member who needs it most.</p></div><span class="pack-total">' + total + '<small>ITEMS</small></span></section>' +
+    '<section class="inventory-context-strip"><div class="inventory-current-crew"><img src="' + portrait(selectedUnit.id) + '" alt=""><div class="inventory-current-copy"><small>' + label("SELECTED CREW MEMBER", "ANGGOTA KRU TERPILIH") + '</small><strong>' + safe(selectedUnit.name) + '</strong><span>' + safe(selectedUnit.role) + '</span></div><div class="inventory-vitals"><div><small>HP</small><strong>' + Math.max(0, selectedUnit.hp) + ' / ' + selectedUnit.maxHp + '</strong></div>' + bar(selectedUnit.hp, selectedUnit.maxHp, "health") + focus + '</div></div>' +
+    '<div class="inventory-equipped-weapon"><span class="item-glyph equipment-glyph">⚔</span><div><small>' + label("FIELD WEAPON", "SENJATA MEDAN") + '</small><strong>' + safe(weapon?.name || label("No weapon equipped", "Belum ada senjata terpasang")) + '</strong><span>' + (weapon ? '+' + weapon.strikeBonus + ' ' + label("Strike damage", "daya serang") : label("Equip an available blade below.", "Pasang senjata yang tersedia di bawah.")) + '</span></div></div></section>' +
     '<section class="panel pack-panel"><div class="panel-head"><div><small>YOUR PACK</small><h2>Supplies and cargo</h2></div><span class="status-pill">' + state.inventory.ration + ' RATIONS</span></div><div class="inventory-grid">' +
     itemCards + '</div>' +
     (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
@@ -486,9 +491,11 @@ function renderRouteWindow() {
 }
 function renderStatusWindow() {
   const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
-  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("ROAD RATIONS", "RANSUM JALAN") + '</small><strong>' + state.inventory.ration + '</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party" role="list">' + state.party.map((unit) => {
+  const selectedUnit = state.party.find((unit) => unit.id === ui.selectedUnitId) || state.party[0];
+  const selectedFocus = selectedUnit?.maxFocus ? '<div class="status-selected-focus"><span>' + label("FOCUS", "FOKUS") + '</span><span class="focus-dots">' + Array.from({ length: selectedUnit.maxFocus }, (_, i) => '<i class="' + (i < selectedUnit.focus ? "filled" : "") + '"></i>').join("") + '</span></div>' : '';
+  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("ROAD RATIONS", "RANSUM JALAN") + '</small><strong>' + state.inventory.ration + '</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><section class="status-selected-profile"><div class="status-profile-heading"><small>' + label("CHARACTER PROFILE · CURRENT SELECTION", "PROFIL KARAKTER · PILIHAN SAAT INI") + '</small><span>' + label("LOCAL VALUES", "NILAI LOKAL") + '</span></div><div class="status-profile-body"><img src="' + portrait(selectedUnit.id) + '" alt=""><div class="status-profile-name"><strong>' + safe(selectedUnit.name) + '</strong><span>' + safe(selectedUnit.role) + '</span></div><div class="status-profile-vitality"><div><small>' + label("VITALITY", "VITALITAS") + '</small><strong>' + Math.max(0, selectedUnit.hp) + ' / ' + selectedUnit.maxHp + '</strong></div>' + bar(selectedUnit.hp, selectedUnit.maxHp, "health") + '</div>' + selectedFocus + '</div></section><div class="status-roster-heading"><strong>' + label("CREW STATUS", "STATUS KRU") + '</strong><small>' + label("Choose a portrait to inspect", "Pilih potret untuk melihat") + '</small></div><div class="status-party" role="list">' + state.party.map((unit) => {
     const selected = ui.selectedUnitId === unit.id;
-    return '<div class="status-member ' + (selected ? "selected" : "") + '" data-status-member="' + safe(unit.id) + '" role="listitem" aria-current="' + selected + '">' + (selected ? '<span class="status-member-marker">' + label("SELECTED PORTRAIT", "POTRET DIPILIH") + '</span>' : "") + unitCard(unit, false) + '</div>';
+    return '<div class="status-member-wrap" role="listitem"><button type="button" class="status-member ' + (selected ? "selected" : "") + '" data-status-member="' + safe(unit.id) + '" data-status-unit-select="' + safe(unit.id) + '" aria-label="' + label("Select character ", "Pilih karakter ") + safe(unit.name) + '" aria-pressed="' + selected + '">' + (selected ? '<span class="status-member-marker">' + label("SELECTED PORTRAIT", "POTRET DIPILIH") + '</span>' : "") + unitCard(unit, true) + '</button></div>';
   }).join("") + '</div></section>';
 }
 function renderPropertyWindow() {
@@ -756,6 +763,13 @@ document.addEventListener("click", (event) => {
     ui.selectedUnitId = unitButton.dataset.unitSelect;
     if (state.phase === "town") openWindow("inventory");
     else render();
+    return;
+  }
+  const statusUnitButton = event.target.closest("[data-status-unit-select]");
+  if (statusUnitButton) {
+    ui.selectedUnitId = statusUnitButton.dataset.statusUnitSelect;
+    render();
+    [...document.querySelectorAll("[data-status-unit-select]")].find((button) => button.dataset.statusUnitSelect === ui.selectedUnitId)?.focus?.();
     return;
   }
   const formationButton = event.target.closest("[data-formation-front]");

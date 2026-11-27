@@ -76,6 +76,12 @@ Do not describe a release as TGM interface-inspired until it passes the eight-it
 
 The V5.0 dashboard remains a useful playable baseline, but it is not accepted as the V5.1 interface target. The deployed V5.1 shell is a playable prototype; TGM interface fidelity remains in progress until the full gate passes.
 
+## Inventory and Status evidence pass — 27 November 2026
+
+The next user-visible pass prioritizes Inventory and Character Status. The current candidate groups the selected crew member's existing portrait, HP and Focus values with the equipped field weapon, then the existing cargo cards. Status presents the selected member's existing HP/Focus values and keyboard/touch roster selectors above the fictional prototype summary. The selection remains presentation-only and does not enter the persisted save schema. Cache v24 re-fetches the revised shell; rules, source assets and game data stay unchanged.
+
+Evidence is recorded in [the Inventory and Status reference note](inventory-status-evidence-2026-11-27.md). The historical Indonesian Episode 2 article has mixed screenshot provenance; the Global Server 2026 lead yielded no frame; the 2015 event/archive sources remain unidentified. These sources inform only a broad organizational comparison. Keep exact geometry, controls, formulas and patch unresolved, and continue seeking a dated, inspectable frame with explicit server/build linkage.
+
 ## Verified quest detail and paired-layout releases — 27 November 2026
 
 - v22: candidate `b5cd70856abb9974dd19f07aa12c1d3c27734a6c` initially passed 40/42 tests; two PWA assertions still expected v21. Commit `1cbab01ab38c9fc44b9cd6b7e45249948b169a79` corrects them and asserts old cache removal. All 42 tests, syntax, content validation and Git diff checks passed in run 45998086065. A first browser harness expectation was corrected to account for the two intentional language-change log entries; all other save state was compared exactly. Pages 45998288370 succeeded; live verification 45998465634 confirmed byte-identical CSS/service worker, actual Chrome game interactions and offline reload.

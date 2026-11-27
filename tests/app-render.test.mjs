@@ -85,6 +85,7 @@ function click(button) {
     if (selector === ".guide-backdrop") return button?.backdrop ? button : null;
     if (selector === ".guide-dialog") return button?.insideGuide ? button : null;
     if (selector === "[data-unit-select]") return button?.dataset?.unitSelect ? button : null;
+    if (selector === "[data-status-unit-select]") return button?.dataset?.statusUnitSelect ? button : null;
     if (selector === "[data-formation-front]") return button?.dataset?.formationFront ? button : null;
     if (selector === "[data-route]") return button?.dataset?.route ? button : null;
     if (selector === "[data-target]") return button?.dataset?.target ? button : null;
@@ -311,14 +312,19 @@ test("portrait right-click opens selected status without changing the saved jour
   };
   assert.equal(contextMenu(fakeButton({ unitSelect: "scout" }, { inPortraitRail: true })), true);
   assert.match(element("#client-window-root").innerHTML, /data-window-name="status"/);
-  assert.match(element("#client-window-root").innerHTML, /class="status-member selected" data-status-member="scout" role="listitem" aria-current="true"/);
+  assert.match(element("#client-window-root").innerHTML, /class="status-member selected" data-status-member="scout" data-status-unit-select="scout" aria-label="Select character Tarin Reed" aria-pressed="true"/);
   assert.match(element("#client-window-root").innerHTML, /SELECTED PORTRAIT/);
   assert.match(element("#portrait-rail").innerHTML, /left click: inventory · right click: status/i);
+  assert.match(element("#client-window-root").innerHTML, /CHARACTER PROFILE · CURRENT SELECTION/);
+  click(fakeButton({ statusUnitSelect: "mara" }));
+  assert.match(element("#client-window-root").innerHTML, /class="status-member selected" data-status-member="mara" data-status-unit-select="mara" aria-label="Select character Mara Venn" aria-pressed="true"/);
   const statusOpen = savedState();
   assert.deepEqual({ phase: statusOpen.phase, day: statusOpen.day, coin: statusOpen.coin, completedRoutes: statusOpen.completedRoutes, routeRuns: statusOpen.routeRuns, party: statusOpen.party, inventory: statusOpen.inventory }, journeyBefore);
 
   click(fakeButton({ unitSelect: "mara" }));
   assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
+  assert.match(element("#client-window-root").innerHTML, /class="inventory-context-strip"/);
+  assert.match(element("#client-window-root").innerHTML, /SELECTED CREW MEMBER/);
   const inventoryOpen = savedState();
   assert.deepEqual({ phase: inventoryOpen.phase, day: inventoryOpen.day, coin: inventoryOpen.coin, completedRoutes: inventoryOpen.completedRoutes, routeRuns: inventoryOpen.routeRuns, party: inventoryOpen.party, inventory: inventoryOpen.inventory }, journeyBefore);
   action("close-window");
