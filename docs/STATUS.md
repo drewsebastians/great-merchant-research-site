@@ -1,15 +1,15 @@
 # Development Status
 
 **Updated:** 27 November 2026
-**Task:** V5.1 P0 — layered, nonmodal contextual windows
+**Task:** V5.1 P0 — original contextual-window frame refinement
 **Plan:** Development Plan v5.1
 
 ## Current state
 
 **Production game:** https://drewsebastians.github.io/great-merchant-research-site/game/
-**Production game-code commit:** 4e1e930c338bce34e9b9e99064674f8e7e3d98a5
-**Pages deployments:** code run 45926785566 succeeded for `4e1e930` (the initial layered-window build was run 45926424401). Documentation commit `967f574` deployed in run 45927330146, and follow-up `3366b2e` deployed successfully in run 45927567313. The production browser reloaded the current game build, opened inventory and quest windows together over the field, focused the exposed inventory frame, and closed only the front window with Escape. Shop mode was also confirmed. The saved journey remained at day 05 / 102 marks.
-**Recent visual passes:** commit `a38cbdb` added an original illustrated town scene and precached it in PWA shell v4. Commit `b1b7b0e` removed the project wordmark, reduced the utility strip from 40px to 28px and the desktop HUD from 160px to 118px. Commit `6bcd76e` refined the original contextual-window frame. Commit `f9e94a5` expires transient notices and clears only stale saved notices on reload. Commit `1784c24` added original Mosswind Road and Amber Quarry scene art. Commit `23fa536` added a stepped inset bevel, original corner rivets and a doubled titlebar edge. Commit `6830d00` added multiple nonmodal windows over the field and bumped the shell cache to v7; `4e1e930` brings a clicked window to the front and bumps the shell cache to v8. The independently authored trim remains simpler than the historical Xian frame.
+**Production game-code commit:** aa86f748c1d3f9638c44f2801e445c430ffc0b4e
+**Pages deployments:** code run 45944691666 succeeded for `aa86f74`; run 45926785566 succeeded for the preceding window-focus build, and run 45926424401 deployed the initial layered-window version. Documentation commits `967f574` and `3366b2e` deployed in runs 45927330146 and 45927567313. Production visual checks confirmed the new frame rail with inventory and quest open together, window focus, Escape closing only the front window, distinct shop mode, and the preserved day 05 / 102-mark save.
+**Recent visual passes:** commit `a38cbdb` added an original illustrated town scene and precached it in PWA shell v4. Commit `b1b7b0e` removed the project wordmark, reduced the utility strip from 40px to 28px and the desktop HUD from 160px to 118px. Commit `6bcd76e` refined the original contextual-window frame. Commit `f9e94a5` expires transient notices and clears only stale saved notices on reload. Commit `1784c24` added original Mosswind Road and Amber Quarry scene art. Commit `23fa536` added a stepped inset bevel, original corner rivets and a doubled titlebar edge. Commit `6830d00` added multiple nonmodal windows over the field and bumped the shell cache to v7; `4e1e930` added click-to-focus and shell cache v8. Commit `aa86f74` adds an original fine inset rail and midpoint fittings and bumps the PWA shell cache to v9. The independently authored trim remains simpler than the historical Xian frame.
 **Earlier UI deployment:** run 45766624535 succeeded but the first browser load exposed a stale `#coin-count` lookup; commit c80eaa2 removed the obsolete lookup and added a selector regression check.
 **V5.1 specification commit:** c2cb72dc84bfcf9e93bf51e4f587b55f349d950e; Pages run 45762703141 succeeded. This was a documentation-only change.
 **Status:** the scene-first redesign, original town and route illustrations, compact utility/HUD and layered contextual windows are live on `main` and `development/v5-first-playable-slice`. The 14 Jan 2017 Xian field screenshot remains a historical comparator with unknown capture date and client patch. The current claim remains “playable prototype; TGM interface fidelity in progress.”
@@ -26,6 +26,7 @@
 **Pre-route-art checkpoint:** checkpoint/pre-route-art-pass-2026-11-26 at f9e94a5f01f4654c1adaa7fe1d2e72dfae6e4daa.
 **Pre-window-density checkpoint:** checkpoint/pre-window-density-pass-2026-11-26 at 1784c24692fda4a904c12bafbd4a174b6773c078.
 **Pre-multi-window checkpoint:** checkpoint/pre-multi-window-pass-2026-11-27 at 4f75932e0fd572b87590af47185c7f2f240859c6.
+**Pre-window-frame-detail checkpoint:** checkpoint/pre-window-frame-detail-2026-11-27 at 65117023dec80b4841aba1f54e1963e0c5a302d2.
 **Earlier checkpoints:** checkpoint/pre-v5-2026-11-19 (a1bfc98df853ace84e4894c91361dcc3c5120935); checkpoint/pre-v5-025-2026-11-25 (ccaae5a52f1694dc76be599dd0789f0b8f116423); checkpoint/pre-v5-026-2026-11-25 (3c463e506829818125c0f497f0da410ee250468f); checkpoint/pre-v5-027-2026-11-25 (0635af9b4311ef580196797d53da30af1a19eea3); checkpoint/pre-v5-028-2026-11-25 (6758a4fa0a598e3dfab1386b41c9dee7cd412a63).
 
 **Research source:** great-merchant-research main commit f52446e6a8f25a9cff4fe15a21e63b976df85317, reviewed read-only.
@@ -53,7 +54,7 @@ These features remain useful prototype systems. The old dashboard arrangement fa
 
 - Baseline production page showed the V5.0 dashboard and a 102-mark save. After deployment, the corrected client rendered the town scene, left portrait stack, minimap, lower HUD and context windows. Quest and route windows opened and closed; the shop opened in its own mode.
 - Original Hearthcross, Mosswind Road and Amber Quarry illustrations are 1199×675 JPEGs. The current v8 shell precaches the road and quarry scenes alongside the existing app shell. The production browser showed Hearthcross as the scene background; both route assets returned as 1199×675 images.
-- PWA app-shell cache v8 supersedes v6 after the layered-window and focus updates. Its precache/update path is covered by the service-worker test; live offline mode remains unverified because the managed browser blocks DevTools.
+- PWA app-shell cache v9 supersedes v8 after the original frame-detail update. Its precache/update path is covered by the service-worker test; live offline mode remains unverified because the managed browser blocks DevTools.
 - Commit `b1b7b0e` removes the separate wordmark, keeps save/help/reset in a 28px utility strip and reduces the desktop HUD from 160px to 118px. Commit `6bcd76e` removes the window eyebrow and adds original corner bevels. The latest production check left the existing save at day 05 / 102 marks; no progression action was performed.
 - Commit `23fa536` adds a stepped inset bevel, original corner rivets and a double-edged title bar. The deployed shop window opened and closed correctly; the dated Xian window remains more densely ornamented.
 - Pages run `45926424401` deployed the first layered-window version; run `45926785566` deployed the front-window focus refinement. In production, inventory and quest windows were open together without dimming the scene; clicking inventory focused it, and Escape closed that front window while leaving quest open. The shop window entered shop mode. No transaction, battle, reset or recovery action was performed.
@@ -61,6 +62,7 @@ These features remain useful prototype systems. The old dashboard arrangement fa
 - Official interface, shortcut and battle-system guides were reviewed. The generic battle guide's Ctrl+number grouping and first-20-second withdrawal penalty are documented with an explicit Xian-version caveat in `docs/ui-fidelity-review-v5.md`.
 - `node --check game/app.mjs`, `node --test` (39/39), `node scripts/validate-game-content.mjs` and `git diff --check` all pass.
 - The new window-stack render and focus behavior is covered by tests; all 39 tests pass after commit `4e1e930`.
+- Commit `aa86f74` adds an original inset window rail with midpoint fittings and updates the shell cache to v9. Production Pages run 45944691666 succeeded; the deployed inventory/quest stack showed the new rail, click-to-focus and Escape-to-close behavior, and saved progress stayed at day 05 / 102 marks. All 39 tests, syntax checks, content validation and `git diff --check` pass.
 - Tests cover the redesigned shell, contextual windows, party/travel/trade/quest/battle flow, withdrawal, reload persistence, migrations and PWA cache shell.
 - The pre-scene-first checkpoint is anchored at the old remote head; the research repository remains read-only at f52446e6a8f25a9cff4fe15a21e63b976df85317.
 - Corrected Pages run 45767255947 succeeded; the production scene and core contextual interactions were visually checked after reload. Automated flow tests cover battle commands and withdrawal without modifying the production save.

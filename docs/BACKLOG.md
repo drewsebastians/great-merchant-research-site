@@ -33,12 +33,13 @@
 - [x] Bump the service-worker app-shell cache from v5 to v6 so installed clients re-fetch the updated window styling. Commit `2a78f5c` deployed in Pages run 45797607295; the live game reloaded and the shop still opened/closed with the save at day 05 / 102 marks.
 - [x] Replace the single modal scrim with layered, nonmodal contextual windows. Two desktop windows are shown side by side over the undimmed scene; clicking an exposed window brings it forward, and Escape closes only the front window. At the narrow breakpoint, the same stack keeps the active window in front for readability. Commits `6830d00` and `4e1e930` deployed successfully in Pages runs 45926424401 and 45926785566.
 - [x] Bump the app-shell cache to v8 for the focus behavior. The live production check confirmed inventory/quest layering, focus, front-window close, shop mode and the preserved day 05 / 102-mark save.
+- [x] Add an independently authored inset rail, center fasteners and midpoint fittings to the contextual-window frame; bump the app-shell cache to v9. Commit `aa86f74` deployed in Pages run 45944691666; the production browser showed inventory and quest together, verified focus and Escape behavior, and kept the save at day 05 / 102 marks.
 - [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
 - [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
 - [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
 - [ ] Verify on a physical narrow device, check keyboard focus and accessible labels, and test actual PWA offline behavior. The browser's organization policy blocked DevTools, so the live offline toggle was not attempted; automated service-worker tests are mocked.
 - [x] Shorten top/header chrome and lower HUD; use a darker double border and tighter title spacing for original contextual windows. Commit `05c2607` deployed in Pages run 45786650163.
-- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. The new frame is still simpler than the 2017 screenshot; current Xian client version and exact geometry remain unverified.
+- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. The added inner rail and fittings refine the frame, which is still simpler than the 2017 screenshot; current Xian client version and exact geometry remain unverified.
 
 ## Retained V5.0 playable work
 
@@ -64,6 +65,7 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] Game content validator and `git diff --check`.
 - [x] Production desktop browser visual verification and context-window smoke checks.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
+- [x] Post-`aa86f74` production screenshot and interaction check: the cache-v9 client shows the new inset rail, two windows remain over the field, clicking an exposed frame focuses it, Escape closes only the front window, and the save remains day 05 / 102 marks.
 - [x] Documentation follow-up committed as `967f574` and deployed successfully in Pages run 45927330146.
 - [x] Final deployment record committed as `3366b2e` and deployed successfully in Pages run 45927567313; production workflow linked the run to that exact commit.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
