@@ -72,7 +72,8 @@ These tasks remain complete as original prototype functionality. Their completio
 
 - [x] Before the window refinement, confirm `checkpoint/pre-window-refinement-2026-11-27` at `1cf7dc454bb82c994914b68f78657df721f9edf7`; research main remains `f52446e6a8f25a9cff4fe15a21e63b976df85317`, and its encrypted-vault blob remains `748f8863212c1a2911c53569e7c934293c5e4205`. The research repository was read-only.
 - [x] Before the quest-journal code change, create and verify `checkpoint/pre-quest-journal-refinement-2026-11-27` at remote head `71fbfc999115f9cb661629ce44fc9278277a1de9`.
-- [x] Confirm implementation commit `38834b8df1f19d80bd22f5ff3bcec8c5addfbda4` is aligned on `main` and `development/v5-first-playable-slice`, and Pages run `45962041736` succeeded.
+- [x] Confirm both branches contain implementation commit `38834b8df1f19d80bd22f5ff3bcec8c5addfbda4`; Pages run `45962041736` succeeded for that game build.
+- [x] Publish the synced status, backlog, handoff, development plan, blueprint and fidelity review to both branches; documentation commit `84e8851` deployed successfully in Pages run `45963240569`.
 - [x] `node --check` on game modules; commit `e7c7433` passes 39/39 tests.
 - [x] 39/39 Node tests, including three-zone HUD/window layout assertions, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check` before the `e7c7433` publication.
