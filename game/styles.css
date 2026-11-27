@@ -619,3 +619,42 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .hud-date { padding: 1px 4px; }
   .battle-command-deck { bottom: 10px; }
 }
+
+/* Historical quest-window evidence informs inset grouping, not source geometry. */
+.quest-contract-detail .quest-detail-summary {
+  padding: 8px 9px;
+  border: 1px solid rgba(215,179,111,.32);
+  background: rgba(5,11,13,.46);
+  box-shadow: inset 0 0 0 1px rgba(5,11,13,.65);
+  color: #d0d5c6;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.quest-contract-detail .quest-progress-heading {
+  padding: 5px 7px;
+  border: 1px solid var(--line-soft);
+  background: rgba(215,179,111,.07);
+  color: #e4c98d;
+}
+.quest-contract-detail .quest-stage-list {
+  padding: 5px;
+  border: 1px solid rgba(215,179,111,.23);
+  background: rgba(5,11,13,.32);
+}
+.quest-contract-detail .quest-stage-copy strong {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 10px;
+}
+.quest-contract-detail .quest-detail-footer {
+  padding: 7px;
+  border: 1px solid var(--line-soft);
+  background: rgba(5,11,13,.32);
+  flex-wrap: wrap;
+}
+.quest-contract-detail .quest-detail-footer strong { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .quest-journal-layout { grid-template-columns: minmax(0,1fr); flex: 0 0 auto; }
+  .quest-contract-index, .quest-contract-detail { min-width: 0; }
+  .quest-contract-detail .quest-detail-footer .text-button { min-height: 36px; }
+}
