@@ -29,3 +29,7 @@ The displayed values remain prototype values. No STR/AGY/VIT/WIS fields or Xian 
 ## Evidence needed before a fidelity claim
 
 For an Inventory/Status screen to graduate from comparator to version-scoped reference, obtain an inspectable frame, source context that identifies the server, a capture date distinct from publication date where possible, and a defensible client/build or patch link. Until those are established, keep Indonesian Episode 2, Global Server and unidentified-client evidence separate; do not infer exact dimensions, controls, formulas or patch. The overall blueprint gate remains open.
+
+## Implementation validation and release
+
+The presentation pass was isolated on `candidate/inventory-status-research-2026-11-27`, commit `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457`, with rollback checkpoint `checkpoint/pre-inventory-status-pass-2026-11-27` at `936f6eae66896c14e0e4c0e0016e7da9a0d9900b`. GitHub Actions validation run `46009842569` passed the 42 existing tests, content/syntax validation, source/save-preservation diff checks, desktop paired windows, mobile widths 390×844 and 340×740, English/Indonesian labels, selector save preservation, reload and offline reload using a disposable browser profile. Pages run `46010209631` deployed PWA shell v24. Direct production review confirmed both updated windows and the existing day 05 / 102-mark game state after reload. Production offline mode was not tested in the user's browser. Research main and encrypted vault remained read-only and unchanged.

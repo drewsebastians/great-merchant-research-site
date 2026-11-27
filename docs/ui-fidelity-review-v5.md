@@ -1,6 +1,6 @@
 # Interface Fidelity Review — V5.1 Xian TGM Reset
 
-> Current verified release: PWA shell v23. The candidate-only notes below are historical and superseded by the verified release record at the end.
+> Current verified release: PWA shell v24. The candidate-only notes below are historical and superseded by the verified release record at the end.
 
 **Updated:** 27 November 2026
 **Scope:** V5.0 production baseline, V5.1 deployed client and available Xian/TGM references
@@ -88,7 +88,7 @@ The blueprint gate remains open because detailed visual treatment and precise cu
 
 - [x] After the compact-client and notice-fix deployments, browser-zoom emulations at 779px, 681px and 340px CSS widths showed no visible horizontal scrolling; the 340px view returned to a clear scene after transient notice expiry. These emulations are not physical-device checks.
 - [ ] Physical narrow-device, keyboard-focus and accessible-control checks remain open.
-- [x] Actual live offline reload in isolated Chrome CI passed at three viewports for shells v22 and v23. Physical-device installation and wider browser verification remain open.
+- [x] Actual live offline reload in isolated Chrome CI passed at three viewports for v22/v23; candidate v24 also passed offline reload in its isolated browser workflow. Physical-device installation and wider browser verification remain open.
 
 ## Scope note
 
@@ -131,3 +131,7 @@ The new screen comparison is documented in [Inventory and Status reference evide
 - **Unidentified or mixed-source:** the May 2015 Duniaku event article and the LastHero archive remain leads; neither currently identifies a usable Inventory/Status screenshot's client and patch.
 
 The implementation groups existing selected-character HP/Focus values, the existing equipped-weapon state and existing cargo items; Status adds an accessible selector for the existing crew members. Browser interaction confirmed English and Indonesian labels, status portrait selection and a reload that preserved the day/currency/party/inventory state. Selection is transient UI state. This is an original, data-backed presentation pass and does not establish Xian geometry or controls. No exact character formula/stat was added; the blueprint gate remains open.
+
+## Verified Inventory and Status implementation — 27 November 2026
+
+Commit `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` (v24) renders the selected member’s existing HP/Focus and equipped weapon in Inventory, followed by existing cargo; Status adds a selected-character panel with roster selection. The selected-character state is not persisted and no stats or game formulas were added. Isolated workflow `46009842569` passed 42/42 tests, content, syntax and diff checks, desktop paired-window and 390×844/340×740 narrow browser checks, localization, save preservation, reload persistence and offline PWA reload. Pages run `46010209631` succeeded. The production browser showed both new panels and the visible day 05 / 102-mark save. The Indonesian Episode 2 source has mixed screenshot provenance; the Global lead has no frame, and the other sources remain unidentified. These results improve the prototype without closing the TGM fidelity gate.

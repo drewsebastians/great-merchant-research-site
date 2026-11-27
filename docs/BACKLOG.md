@@ -1,6 +1,6 @@
 # Development Backlog
 
-> Current verified release: PWA shell v23. The candidate-only notes below are historical and superseded by the verified release record at the end.
+> Current verified release: PWA shell v24. The candidate-only notes below are historical and superseded by the verified release record at the end.
 
 **Updated:** 27 November 2026
 **Plan:** Development Plan v5.1 — Xian TGM Interface-Fidelity Reset
@@ -63,6 +63,10 @@
 - [x] Record the official [Update Notice 19/NOV/2026](https://www.thegreatmerchant.com/board/bbsPatch.gs?GSbid=18202&GSuid=148&page=1): posted 18 Nov 2026 for a Global Server update scheduled 19 Nov, Patch V34411, it says Escape closes the UI when the map is maximized. The notice identifies the Global Server, not Xian; do not call this Xian-specific evidence.
 - [ ] Revisit the lower HUD and contextual-window comparison only when a newer or version-identifiable Xian screenshot/video frame is inspectable. Current reference captures and patches are unknown, so keep sizing and styling labeled as prototype choices.
 - [ ] Seek a newer or version-identifiable Xian field/context-window frame. The 14 Jan 2017 image is inspectable but only the article publication date is known; the 22 May 2026 stream yielded no frame. Do not treat either as current-build evidence.
+
+- [x] Prioritize an Inventory and Character Status context pass using existing local character, weapon and cargo data; keep selection presentation-only and save-compatible.
+- [x] Validate paired desktop windows and narrow single-window behavior, English/Indonesian controls, saved journey and offline reload on an isolated candidate branch; run `46009842569` passed.
+- [x] Promote implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457`, deploy PWA shell v24 and inspect live production Inventory and Status windows; Pages run `46010209631` succeeded.
 
 ## Retained V5.0 playable work
 
@@ -144,3 +148,10 @@ Candidate branch: `candidate/quest-inset-detail-2026-11-27`, based on `b11a6bacc
 - The validation branch `validation/quest-inset-detail-2026-11-27` retains the isolated GitHub Actions workflow (head `e2a434f718f63017886572dfe7033d76f9d7171a`); it checks out the exact candidate SHA, uses a disposable browser profile, and adds no shipped dependency. Local container DNS did not permit cloning, so full-repository checks ran in GitHub Actions. The disposable saves were seeded day 05 / 102 marks; actual user local storage was never accessed or changed. Physical Android/iOS and Windows Edge install and broader accessibility checks remain open.
 - Recovery: `checkpoint/pre-quest-candidate-validation-2026-11-27` at `b5cd70856abb9974dd19f07aa12c1d3c27734a6c`; `checkpoint/pre-quest-inset-promotion-2026-11-27` at `b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd`; `checkpoint/pre-quest-paired-layout-2026-11-27` at `1cbab01ab38c9fc44b9cd6b7e45249948b169a79`. Candidate branches retained. No gameplay, original assets, save schema or encrypted vault changed. Research main remains read-only at `f52446e6a8f25a9cff4fe15a21e63b976df85317`; its actual vault path `dist-github-pages/data/vault.json` and development `data/vault.json` share blob `748f8863212c1a2911c53569e7c934293c5e4205`.
 - Evidence correction: the [26 Aug 2019 Repeat Loop quest guide](https://repeatloop.blogspot.com/2019/08/Tips-Newbie-Xian-Online.html) discusses the Global Server after Indonesian releases; the same community's [27 Mar 2019 article](https://repeatloop.blogspot.com/2019/03/download-xian-great-merchant-server-international.html) reports the Indonesian server closed 28 Jan 2018. The shutdown date is a community report, not independently verified. The quest panel is a Global-context comparator with unverified image provenance and patch, not established Indonesian Xian footage. The [10 Jul 2016 Indonesian Episode 2 introduction](https://xiantgmindo.blogspot.com/2016/07/game-intro-xian-tgm-indonesia-episode-2.html) gives an explicit Indonesian-server guide context and describes client controls; its images' actual capture build remains unverified. KotakGame's [Episode 2 listing](https://www.kotakgame.com/gamebox/detail/6/4623/The-Great-Merchant-Xian-Episode-2) notes a 27 Jul 2015 screenshot update, but direct retrieval returned 403 and no linked screenshot was inspected. January 2016 quest image previews and January 2017 field frame remain historical only; Xian-labelled later video titles do not establish server identity. Seek an inspectable frame paired with a named server and verifiable patch; do not substitute Global patch notices for Xian evidence. The fidelity gate remains open.
+
+## Verified Inventory and Status release — 27 November 2026
+
+- Candidate implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` groups existing selected-character HP/Focus and equipped-weapon context with Inventory cargo, and adds a selected-character Status card with accessible crew selectors. It adds no game rules, assets or save fields.
+- Isolated validation run `46009842569`: 42/42 tests, syntax, content validation, Git diff/preservation checks, desktop 1363×936 and mobile 390×844/340×740 behavior, localization, save preservation, reload persistence and v24 offline reload passed.
+- Rollback checkpoint: `checkpoint/pre-inventory-status-pass-2026-11-27` at `936f6eae66896c14e0e4c0e0016e7da9a0d9900b`. Pages deployment `46010209631` succeeded; production review confirmed the new panels and retained day 05 / 102-mark save. Live offline mode was not opened in the user's browser; the isolated CI browser performed the offline reload.
+- Historical Indonesian Episode 2, Global Server and unidentified/mixed-source evidence remain separate in [the evidence ledger](inventory-status-evidence-2026-11-27.md). Exact Xian geometry, patch and detailed controls remain unresolved; keep the fidelity gate open.
