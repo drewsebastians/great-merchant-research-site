@@ -79,7 +79,7 @@ jobs:
               assert.equal(await page.locator(win('status')+' .status-member').count(),2);
               const paired=await page.locator('.client-window').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return{name:e.dataset.windowName,x:r.x,y:r.y,right:r.right,bottom:r.bottom,display:getComputedStyle(e).display};}));
               const visible=paired.filter(w=>w.display!=='none');
-              assert.equal(documentWidth(page),width);
+              assert.equal(await documentWidth(page),width);
               assert.ok(visible.every(w=>w.right<=width+1&&w.bottom<=height+1),JSON.stringify({width,height,visible}));
               if(mobile) assert.equal(visible.length,1,JSON.stringify(paired));
               else {const a=paired.find(w=>w.name==='inventory'),b=paired.find(w=>w.name==='status');assert.ok(visible.length===2&&(a.right<=b.x+1||b.right<=a.x+1),JSON.stringify(paired));}
@@ -108,7 +108,7 @@ jobs:
               await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
               const caches=await page.evaluate(()=>caches.keys());
               assert.ok(caches.includes('wayfarers-ledger-shell-v24'),JSON.stringify(caches));
-              assert.equal(documentWidth(page),width);
+              assert.equal(await documentWidth(page),width);
               await context.setOffline(true);await page.reload();
               await page.locator(menu('inventory')).waitFor({timeout:10000});
               await page.locator(menu('inventory')).click();
