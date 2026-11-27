@@ -658,3 +658,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .quest-contract-index, .quest-contract-detail { min-width: 0; }
   .quest-contract-detail .quest-detail-footer .text-button { min-height: 36px; }
 }
+
+/* Paired desktop windows: preserve the inset detail at narrow window widths. */
+@media (min-width: 901px) {
+  .window-layer-two .client-window[data-window-name="quest"] .quest-journal-layout { grid-template-columns: minmax(0,1fr); flex: 0 0 auto; }
+  .window-layer-two .client-window[data-window-name="quest"] .quest-contract-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .window-layer-two .client-window[data-window-name="quest"] .quest-contract-select { min-height: 58px; padding: 6px; gap: 3px; }
+  .window-layer-two .client-window[data-window-name="quest"] .quest-contract-select > strong { overflow-wrap: anywhere; }
+  .window-layer-two .client-window[data-window-name="quest"] .quest-contract-detail { gap: 6px; padding: 9px; }
+}
