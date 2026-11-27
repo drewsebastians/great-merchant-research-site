@@ -11,16 +11,131 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: 1cbab01ab38c9fc44b9cd6b7e45249948b169a79
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify candidate and run existing tests
+      - name: Verify exact candidate, syntax, tests and content
         run: |
-          git diff --check b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd b5cd70856abb9974dd19f07aa12c1d3c27734a6c
-          git diff --exit-code b5cd70856abb9974dd19f07aa12c1d3c27734a6c HEAD -- game tests scripts data
+          test "$(git rev-parse HEAD)" = "1cbab01ab38c9fc44b9cd6b7e45249948b169a79"
+          git diff --check b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd HEAD
+          git diff --exit-code b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd HEAD -- game/app.mjs game/engine.mjs game/data.mjs game/storage.mjs game/quests.mjs game/assets data
           node --check game/app.mjs
           node --check game/sw.js
           node --test tests/*.test.mjs
           node scripts/validate-game-content.mjs
+      - name: Install isolated browser-test dependency
+        run: npm install --no-save --no-package-lock playwright@1.55.0
+      - name: Browser smoke tests on exact game, with disposable saves
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/quest-server.log 2>&1 &
+          mkdir -p /tmp/quest-screens
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+          const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
+          const origin='http://127.0.0.1:8765/game/';
+          const key='wayfarers-ledger:v5:save';
+          const win=name=>'[data-window-name="'+name+'"]';
+          const menu=name=>'#client-menu [data-window="'+name+'"]';
+          const filter=name=>'[data-action="quest-filter"][data-filter="'+name+'"]';
+          for (const [width,height,mobile] of [[1363,936,false],[390,844,true],[340,740,true]]) {
+            const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:1});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',error=>errors.push(error.message));
+            await page.goto(origin);
+            await page.locator(menu('quest')).waitFor();
+            await page.evaluate(async key=>{
+              const {createInitialState}=await import('./data.mjs');
+              const s=createInitialState();
+              Object.assign(s,{day:5,coin:102,onboardingSeen:true,language:'en'});
+              localStorage.setItem(key,JSON.stringify(s));
+            },key);
+            await page.reload();
+            await page.locator(menu('quest')).waitFor();
+            const save=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+            const baseline=await save();
+            assert.equal(baseline.day,5); assert.equal(baseline.coin,102);
+            const stable=s=>Object.fromEntries(Object.entries(s).filter(([k])=>!['activeTab','language','notice'].includes(k)));
+            const click=async selector=>{const l=page.locator(selector).first(); if(mobile) await l.tap(); else await l.click();};
+            await click(menu('quest'));
+            await page.locator(win('quest')+' .quest-contract-detail').waitFor();
+            const geometry=await page.locator('.quest-journal-layout').evaluate(e=>({columns:getComputedStyle(e).gridTemplateColumns,scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
+            assert.equal(geometry.columns.split(' ').length,mobile?1:2,JSON.stringify(geometry));
+            assert.ok(geometry.scroll<=geometry.viewport+1,JSON.stringify(geometry));
+            const summary=await page.locator('.quest-detail-summary').evaluate(e=>({font:getComputedStyle(e).fontSize,border:getComputedStyle(e).borderTopWidth}));
+            assert.equal(summary.font,'11px'); assert.equal(summary.border,'1px');
+            if(mobile) assert.ok(await page.locator('.quest-detail-footer button').evaluate(e=>e.getBoundingClientRect().height)>=36);
+            const all=await page.locator('.quest-contract-select').count();
+            assert.ok(all>=2);
+            await click('.quest-contract-select:nth-of-type(1)');
+            const second=page.locator('.quest-contract-select').nth(1);
+            const title=await second.locator('strong').textContent();
+            if(mobile) await second.tap(); else await second.click();
+            assert.equal(await page.locator('.quest-detail-heading h3').textContent(),title);
+            await click(filter('open'));
+            assert.equal(await page.locator(filter('open')).getAttribute('aria-pressed'),'true');
+            await click(filter('completed'));
+            assert.equal(await page.locator(filter('completed')).getAttribute('aria-pressed'),'true');
+            assert.equal(await page.locator('.quest-empty-state').count(),1);
+            await click(filter('all'));
+            assert.equal(await page.locator('.quest-contract-select').count(),all);
+            await page.screenshot({path:'/tmp/quest-screens/quest-'+width+'.png',fullPage:true});
+            await click(menu('inventory'));
+            assert.equal(await page.locator(win('quest')).count(),1);
+            assert.equal(await page.locator(win('inventory')+'.window-active').count(),1);
+            if(!mobile){
+              const a=await page.locator(win('quest')).boundingBox(), b=await page.locator(win('inventory')).boundingBox();
+              assert.ok(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1,JSON.stringify({a,b}));
+              await page.locator(win('quest')+' .window-titlebar').click();
+              assert.equal(await page.locator(win('quest')+'.window-active').count(),1);
+              await page.keyboard.press('Escape');
+              assert.equal(await page.locator(win('quest')).count(),0);
+              assert.equal(await page.locator(win('inventory')).count(),1);
+            } else {
+              await page.screenshot({path:'/tmp/quest-screens/paired-'+width+'.png',fullPage:true});
+              await page.keyboard.press('Escape');
+              assert.equal(await page.locator(win('inventory')).count(),0);
+              assert.equal(await page.locator(win('quest')).count(),1);
+            }
+            await page.keyboard.press('Escape');
+            assert.equal(await page.locator('.client-window').count(),0);
+            await click(menu('system'));
+            await click('[data-language-option="id"]');
+            await page.keyboard.press('Escape');
+            await click(menu('quest'));
+            assert.equal(await page.locator(win('quest')+' .window-titlebar h2').textContent(),'Informasi misi');
+            await click(filter('open'));
+            assert.equal(await page.locator(filter('open')).getAttribute('aria-pressed'),'true');
+            await click(filter('all'));
+            await click('.quest-detail-footer button');
+            assert.equal(await page.locator(win('travel')+'.window-active').count(),1);
+            await page.keyboard.press('Escape');
+            await page.keyboard.press('Escape');
+            await click('#map-maximize-button');
+            await page.locator('.map-maximized-dialog').waitFor();
+            await page.keyboard.press('Escape');
+            assert.equal(await page.locator('.map-maximized-dialog').count(),0);
+            assert.equal(await page.locator('#map-maximize-button').evaluate(e=>e===document.activeElement),true);
+            await click(menu('system'));
+            await click('[data-language-option="en"]');
+            await page.keyboard.press('Escape');
+            assert.deepEqual(stable(await save()),stable(baseline));
+            await page.reload();
+            await page.locator(menu('quest')).waitFor();
+            assert.deepEqual(stable(await save()),stable(baseline));
+            assert.deepEqual(errors,[]);
+            console.log('PASS browser '+width+'x'+height+' '+JSON.stringify(geometry)+' save day '+baseline.day+' coin '+baseline.coin);
+            await context.close();
+          }
+          await browser.close();
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quest-candidate-screens
+          path: /tmp/quest-screens
+          if-no-files-found: ignore
