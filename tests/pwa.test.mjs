@@ -21,7 +21,7 @@ test("PWA metadata, registration and precache entries match the game folder", ()
   assert.equal(manifest.display, "standalone");
   assert.match(html, /rel="manifest" href="\.\/manifest\.webmanifest"/);
   assert.match(app, /serviceWorker\.register\("\.\/sw\.js"/);
-  assert.match(workerSource, /wayfarers-ledger-shell-v24/);
+  assert.match(workerSource, /wayfarers-ledger-shell-v25/);
   assert.ok(appShell.includes("./assets/window-engraving.svg"), "the original window trim is precached for offline use");
   assert.ok(appShell.includes("./assets/hearthcross-field.jpg"), "the original town art must be precached for offline use");
   assert.ok(appShell.includes("./assets/mosswind-road.jpg"), "the original road art must be precached for offline use");
@@ -60,6 +60,7 @@ test("service worker precaches the app shell and serves its saved page while off
   cacheNames.add("wayfarers-ledger-shell-v21");
   cacheNames.add("wayfarers-ledger-shell-v22");
   cacheNames.add("wayfarers-ledger-shell-v23");
+  cacheNames.add("wayfarers-ledger-shell-v24");
   const context = {
     URL,
     Request,
@@ -92,7 +93,7 @@ test("service worker precaches the app shell and serves its saved page while off
   let activatePromise;
   listeners.get("activate")({ waitUntil(promise) { activatePromise = promise; } });
   await activatePromise;
-  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v24"]);
+  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v25"]);
 
   let onlineResponse;
   listeners.get("fetch")({

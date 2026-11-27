@@ -155,3 +155,15 @@ Candidate branch: `candidate/quest-inset-detail-2026-11-27`, based on `b11a6bacc
 - Isolated validation run `46009842569`: 42/42 tests, syntax, content validation, Git diff/preservation checks, desktop 1363×936 and mobile 390×844/340×740 behavior, localization, save preservation, reload persistence and v24 offline reload passed.
 - Rollback checkpoint: `checkpoint/pre-inventory-status-pass-2026-11-27` at `936f6eae66896c14e0e4c0e0016e7da9a0d9900b`. Pages deployment `46010209631` succeeded; production review confirmed the new panels and retained day 05 / 102-mark save. Live offline mode was not opened in the user's browser; the isolated CI browser performed the offline reload.
 - Historical Indonesian Episode 2, Global Server and unidentified/mixed-source evidence remain separate in [the evidence ledger](inventory-status-evidence-2026-11-27.md). Exact Xian geometry, patch and detailed controls remain unresolved; keep the fidelity gate open.
+
+
+## HUD readability candidate — 28 November 2026
+
+Candidate: `candidate/hud-readability-pass-2026-11-28`; rollback: `checkpoint/pre-hud-readability-pass-2026-11-28` at base `9efb48ad84b834da0a77754ca4301b26ade37691`.
+
+- [x] Continue the Xian screenshot search and record Indonesian Episode 2, Global Server, other regional clients and mixed/unidentified sources separately; no version-identifiable Xian frame was found.
+- [x] Improve source-verified HUD readability: replace the cramped mobile nine-control row with five columns/two rows, wrap labels, raise them to 8px and provide 44px menu-button height; update PWA cache to v25.
+- [ ] Run the existing test suite, content/syntax/diff checks, and desktop/mobile browser checks for localization, save preservation and offline PWA behavior.
+- [ ] Promote only after validation; verify Pages deployment and live production, then record exact SHAs and run IDs.
+
+This candidate changes CSS, the PWA cache version, its expected cache tests and project documentation only. Physical Android/iOS, broader keyboard/accessibility and offline testing in the user's production browser remain open.

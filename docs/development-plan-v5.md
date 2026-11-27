@@ -93,3 +93,8 @@ Evidence is recorded in [the Inventory and Status reference note](inventory-stat
 ## Verified Inventory and Character Status pass — 27 November 2026
 
 Implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` advances the shell to v24. Inventory displays existing selected-crew HP/Focus and equipped-weapon context before cargo. Status displays the selected character and accessible roster controls; changing selection does not alter persisted journey fields. No new game values, formulas, save keys or source assets were introduced. Isolated run `46009842569` passed 42/42 tests, syntax, content validation, Git diff/preservation checks, desktop paired-window checks, two mobile widths, bilingual labels, save/reload checks and offline reload. Pages run `46010209631` succeeded, and the live page showed the new panels with the day 05 / 102-mark journey intact. See [the dated evidence ledger](inventory-status-evidence-2026-11-27.md); source identity remains uncertain and the blueprint gate stays open.
+
+
+### 28 November 2026 — HUD legibility candidate
+
+The lower HUD's source CSS fell to 4–6px labels at narrow widths and packed nine actions into one row. The v25 candidate raises these labels to 8px, wraps them, gives menu buttons a 44px minimum height and lays the menu out as five columns by two rows through 900px. This is a responsive usability correction based on our own CSS and viewport constraints, not a TGM measurement. It changes no state, game rule, art, save field or formula. Validate with existing checks and disposable desktop/narrow browser profiles before promotion; verify the PWA shell cache upgrade and actual offline reload.

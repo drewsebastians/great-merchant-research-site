@@ -702,3 +702,47 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .window-layer-two .client-window[data-window-name="quest"] .quest-contract-select > strong { overflow-wrap: anywhere; }
   .window-layer-two .client-window[data-window-name="quest"] .quest-contract-detail { gap: 6px; padding: 9px; }
 }
+
+
+/* HUD readability and touch targets — original responsive choices, not TGM measurements. */
+.overview-heading { font-size: 8px; letter-spacing: .06em; }
+.overview-cell small { font-size: 8px; letter-spacing: .04em; }
+.chat-heading strong, .chat-heading small { font-size: 8px; }
+.chat-line { font-size: 9px; }
+.client-menu-button small {
+  overflow: visible;
+  font-size: 8px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
+}
+.hud-date-heading, .hud-date-footer { font-size: 7px; letter-spacing: .02em; }
+
+@media (max-width: 900px) {
+  .lower-hud { min-height: 340px; grid-template-rows: auto 92px 138px; }
+  .hud-overview { min-height: 68px; grid-template-rows: 14px auto; }
+  .overview-cell { gap: 4px; }
+  .overview-cell small { font-size: 8px; letter-spacing: 0; }
+  .chat-window { min-height: 84px; grid-template-rows: 16px minmax(36px,1fr) 25px; padding: 4px 8px; }
+  .chat-heading strong, .chat-heading small { font-size: 8px; }
+  .chat-line { font-size: 9px; }
+  .client-controls { min-height: 136px; grid-template-rows: minmax(0,1fr) 26px; }
+  .client-menu { min-height: 104px; grid-template-columns: repeat(5,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(48px,1fr)); gap: 2px 4px; padding: 2px 2px 0; }
+  .client-menu-button { min-height: 44px; gap: 2px; padding: 3px 2px; }
+  .client-menu-button.state-toggle { flex-direction: column; gap: 1px; }
+  .client-menu-button > span { width: 19px; height: 19px; font-size: 11px; }
+  .client-menu-button small { font-size: 8px; line-height: 1.1; }
+  .hud-date { gap: 5px; padding: 1px 4px; }
+  .hud-date-heading, .hud-date-footer { font-size: 7px; letter-spacing: .02em; }
+}
+
+@media (max-width: 430px) {
+  .overview-cell { padding: 2px 1px; }
+  .overview-cell small { font-size: 8px; }
+  .overview-cell strong { font-size: 14px; }
+  .client-menu { column-gap: 3px; }
+  .client-menu-button { padding-inline: 1px; }
+  .client-menu-button small { font-size: 8px; }
+}

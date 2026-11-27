@@ -128,3 +128,8 @@ Until all eight checks pass, retain the status “playable prototype; TGM interf
 ### Verified implementation update — 27 November 2026
 
 PWA shell v24 deploys the Inventory and Status presentation pass under implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` (Pages run `46010209631`). Existing vitality/focus, equipped weapon and cargo are grouped in Inventory; Status surfaces the selected character and accessible crew selectors. Selection is not saved. Isolated browser validation `46009842569` passed at desktop and two narrow widths, including English/Indonesian labels, save preservation and offline reload. Production UI and the existing day 05 / 102-mark save were checked after deployment. These checks establish prototype behavior only. The historical Indonesian Episode 2 screen has mixed image provenance, the Global Server lead has metadata but no frame, and the remaining image leads are unidentified; no geometry or exact controls can yet be derived.
+
+
+### Candidate review — 28 November 2026
+
+The v25 HUD pass is an original responsive usability change: lower-HUD labels are raised from 4–6px to 8px at narrow widths; the mobile menu wraps over five columns and two rows; buttons have a 44px minimum height. These values are not sourced from Xian and do not satisfy the blueprint's reference-comparison gate. The latest search still lacks an inspectable Xian frame linked to a capture build or patch. Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source references remain distinct in the evidence ledger.

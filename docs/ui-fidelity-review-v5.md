@@ -135,3 +135,10 @@ The implementation groups existing selected-character HP/Focus values, the exist
 ## Verified Inventory and Status implementation — 27 November 2026
 
 Commit `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` (v24) renders the selected member’s existing HP/Focus and equipped weapon in Inventory, followed by existing cargo; Status adds a selected-character panel with roster selection. The selected-character state is not persisted and no stats or game formulas were added. Isolated workflow `46009842569` passed 42/42 tests, content, syntax and diff checks, desktop paired-window and 390×844/340×740 narrow browser checks, localization, save preservation, reload persistence and offline PWA reload. Pages run `46010209631` succeeded. The production browser showed both new panels and the visible day 05 / 102-mark save. The Indonesian Episode 2 source has mixed screenshot provenance; the Global lead has no frame, and the other sources remain unidentified. These results improve the prototype without closing the TGM fidelity gate.
+
+
+### Evidence and readability review — 28 November 2026
+
+A new search across Xian Episode 2, official Global notices, current Great Merchant references and video leads did not yield an inspectable frame tied to an Xian capture build/patch. The 2016 Indonesian Episode 2 tutorial remains explicit about its guide context but its screenshots have mixed provenance and no confirmed capture build. KotakGame metadata reports a 27 Jul 2015 screenshot update, but the image itself was not inspectable. The Global Server v34411 notice identifies that client and date but supplies no qualifying Xian frame. A V34300 “new UI” video surfaced from HK/TW material; that regional client is kept separate and is not evidence for Xian. Refer to `docs/hud-readability-evidence-2026-11-28.md`.
+
+The v25 candidate addresses demonstrably tiny labels and tightly packed controls in our own narrow layout. Its font sizes, wrapping and touch dimensions are independent prototype usability choices; they do not imply source measurements. No fidelity-gate item is newly satisfied.
