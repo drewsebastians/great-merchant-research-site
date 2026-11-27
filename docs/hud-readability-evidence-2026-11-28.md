@@ -29,7 +29,7 @@ No newly inspected image or video frame can be identified as an Xian client scre
 
 ## Implementation boundary
 
-The v25 candidate responds to the project's own CSS and narrow-viewport layout: labels were 4–6px and nine menu buttons shared a single row on mobile. The candidate raises HUD labels to 8px, lets labels wrap, lays out the menu in five columns over two rows and sets buttons to a 44px minimum height. These are original usability choices, not measurements or controls learned from TGM. Gameplay, save schema, original assets and encrypted research vault remain untouched.
+The v25 candidate responds to the project's own CSS and narrow-viewport layout: labels were 4–6px and nine menu buttons shared a single row on mobile. It sets overview/chat labels to 8–9px, menu labels to 8px across viewports; labels wrap, the menu uses five columns over two rows across desktop and narrow widths, and buttons have a 44px minimum height. These are original usability choices, not measurements or controls learned from TGM. Gameplay, save schema, original assets and encrypted research vault remain untouched.
 
 ## Open fidelity and verification items
 

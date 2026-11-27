@@ -162,7 +162,7 @@ Candidate branch: `candidate/quest-inset-detail-2026-11-27`, based on `b11a6bacc
 Candidate: `candidate/hud-readability-pass-2026-11-28`; rollback: `checkpoint/pre-hud-readability-pass-2026-11-28` at base `9efb48ad84b834da0a77754ca4301b26ade37691`.
 
 - [x] Continue the Xian screenshot search and record Indonesian Episode 2, Global Server, other regional clients and mixed/unidentified sources separately; no version-identifiable Xian frame was found.
-- [x] Improve source-verified HUD readability: replace the cramped mobile nine-control row with five columns/two rows, wrap labels, raise them to 8px and provide 44px menu-button height; update PWA cache to v25.
+- [x] Improve code-verified HUD readability: replace the cramped nine-control row with five columns/two rows, wrap labels, set menu labels to 8px across viewports, and provide 44px menu-button height; update PWA cache to v25.
 - [ ] Run the existing test suite, content/syntax/diff checks, and desktop/mobile browser checks for localization, save preservation and offline PWA behavior.
 - [ ] Promote only after validation; verify Pages deployment and live production, then record exact SHAs and run IDs.
 

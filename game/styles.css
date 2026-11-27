@@ -718,6 +718,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   text-overflow: clip;
   white-space: normal;
 }
+.client-menu { grid-template-columns: repeat(5,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); }
+.client-menu-button { min-height: 44px; }
+.client-menu-button.state-toggle { flex-direction: column; gap: 1px; }
+.client-menu-button.state-toggle:nth-child(8), .client-menu-button.state-toggle:nth-child(9) { grid-column: auto; grid-row: auto; }
 .hud-date-heading, .hud-date-footer { font-size: 7px; letter-spacing: .02em; }
 
 @media (max-width: 900px) {
