@@ -58,6 +58,7 @@ test("service worker precaches the app shell and serves its saved page while off
   const cacheNames = new Set();
   cacheNames.add("wayfarers-ledger-shell-v1");
   cacheNames.add("wayfarers-ledger-shell-v21");
+  cacheNames.add("wayfarers-ledger-shell-v22");
   const context = {
     URL,
     Request,
