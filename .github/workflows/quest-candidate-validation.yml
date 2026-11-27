@@ -1,0 +1,26 @@
+name: Quest candidate validation
+on:
+  push:
+    branches: ['validation/quest-inset-detail-2026-11-27']
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify candidate and run existing tests
+        run: |
+          git diff --check b11a6bacc578230fdeebc11f5b7ccaa07ad6ddfd b5cd70856abb9974dd19f07aa12c1d3c27734a6c
+          git diff --exit-code b5cd70856abb9974dd19f07aa12c1d3c27734a6c HEAD -- game tests scripts data
+          node --check game/app.mjs
+          node --check game/sw.js
+          node --test tests/*.test.mjs
+          node scripts/validate-game-content.mjs
