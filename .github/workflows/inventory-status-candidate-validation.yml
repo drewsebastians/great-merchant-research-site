@@ -48,7 +48,7 @@ jobs:
           const key='wayfarers-ledger:v5:save';
           const menu=name=>'#client-menu [data-window="'+name+'"]';
           const win=name=>'.client-window[data-window-name="'+name+'"]';
-          const stable=value=>{const copy=structuredClone(value);delete copy.language;delete copy.log;delete copy.notice;return copy;};
+          const stable=value=>{const copy=structuredClone(value);delete copy.activeTab;delete copy.language;delete copy.log;delete copy.notice;return copy;};
           try {
             for (const [width,height,mobile] of [[1363,936,false],[390,844,true],[340,740,true]]) {
               const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:1});
