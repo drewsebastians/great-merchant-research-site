@@ -1,6 +1,6 @@
 # Development Backlog
 
-**Updated:** 26 November 2026
+**Updated:** 27 November 2026
 **Plan:** Development Plan v5.1 — Xian TGM Interface-Fidelity Reset
 **Specification:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
@@ -31,6 +31,8 @@
 - [x] Add original 1199×675 Mosswind Road and Amber Quarry encounter scenes and include them in PWA app-shell cache v5. Commit `1784c24` is live in Pages run 45795440090; both deployed image assets loaded in the browser.
 - [x] Increase original contextual-window depth with stepped inset bevels, corner rivets and a doubled titlebar edge. Commit `23fa536` deployed in Pages run 45796646359; the shop window rendered and opened/closed in production without changing the saved journey.
 - [x] Bump the service-worker app-shell cache from v5 to v6 so installed clients re-fetch the updated window styling. Commit `2a78f5c` deployed in Pages run 45797607295; the live game reloaded and the shop still opened/closed with the save at day 05 / 102 marks.
+- [x] Replace the single modal scrim with layered, nonmodal contextual windows. Two desktop windows are shown side by side over the undimmed scene; clicking an exposed window brings it forward, and Escape closes only the front window. At the narrow breakpoint, the same stack keeps the active window in front for readability. Commits `6830d00` and `4e1e930` deployed successfully in Pages runs 45926424401 and 45926785566.
+- [x] Bump the app-shell cache to v8 for the focus behavior. The live production check confirmed inventory/quest layering, focus, front-window close, shop mode and the preserved day 05 / 102-mark save.
 - [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
 - [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
 - [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
@@ -57,11 +59,11 @@ These tasks remain complete as original prototype functionality. Their completio
 
 ## Verification recorded this update
 
-- [x] `node --check` on the app and engine modules.
+- [x] `node --check` on app and service-worker modules; `node --test` passes 39/39 after `4e1e930`.
 - [x] 39/39 Node tests, including shell/window coverage, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check`.
 - [x] Production desktop browser visual verification and context-window smoke checks.
-- [x] Post-`2a78f5c` production browser check: the cache-v6 build reloads into the illustrated town, the shop opens and closes, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
+- [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.
 - [x] CSS-width browser smoke checks at 779px, 681px and 340px after the compact-client and notice-fix deployments; no visible horizontal scrolling, and the 340px save values remain visible after the notice clears.
 - [ ] Physical-device, keyboard-focus and live offline-PWA verification remain open.
