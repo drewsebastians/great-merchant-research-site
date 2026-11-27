@@ -46,7 +46,10 @@
 - [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
 - [ ] Verify on a physical narrow device, check keyboard focus and accessible labels, and test actual PWA offline behavior. The browser's organization policy blocked DevTools, so the live offline toggle was not attempted; automated service-worker tests are mocked.
 - [x] Shorten top/header chrome and lower HUD; use a darker double border and tighter title spacing for original contextual windows. Commit `05c2607` deployed in Pages run 45786650163.
-- [ ] Continue comparing independently authored contextual-window density and HUD proportions with available dated Xian frames. The prototype remains simpler than the 2019 quest-panel image; current Xian client version and exact geometry remain unverified.
+- [x] Reorganize the quest window as an original route ledger with All/Open/Completed filters, contract selection, focused detail, step progress, milestone rows and a route-chart action. Commit `d87e94d` deployed in Pages run `45961499731`.
+- [x] Preserve quest filter/control classes and `data-*` values while applying Indonesian UI text; add a regression check and bump the PWA shell from v16 to v17. Commit `38834b8` deployed in Pages run `45962041736`.
+- [x] Verify deployed quest filtering and selection in production: All/Open/Completed filters, selected-contract detail updates, empty state, route-chart action, Escape close, shop return to field, and retained day 05 / 102-mark save. No transaction or progression was performed.
+- [ ] Compare the deployed route ledger and lower HUD with the dated 2019 quest-panel image and 2017 full-client screenshot. Refine remaining hierarchy only where those public references support it; exact current-Xian proportions and client version remain unverified.
 
 ## Retained V5.0 playable work
 
@@ -68,11 +71,14 @@ These tasks remain complete as original prototype functionality. Their completio
 ## Verification recorded this update
 
 - [x] Before the window refinement, confirm `checkpoint/pre-window-refinement-2026-11-27` at `1cf7dc454bb82c994914b68f78657df721f9edf7`; research main remains `f52446e6a8f25a9cff4fe15a21e63b976df85317`, and its encrypted-vault blob remains `748f8863212c1a2911c53569e7c934293c5e4205`. The research repository was read-only.
-- [x] Confirm implementation commit `e7c7433ba4b2a157a76650609bc604f6e6211f28` is aligned on `main` and `development/v5-first-playable-slice`, and Pages run `45958274697` succeeded.
+- [x] Before the quest-journal code change, create and verify `checkpoint/pre-quest-journal-refinement-2026-11-27` at remote head `71fbfc999115f9cb661629ce44fc9278277a1de9`.
+- [x] Confirm implementation commit `38834b8df1f19d80bd22f5ff3bcec8c5addfbda4` is aligned on `main` and `development/v5-first-playable-slice`, and Pages run `45962041736` succeeded.
 - [x] `node --check` on game modules; commit `e7c7433` passes 39/39 tests.
 - [x] 39/39 Node tests, including three-zone HUD/window layout assertions, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check` before the `e7c7433` publication.
 - [x] Production desktop browser visual verification and context-window smoke checks.
+- [x] After `38834b8`, run all 39 existing Node tests, `node scripts/validate-game-content.mjs`, syntax checks and `git diff --check`; all passed.
+- [x] Production browser check after Pages run `45962041736`: English and Indonesian quest controls remained functional, route-chart opened the map, Escape closed the front window, shop returned to the field, and the visible save remained day 05 / 102 marks.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Post-`aa86f74` production screenshot and interaction check: the cache-v9 client shows the new inset rail, two windows remain over the field, clicking an exposed frame focuses it, Escape closes only the front window, and the save remains day 05 / 102 marks.
 - [x] Post-`eb007f6` production check: the then-current build showed overlapping Inventory and Quest windows; clicking the exposed Inventory titlebar raised it and Escape closed it to reveal Quest. This result was subsequently superseded after correcting the 2017 screenshot interpretation.
