@@ -73,6 +73,7 @@ These tasks remain complete as original prototype functionality. Their completio
 
 - [x] Before the window refinement, confirm `checkpoint/pre-window-refinement-2026-11-27` at `1cf7dc454bb82c994914b68f78657df721f9edf7`; research main remains `f52446e6a8f25a9cff4fe15a21e63b976df85317`, and its encrypted-vault blob remains `748f8863212c1a2911c53569e7c934293c5e4205`. The research repository was read-only.
 - [x] Before the quest-journal code change, create and verify `checkpoint/pre-quest-journal-refinement-2026-11-27` at remote head `71fbfc999115f9cb661629ce44fc9278277a1de9`.
+- [x] Before the quest-window scale pass, verify rollback checkpoint `checkpoint/pre-quest-window-scale-pass-2026-11-27` at remote head `096e1f9f8564419a3c2b75a553823cbd55d0d0d7`.
 - [x] Confirm both branches contain implementation commit `38834b8df1f19d80bd22f5ff3bcec8c5addfbda4`; Pages run `45962041736` succeeded for that game build.
 - [x] Publish the synced status, backlog, handoff, development plan, blueprint and fidelity review to both branches; documentation commit `84e8851` deployed successfully in Pages run `45963240569`.
 - [x] `node --check` on game modules; commit `e7c7433` passes 39/39 tests.
@@ -80,7 +81,9 @@ These tasks remain complete as original prototype functionality. Their completio
 - [x] Game content validator and `git diff --check` before the `e7c7433` publication.
 - [x] Production desktop browser visual verification and context-window smoke checks.
 - [x] After `38834b8`, run all 39 existing Node tests, `node scripts/validate-game-content.mjs`, syntax checks and `git diff --check`; all passed.
+- [x] After `11e1a04`, rerun all 39 Node tests, syntax checks across game/scripts/tests, `node scripts/validate-game-content.mjs` and `git diff --check`; all passed.
 - [x] Production browser check after Pages run `45962041736`: English and Indonesian quest controls remained functional, route-chart opened the map, Escape closed the front window, shop returned to the field, and the visible save remained day 05 / 102 marks.
+- [x] Production browser check after Pages run `45965078349`: the single quest panel measured 880×580px with a 21px heading; selecting a contract, showing/restoring the empty Open filter and opening the route map worked; the save remained at day 05 / 102 marks.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Post-`aa86f74` production screenshot and interaction check: the cache-v9 client shows the new inset rail, two windows remain over the field, clicking an exposed frame focuses it, Escape closes only the front window, and the save remains day 05 / 102 marks.
 - [x] Post-`eb007f6` production check: the then-current build showed overlapping Inventory and Quest windows; clicking the exposed Inventory titlebar raised it and Escape closed it to reveal Quest. This result was subsequently superseded after correcting the 2017 screenshot interpretation.
