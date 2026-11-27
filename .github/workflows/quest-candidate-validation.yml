@@ -26,6 +26,12 @@ jobs:
           node --check game/sw.js
           node --test tests/*.test.mjs
           node scripts/validate-game-content.mjs
+      - name: Verify deployed v22 CSS and service worker
+        run: |
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/styles.css?v=22' -o /tmp/live-css
+          cmp game/styles.css /tmp/live-css
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/sw.js?v=22' -o /tmp/live-sw
+          cmp game/sw.js /tmp/live-sw
       - name: Install isolated browser-test dependency
         run: npm install --no-save --no-package-lock playwright@1.55.0
       - name: Browser smoke tests on exact game, with disposable saves
@@ -36,7 +42,7 @@ jobs:
           import { chromium } from 'playwright';
           import assert from 'node:assert/strict';
           const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
-          const origin='http://127.0.0.1:8765/game/';
+          const origin='https://drewsebastians.github.io/great-merchant-research-site/game/';
           const key='wayfarers-ledger:v5:save';
           const win=name=>'[data-window-name="'+name+'"]';
           const menu=name=>'#client-menu [data-window="'+name+'"]';
@@ -130,6 +136,15 @@ jobs:
             await page.locator(menu('quest')).waitFor();
             assert.deepEqual(stable(await save()),stable(baseline));
             assert.deepEqual((await save()).log,['Interface language changed to English.','Bahasa tampilan diubah ke Bahasa Indonesia.',...baseline.log]);
+            await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
+            assert.ok((await page.evaluate(()=>caches.keys())).some(k=>k.endsWith('v22')));
+            await context.setOffline(true);
+            await page.reload();
+            await page.locator(menu('quest')).waitFor();
+            assert.deepEqual(stable(await save()),stable(baseline));
+            await click(menu('quest'));
+            await page.locator('.quest-detail-summary').waitFor();
+            await context.setOffline(false);
             assert.deepEqual(errors,[]);
             console.log('PASS browser '+width+'x'+height+' '+JSON.stringify(geometry)+' save day '+baseline.day+' coin '+baseline.coin);
             await context.close();
