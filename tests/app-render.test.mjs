@@ -117,6 +117,8 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /\.client-window::before \{[^}]*background:/);
   assert.match(gameStyles, /\.client-window::before \{[^}]*radial-gradient\(circle/);
   assert.match(gameStyles, /\.client-window \{[^}]*0 0 0 3px rgba\(207,180,120,\.32\)/);
+  assert.match(gameStyles, /\.client-window-layer \{[^}]*pointer-events: none/);
+  assert.match(gameStyles, /\.client-window:not\(\.window-active\) \{ display: none; \}/);
   assert.match(gameStyles, /\.window-titlebar \{ min-height: 32px;/);
   assert.match(gameStyles, /\.window-titlebar \{[^}]*border-top: 1px solid/);
   assert.match(gameStyles, /\.window-titlebar h2 \{[^}]*font: 14px\/1\.1 var\(--serif\);/);
@@ -185,16 +187,19 @@ test("context windows open and close without returning to dashboard pages", () =
   openWindow("inventory");
   assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
   assert.match(element("#client-window-root").innerHTML, /Supplies and cargo/);
-  action("close-window");
-  assert.equal(element("#client-window-root").innerHTML, "");
-
   openWindow("quest");
+  assert.equal((element("#client-window-root").innerHTML.match(/role="dialog"/g) || []).length, 2);
+  assert.match(element("#client-window-root").innerHTML, /aria-modal="false"/);
+  assert.doesNotMatch(element("#client-window-root").innerHTML, /window-scrim/);
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /WAYFARER CLIENT WINDOW/);
   assert.match(element("#client-window-root").innerHTML, /The Courier&#39;s Mark/);
   let prevented = false;
   keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
   assert.equal(prevented, false);
+  assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
+  assert.doesNotMatch(element("#client-window-root").innerHTML, /Quest information/);
+  action("close-window");
   assert.equal(element("#client-window-root").innerHTML, "");
 });
 

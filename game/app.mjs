@@ -20,6 +20,7 @@ let guideTrigger = null;
 let noticeTimer = null;
 let dismissedNotice = null;
 const ui = {
+  openWindows: [],
   activeWindow: null,
   selectedUnitId: state.formationFrontId || state.party[0]?.id || "mara",
   selectedGroup: "all",
@@ -30,7 +31,10 @@ const ui = {
   peaceMode: true,
   chatLines: []
 };
-if (state.phase === "victory" || state.phase === "defeat") ui.activeWindow = "results";
+if (state.phase === "victory" || state.phase === "defeat") {
+  ui.openWindows = ["results"];
+  ui.activeWindow = "results";
+}
 const label = (english, indonesian = english) => state.language === "id" ? indonesian : english;
 const GUIDE_STEPS = [
   { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
@@ -523,10 +527,10 @@ function renderWindowContent(name) {
   return "";
 }
 function renderClientWindow() {
-  const name = ui.activeWindow || ((state.phase === "victory" || state.phase === "defeat") ? "results" : null);
   const root = $("#client-window-root");
   if (!root) return;
-  if (!name) { root.innerHTML = ""; return; }
+  const names = ui.openWindows.length ? ui.openWindows : ((state.phase === "victory" || state.phase === "defeat") ? ["results"] : []);
+  if (!names.length) { root.innerHTML = ""; return; }
   const titles = {
     travel: label("World map · route chart", "Peta dunia · pilihan rute"),
     market: label("Town shop · Hearthcross", "Toko kota · Hearthcross"),
@@ -539,13 +543,20 @@ function renderClientWindow() {
     system: label("System settings", "Pengaturan sistem"),
     results: state.phase === "victory" ? label("Encounter complete", "Pertemuan selesai") : label("Crew retreat", "Awak mundur")
   };
-  const isResult = name === "results";
-  root.innerHTML = '<div class="window-scrim"><section class="client-window ' + (name === "market" ? "shop-window" : "") + '" role="dialog" aria-modal="true" aria-labelledby="client-window-title"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="client-window-title">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content">' + localizeUI(renderWindowContent(name)) + '</div></section></div>';
+  root.innerHTML = '<div class="client-window-layer' + (names.length === 2 ? " window-layer-two" : "") + '">' + names.map((name, index) => {
+    const isResult = name === "results";
+    const active = name === ui.activeWindow;
+    const titleId = "client-window-title-" + name;
+    const centerX = names.length === 2 ? (index === 0 ? "28%" : "72%") : "50%";
+    return '<section class="client-window ' + (name === "market" ? "shop-window " : "") + (active ? "window-active" : "window-behind") + '" data-window-name="' + name + '" style="--window-center-x:' + centerX + ';z-index:' + (index + 1) + '" role="dialog" aria-modal="false" aria-labelledby="' + titleId + '"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="' + titleId + '">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" data-window-close="' + name + '" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content-' + name + '">' + localizeUI(renderWindowContent(name)) + '</div></section>';
+  }).join("") + '</div>';
 }
 function openWindow(name) {
   if (state.phase === "battle" && ["travel", "market", "character", "property"].includes(name)) return;
   const tabNames = { travel: "journey", market: "market", character: "roster", inventory: "inventory", status: "roster", property: "journal", quest: "journal", community: "journal", system: "preferences" };
   if (tabNames[name]) state = changeTab(state, tabNames[name]);
+  ui.openWindows = ui.openWindows.filter((openName) => openName !== name && openName !== "results");
+  ui.openWindows.push(name);
   ui.activeWindow = name;
   render();
 }
@@ -620,9 +631,13 @@ function transition(next) {
   const previousPhase = state.phase;
   state = next;
   showNotice(state.notice);
-  if (state.phase === "victory" || state.phase === "defeat") ui.activeWindow = "results";
-  else if (previousPhase !== "battle" && state.phase === "battle") ui.activeWindow = null;
+  if (state.phase === "victory" || state.phase === "defeat") {
+    ui.openWindows = ["results"];
+    ui.activeWindow = "results";
+  }
+  else if (previousPhase !== "battle" && state.phase === "battle") { ui.openWindows = []; ui.activeWindow = null; }
   else if (previousPhase === "battle" && state.phase !== "battle") {
+    ui.openWindows = [];
     ui.activeWindow = null;
     ui.pendingCommand = null;
   }
@@ -688,7 +703,14 @@ document.addEventListener("click", (event) => {
   else if (action === "toggle-peace") { ui.peaceMode = !ui.peaceMode; render(); }
   else if (action === "toggle-trade") { ui.tradeEnabled = !ui.tradeEnabled; render(); }
   else if (action === "map-zoom") { ui.mapZoom = Math.max(0, Math.min(2, ui.mapZoom + Number(button.dataset.delta || 0))); render(); }
-  else if (action === "close-window") { if (ui.activeWindow !== "results") { ui.activeWindow = null; render(); } }
+  else if (action === "close-window") {
+    const closing = button.dataset.windowClose || ui.activeWindow;
+    if (closing && closing !== "results") {
+      ui.openWindows = ui.openWindows.filter((name) => name !== closing);
+      ui.activeWindow = ui.openWindows.at(-1) || null;
+      render();
+    }
+  }
   else if (action === "return-town") transition(returnToTown(state));
   else if (action === "recover") transition(recoverInTown(state));
   else if (action === "onboarding-replay") { guideTrigger = button; guideStep = 0; guideOpen = true; render(); }
@@ -698,6 +720,7 @@ document.addEventListener("click", (event) => {
   else if (action === "reset" && window.confirm("Start a fresh journey? This clears only this game's save on this device.")) {
     clearGame();
     state = resetJourney();
+    ui.openWindows = [];
     ui.activeWindow = null;
     ui.selectedUnitId = state.formationFrontId;
     ui.selectedGroup = "all";
@@ -743,7 +766,8 @@ document.addEventListener("keydown", (event) => {
     return;
   }
   if (event.key === "Escape" && ui.activeWindow && ui.activeWindow !== "results") {
-    ui.activeWindow = null;
+    ui.openWindows = ui.openWindows.filter((name) => name !== ui.activeWindow);
+    ui.activeWindow = ui.openWindows.at(-1) || null;
     render();
   }
 });
