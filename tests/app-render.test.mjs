@@ -9,6 +9,7 @@ const keyHandlers = [];
 const storage = new Map();
 let scheduledNoticeTimer = null;
 let nextNoticeTimerId = 0;
+const scheduledIntervals = [];
 const guideFocusables = ["close", "skip", "next"].map((name) => ({ name, focus() { document.activeElement = this; } }));
 function element(selector) {
   if (!elements.has(selector)) elements.set(selector, {
@@ -49,6 +50,12 @@ globalThis.window = {
     return id;
   },
   clearTimeout(id) { if (scheduledNoticeTimer?.id === id) scheduledNoticeTimer = null; },
+  setInterval(callback, delay) {
+    const id = ++nextNoticeTimerId;
+    scheduledIntervals.push({ id, callback, delay });
+    return id;
+  },
+  clearInterval() {},
   localStorage: {
     getItem(key) { return storage.has(key) ? storage.get(key) : null; },
     setItem(key, value) { storage.set(key, String(value)); },
@@ -89,7 +96,7 @@ function openWindow(name) { click(fakeButton({ window: name })); }
 function action(name, extra = {}) { click(fakeButton({ action: name, ...extra })); }
 
 test("desktop shell is scene-first with client portraits, minimap, HUD, chat and contextual windows", () => {
-  for (const id of ["screen-eyebrow", "screen-title", "phase-label", "day-count", "portrait-rail", "world-content", "mini-map-root", "overview-strip", "client-menu", "chat-feed", "client-window-root", "save-state"]) {
+  for (const id of ["screen-eyebrow", "screen-title", "phase-label", "day-count", "campaign-date", "campaign-season", "campaign-day-label", "device-time", "clock-label", "portrait-rail", "world-content", "mini-map-root", "overview-strip", "client-menu", "chat-feed", "client-window-root", "save-state"]) {
     assert.match(gameHtml, new RegExp('id="' + id + '"'));
   }
   for (const [, id] of gameApp.matchAll(/(?:document\.querySelector|\$)\("#([^\"]+)"\)/g)) assert.ok(staticIds.has(id), `Missing static shell node: #${id}`);
@@ -103,6 +110,14 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(element("#portrait-rail").innerHTML, /Mara/);
   assert.match(element("#mini-map-root").innerHTML, /mini-map/);
   assert.match(element("#overview-strip").innerHTML, /TOTAL ATTACK|ATTACK/);
+  assert.match(element("#overview-strip").innerHTML, /RATIONS/);
+  assert.doesNotMatch(element("#overview-strip").innerHTML, /STAMINA/);
+  assert.match(element("#campaign-season").textContent, /YEAR 01 · BUDBREAK/);
+  assert.match(element("#day-count").textContent, /^01$/);
+  assert.match(element("#device-time").textContent, /^\d{2}:\d{2}$/);
+  assert.equal(scheduledIntervals.find((timer) => timer.delay === 30_000)?.delay, 30_000);
+  scheduledIntervals.find((timer) => timer.delay === 30_000)?.callback();
+  assert.match(element("#device-time").textContent, /^\d{2}:\d{2}$/);
   assert.match(element("#client-menu").innerHTML, /data-window="inventory"/);
   assert.equal(element("#client-window-root").innerHTML, "");
   assert.match(gameStyles, /grid-template-columns: 74px minmax\(0, 1fr\)/);
@@ -129,6 +144,15 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /@media \(max-width: 900px\)/);
   assert.match(gameStyles, /@media \(max-height: 700px\) and \(min-width: 901px\)/);
   assert.match(gameStyles, /grid-template-rows: minmax\(300px,1fr\) 120px/);
+  assert.match(gameStyles, /grid-template-columns: minmax\(250px,.86fr\) minmax\(300px,1.08fr\) minmax\(440px,1.55fr\) 135px/);
+  assert.match(gameStyles, /\.hud-date time \{ color: #e2d5ad; font: 12px\/1 var\(--mono\);/);
+  assert.match(gameStyles, /grid-template-columns: minmax\(0,1fr\) 92px/);
+  click(fakeButton({ action: "onboarding-close" }));
+  openWindow("status");
+  assert.match(element("#client-window-root").innerHTML, /ROAD RATIONS/);
+  assert.doesNotMatch(element("#client-window-root").innerHTML, /STAMINA/);
+  click(fakeButton({ action: "close-window", windowClose: "status" }));
+  assert.equal(element("#client-window-root").innerHTML, "");
 });
 
 test("travel, recruitment, trade, battle commands, withdrawal and local saves remain connected", () => {
@@ -180,6 +204,7 @@ test("travel, recruitment, trade, battle commands, withdrawal and local saves re
   assert.equal(savedState().phase, "town");
   assert.equal(savedState().battle, null);
   assert.equal(savedState().day, 2);
+  assert.equal(element("#day-count").textContent, "02");
   assert.equal(savedState().lastSettlement.rewardCoin, 0);
   assert.ok(savedState().party.every((unit) => unit.hp > 0));
   assert.equal(document.body.dataset.mode, "field");

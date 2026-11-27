@@ -94,8 +94,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .map-location span { color: var(--gold); }
 .notice { max-width: min(620px, 75%); max-height: 0; overflow: hidden; padding: 0 10px; position: absolute; z-index: 15; top: 7px; left: 50%; transform: translateX(-50%); border-left: 2px solid #b28c50; background: rgba(20,31,31,.94); color: #f0dfb6; font-size: 9px; box-shadow: 0 3px 10px rgba(0,0,0,.25); transition: max-height .16s ease, padding .16s ease; }
 .notice.show { max-height: 54px; padding: 7px 10px; }
-.lower-hud { grid-column: 1 / -1; grid-row: 2; min-height: 0; display: grid; grid-template-columns: minmax(250px, .83fr) minmax(230px, .8fr) minmax(470px, 1.7fr) 84px; gap: 6px; padding: 4px 6px; border-top: 2px solid rgba(181,145,83,.62); background: linear-gradient(180deg, #1d2c30, #111c20); box-shadow: 0 -6px 18px rgba(0,0,0,.38); }
-.hud-overview, .chat-window, .client-menu, .hud-date { min-width: 0; border: 1px solid rgba(220,201,156,.2); background: linear-gradient(180deg, rgba(8,15,17,.78), rgba(16,26,29,.88)); box-shadow: inset 0 1px rgba(238,218,169,.035); }
+.lower-hud { grid-column: 1 / -1; grid-row: 2; min-height: 0; display: grid; grid-template-columns: minmax(250px,.86fr) minmax(300px,1.08fr) minmax(440px,1.55fr) 135px; gap: 6px; padding: 4px 6px; border-top: 2px solid rgba(181,145,83,.62); background: linear-gradient(180deg, #1d2c30, #111c20); box-shadow: 0 -6px 18px rgba(0,0,0,.38); }
+.hud-overview, .chat-window, .client-menu, .hud-date { min-width: 0; border: 1px solid rgba(220,201,156,.24); outline: 1px solid rgba(4,10,12,.78); outline-offset: -4px; background: linear-gradient(180deg, rgba(8,15,17,.78), rgba(16,26,29,.88)); box-shadow: inset 0 0 0 1px rgba(238,218,169,.055), inset 0 1px rgba(238,218,169,.035); }
 .hud-overview { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); grid-template-rows: 12px auto; align-content: start; padding: 6px 5px; }
 .overview-heading { grid-column: 1 / -1; color: #74857d; font: 5px var(--mono); letter-spacing: .11em; text-align: center; }
 .overview-cell { display: grid; align-content: start; justify-items: center; gap: 5px; min-width: 0; padding: 2px 3px; border-right: 1px solid var(--line-soft); }
@@ -121,11 +121,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .client-menu-button:hover:not(:disabled), .client-menu-button[aria-pressed="true"] { border-color: rgba(220,201,156,.24); background: rgba(215,179,111,.08); color: #f0d89e; }
 .client-menu-button > span { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid rgba(220,201,156,.26); border-radius: 50%; color: #e0c47f; font: 13px var(--serif); }
 .client-menu-button small { overflow: hidden; max-width: 100%; color: inherit; font: 6px var(--mono); text-overflow: ellipsis; white-space: nowrap; }
-.hud-date { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #c4c5b3; }
-.hud-date small { color: #829188; font: 5px var(--mono); letter-spacing: .08em; text-align: center; }
-.hud-date strong { color: #f0d697; font: 26px/1 var(--serif); font-weight: 400; }
-.hud-date > span { font: 6px var(--mono); letter-spacing: .12em; }
-.hud-date i { margin-top: 3px; color: #72837b; font: 5px var(--mono); font-style: normal; }
+.hud-date { display: grid; grid-template-rows: 12px 1fr 9px; align-content: center; justify-items: stretch; gap: 2px; padding: 5px 9px; color: #c4c5b3; }
+.hud-date-heading, .hud-date-footer { color: #829188; font: 5px var(--mono); letter-spacing: .08em; text-align: center; white-space: nowrap; }
+.hud-date-main { min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+.hud-date-day { display: flex; align-items: baseline; gap: 4px; color: #f0d697; font: 24px/1 var(--serif); font-weight: 400; white-space: nowrap; }
+.hud-date-day i { color: #b7b39e; font: 6px var(--mono); font-style: normal; letter-spacing: .1em; }
+.hud-date time { color: #e2d5ad; font: 12px/1 var(--mono); white-space: nowrap; }
 .battlefield-view { position: absolute; z-index: 2; inset: 0; }
 .battle-scene-title { max-width: min(42%, 350px); display: grid; gap: 2px; position: absolute; top: 87px; left: 17px; padding: 8px 11px; border: 1px solid rgba(231,213,171,.34); background: rgba(16,28,29,.78); box-shadow: 0 2px 8px rgba(0,0,0,.3); }
 .battle-scene-title small { color: #e0c07d; font: 6px var(--mono); letter-spacing: .12em; }
@@ -372,7 +373,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .guide-next span { font: 17px var(--serif); }
 .guide-note { margin-top: 16px; color: #62756c; font: 6px var(--mono); letter-spacing: .1em; text-align: center; }
 @media (max-width: 1000px) {
-  .lower-hud { grid-template-columns: minmax(215px,.85fr) minmax(190px,.8fr) minmax(340px,1.4fr) 66px; }
+  .lower-hud { grid-template-columns: minmax(200px,.82fr) minmax(220px,.9fr) minmax(360px,1.5fr) 94px; }
+  .hud-date { padding: 4px 5px; }
+  .hud-date-heading, .hud-date-footer { font-size: 4px; letter-spacing: .04em; }
+  .hud-date-day { font-size: 21px; }
+  .hud-date time { font-size: 10px; }
   .client-menu-button small { font-size: 5px; }
 }
 @media (max-width: 900px) {
@@ -420,7 +425,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .battle-note { display: none; }
   .move-destinations { top: 38%; left: 4%; flex-wrap: wrap; }
   .move-destinations > span { width: 100%; }
-  .lower-hud { order: 2; min-height: 300px; display: grid; grid-template-columns: minmax(0,1fr) 58px; grid-template-rows: auto 90px auto; gap: 5px; padding: 6px; }
+  .lower-hud { order: 2; min-height: 300px; display: grid; grid-template-columns: minmax(0,1fr) 92px; grid-template-rows: auto 90px auto; gap: 5px; padding: 6px; }
   .hud-overview { grid-column: 1; grid-row: 1; min-height: 58px; grid-template-rows: 10px auto; }
   .overview-cell small { font-size: 5px; }
   .overview-cell strong { font-size: 15px; }
@@ -428,8 +433,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .client-menu { grid-column: 1 / -1; grid-row: 3; min-height: 78px; grid-template-columns: repeat(9,1fr); }
   .client-menu-button > span { width: 19px; height: 19px; font-size: 11px; }
   .client-menu-button small { font-size: 5px; }
-  .hud-date { grid-column: 2; grid-row: 1 / 3; }
-  .hud-date strong { font-size: 22px; }
+  .hud-date { grid-column: 2; grid-row: 1 / 3; padding: 4px; }
+  .hud-date-heading, .hud-date-footer { font-size: 4px; letter-spacing: .02em; }
+  .hud-date-day { font-size: 19px; }
+  .hud-date time { font-size: 9px; }
   .client-window-layer { overflow: auto; }
   .client-window:not(.window-active) { display: none; }
   .client-window, .client-window.shop-window { width: calc(100% - 12px); max-height: calc(100% - 12px); }
@@ -474,6 +481,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 }
 @media (max-height: 700px) and (min-width: 901px) {
   .game-layout { grid-template-rows: minmax(300px,1fr) 120px; }
-  .lower-hud { grid-template-columns: minmax(220px,.85fr) minmax(195px,.8fr) minmax(440px,1.6fr) 76px; }
+  .lower-hud { grid-template-columns: minmax(205px,.85fr) minmax(195px,.8fr) minmax(365px,1.5fr) 96px; }
+  .hud-date { padding: 4px 5px; }
   .battle-command-deck { bottom: 10px; }
 }

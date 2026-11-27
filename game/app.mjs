@@ -36,6 +36,12 @@ if (state.phase === "victory" || state.phase === "defeat") {
   ui.activeWindow = "results";
 }
 const label = (english, indonesian = english) => state.language === "id" ? indonesian : english;
+const CAMPAIGN_SEASONS = [
+  { en: "BUDBREAK", id: "TUNAS" },
+  { en: "HIGHSUN", id: "MATAHARI" },
+  { en: "HARVEST", id: "PANEN" },
+  { en: "LONGNIGHT", id: "MALAM PANJANG" }
+];
 const GUIDE_STEPS = [
   { kicker: "01 · GET READY", title: "Start from Hearthcross.", copy: "Hire a trail scout from Crew, check your pack and buy supplies at the Town Exchange. A ration is needed for every trip." },
   { kicker: "02 · PICK A ROAD", title: "Choose a route.", copy: "Select an open card on the travel board. Clear the Courier's Mark on Mosswind Road to open Amber Quarry." },
@@ -422,10 +428,8 @@ function renderRouteWindow() {
     }).join("") + '</div><div class="route-departure"><span>' + label("Selected route", "Rute pilihan") + ': <strong>' + safe(route.name) + '</strong> · ' + (state.inventory.ration > 0 ? label("ration ready", "ransum tersedia") : label("buy a ration first", "beli ransum dahulu")) + '</span><button class="primary-button" type="button" data-action="start" ' + (canSetOut ? "" : "disabled") + '><span>' + label("SET OUT", "BERANGKAT") + '</span><b>→</b></button></div></section>';
 }
 function renderStatusWindow() {
-  const hp = state.party.reduce((total, unit) => total + unit.hp, 0);
-  const maxHp = state.party.reduce((total, unit) => total + unit.maxHp, 0);
   const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
-  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("STAMINA", "STAMINA") + '</small><strong>' + Math.round((hp / Math.max(1, maxHp)) * 100) + '%</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party">' + state.party.map((unit) => unitCard(unit, false)).join("") + '</div></section>';
+  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("ROAD RATIONS", "RANSUM JALAN") + '</small><strong>' + state.inventory.ration + '</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party">' + state.party.map((unit) => unitCard(unit, false)).join("") + '</div></section>';
 }
 function renderPropertyWindow() {
   return '<section class="property-window"><div class="window-intro"><small>' + label("HEARTHCROSS · PROPERTY & LEDGER", "HEARTHCROSS · PROPERTI & BUKU") + '</small><h2>' + label("Local holdings", "Aset lokal") + '</h2><p>' + label("This original prototype tracks your coin and the results of each completed route.", "Prototipe orisinal ini mencatat uang dan hasil dari setiap rute yang selesai.") + '</p></div>' +
@@ -442,10 +446,8 @@ function renderPortraitRail() {
   }).join("") + '<button type="button" class="portrait-add" data-window="character" aria-label="' + label("Open character and mercenary window", "Buka jendela karakter dan pengawal") + '">＋<small>' + state.party.length + '/' + PARTY_LIMIT + '</small></button>';
 }
 function renderOverview() {
-  const hp = state.party.reduce((total, unit) => total + unit.hp, 0);
-  const maxHp = state.party.reduce((total, unit) => total + unit.maxHp, 0);
   const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
-  return '<div class="overview-heading">' + label("PROTOTYPE VALUES · LOCAL", "NILAI PROTOTIPE · LOKAL") + '</div><div class="overview-cell"><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div class="overview-cell"><small>' + label("STAMINA", "STAMINA") + '</small><strong>' + Math.round((hp / Math.max(1, maxHp)) * 100) + '%</strong></div><div class="overview-cell"><small>' + label("ATTACK", "SERANGAN") + '</small><strong>' + attack + '</strong></div><div class="overview-cell"><small>' + label("CREDIT", "KREDIT") + '</small><strong>01</strong></div><div class="overview-cell money-cell"><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + '<i> M</i></strong></div>';
+  return '<div class="overview-heading">' + label("PROTOTYPE VALUES · LOCAL", "NILAI PROTOTIPE · LOKAL") + '</div><div class="overview-cell"><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div class="overview-cell"><small>' + label("RATIONS", "RANSUM") + '</small><strong>' + state.inventory.ration + '</strong></div><div class="overview-cell"><small>' + label("ATTACK", "SERANGAN") + '</small><strong>' + attack + '</strong></div><div class="overview-cell"><small>' + label("CREDIT", "KREDIT") + '</small><strong>01</strong></div><div class="overview-cell money-cell"><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + '<i> M</i></strong></div>';
 }
 function renderMenu() {
   const inBattle = state.phase === "battle";
@@ -611,7 +613,7 @@ function render() {
   $("#screen-eyebrow").textContent = heading[0];
   $("#screen-title").textContent = heading[1];
   $("#phase-label").innerHTML = '<span class="status-pip ' + (mode === "battlefield" ? "danger-pip" : "") + '"></span>' + heading[0];
-  $("#day-count").textContent = String(state.day).padStart(2, "0");
+  renderCampaignDate();
   $("#portrait-rail").innerHTML = renderPortraitRail();
   $("#world-content").innerHTML = renderWorldScene();
   $("#mini-map-root").innerHTML = renderMiniMap();
@@ -626,6 +628,24 @@ function render() {
   $("#save-state").innerHTML = '<span class="save-dot ' + (saved ? "" : "save-warning") + '"></span>' + label(saved ? " SAVED HERE" : " SESSION ONLY", saved ? " TERSIMPAN" : " SESI SAJA");
   document.body.dataset.phase = state.phase;
   document.body.dataset.mode = mode;
+}
+function renderCampaignDate() {
+  const dayIndex = Math.max(0, state.day - 1);
+  const year = Math.floor(dayIndex / 120) + 1;
+  const season = CAMPAIGN_SEASONS[Math.floor((dayIndex % 120) / 30)];
+  const dayOfSeason = String((dayIndex % 30) + 1).padStart(2, "0");
+  const clock = deviceClockText();
+  $("#campaign-season").textContent = label("YEAR " + String(year).padStart(2, "0") + " · " + season.en, "TAHUN " + String(year).padStart(2, "0") + " · " + season.id);
+  $("#day-count").textContent = dayOfSeason;
+  $("#campaign-day-label").textContent = label("DAY", "HARI");
+  $("#device-time").textContent = clock;
+  $("#campaign-date").setAttribute("aria-label", label("Original campaign date and device-local time", "Tanggal kampanye orisinal dan jam lokal perangkat"));
+  $("#device-time").setAttribute("aria-label", label("Device local time " + clock, "Jam lokal perangkat " + clock));
+  $("#clock-label").textContent = label("DEVICE LOCAL TIME", "JAM LOKAL PERANGKAT");
+}
+function deviceClockText() {
+  const now = new Date();
+  return String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
 }
 function transition(next) {
   const previousPhase = state.phase;
@@ -779,3 +799,11 @@ document.addEventListener("keydown", (event) => {
   }
 });
 render();
+if (typeof window.setInterval === "function") {
+  const clockTicker = window.setInterval(() => {
+    const clock = deviceClockText();
+    $("#device-time").textContent = clock;
+    $("#device-time").setAttribute("aria-label", label("Device local time " + clock, "Jam lokal perangkat " + clock));
+  }, 30_000);
+  clockTicker?.unref?.();
+}
