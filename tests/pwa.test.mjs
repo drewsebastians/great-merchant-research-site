@@ -21,7 +21,7 @@ test("PWA metadata, registration and precache entries match the game folder", ()
   assert.equal(manifest.display, "standalone");
   assert.match(html, /rel="manifest" href="\.\/manifest\.webmanifest"/);
   assert.match(app, /serviceWorker\.register\("\.\/sw\.js"/);
-  assert.match(workerSource, /wayfarers-ledger-shell-v7/);
+  assert.match(workerSource, /wayfarers-ledger-shell-v8/);
   assert.ok(appShell.includes("./assets/hearthcross-field.jpg"), "the original town art must be precached for offline use");
   assert.ok(appShell.includes("./assets/mosswind-road.jpg"), "the original road art must be precached for offline use");
   assert.ok(appShell.includes("./assets/amber-quarry.jpg"), "the original quarry art must be precached for offline use");
@@ -88,7 +88,7 @@ test("service worker precaches the app shell and serves its saved page while off
   let activatePromise;
   listeners.get("activate")({ waitUntil(promise) { activatePromise = promise; } });
   await activatePromise;
-  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v7"]);
+  assert.deepEqual([...cacheNames].sort(), ["wayfarers-ledger-shell-v8"]);
 
   let onlineResponse;
   listeners.get("fetch")({

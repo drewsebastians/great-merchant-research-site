@@ -79,6 +79,7 @@ function click(button) {
     if (selector === "[data-formation-front]") return button?.dataset?.formationFront ? button : null;
     if (selector === "[data-route]") return button?.dataset?.route ? button : null;
     if (selector === "[data-target]") return button?.dataset?.target ? button : null;
+    if (selector === "[data-window-name]") return button?.dataset?.windowName ? button : null;
     if (selector === "button") return button || null;
     return null;
   } };
@@ -191,14 +192,17 @@ test("context windows open and close without returning to dashboard pages", () =
   assert.equal((element("#client-window-root").innerHTML.match(/role="dialog"/g) || []).length, 2);
   assert.match(element("#client-window-root").innerHTML, /aria-modal="false"/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /window-scrim/);
+  assert.ok(element("#client-window-root").innerHTML.indexOf('data-window-name="inventory"') < element("#client-window-root").innerHTML.indexOf('data-window-name="quest"'));
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /WAYFARER CLIENT WINDOW/);
   assert.match(element("#client-window-root").innerHTML, /The Courier&#39;s Mark/);
+  click(fakeButton({ windowName: "inventory" }));
+  assert.ok(element("#client-window-root").innerHTML.indexOf('data-window-name="quest"') < element("#client-window-root").innerHTML.indexOf('data-window-name="inventory"'));
   let prevented = false;
   keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
   assert.equal(prevented, false);
-  assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
-  assert.doesNotMatch(element("#client-window-root").innerHTML, /Quest information/);
+  assert.match(element("#client-window-root").innerHTML, /Quest information/);
+  assert.doesNotMatch(element("#client-window-root").innerHTML, /Inventory · party pack/);
   action("close-window");
   assert.equal(element("#client-window-root").innerHTML, "");
 });

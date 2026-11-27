@@ -653,6 +653,13 @@ document.addEventListener("click", (event) => {
     }
     return;
   }
+  const clickedWindow = event.target.closest("[data-window-name]")?.dataset.windowName;
+  if (clickedWindow && clickedWindow !== ui.activeWindow) {
+    ui.openWindows = ui.openWindows.filter((name) => name !== clickedWindow);
+    ui.openWindows.push(clickedWindow);
+    ui.activeWindow = clickedWindow;
+    render();
+  }
   const unitButton = event.target.closest("[data-unit-select]");
   if (unitButton) {
     ui.selectedUnitId = unitButton.dataset.unitSelect;
