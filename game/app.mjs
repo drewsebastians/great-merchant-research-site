@@ -188,6 +188,11 @@ function localizeUI(value) {
     preservedSegments.push(segment);
     return marker;
   });
+  localized = localized.replace(/\s(?:class|id|style|role|data-[\w-]+|aria-(?:pressed|modal|current|valuemin|valuemax|valuenow|controls|labelledby)|type|value|tabindex)\s*=\s*(?:"[^"]*"|'[^']*')/gi, (attribute) => {
+    const marker = "\uE000" + preservedSegments.length + "\uE001";
+    preservedSegments.push(attribute);
+    return marker;
+  });
   for (const [english, indonesian] of COMPLETE_UI_PHRASES) localized = localized.replaceAll(english, indonesian);
   for (const segment of PRESERVED_GAME_COPY) preserve(segment);
   for (const [english, indonesian] of UI_PHRASES) {

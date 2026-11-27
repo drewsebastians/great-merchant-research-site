@@ -255,6 +255,15 @@ test("context windows open and close without returning to dashboard pages", () =
   assert.doesNotMatch(element("#client-window-root").innerHTML, /Inventory · party pack/);
   action("close-window");
   assert.equal(element("#client-window-root").innerHTML, "");
+  click(fakeButton({ languageOption: "id" }));
+  openWindow("quest");
+  assert.match(element("#client-window-root").innerHTML, /class="quest-filter-button selected" data-action="quest-filter" data-filter="all"/);
+  assert.match(element("#client-window-root").innerHTML, /data-tab="journey"/);
+  assert.match(element("#client-window-root").innerHTML, /aria-label="KONTRAK TERBUKA"/);
+  click(fakeButton({ action: "quest-filter", filter: "open" }));
+  assert.match(element("#client-window-root").innerHTML, /data-filter="open" aria-label="KONTRAK TERBUKA" aria-pressed="true"/);
+  action("close-window");
+  click(fakeButton({ languageOption: "en" }));
 });
 
 test("local chat is explicit and does not change game progression", () => {
