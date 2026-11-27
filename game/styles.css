@@ -281,21 +281,59 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .pack-total small, .slot-count small { display: block; color: #92a096; font: 5px var(--mono); letter-spacing: .1em; }
 .equipment-actions { display: flex; gap: 3px; }
 .bound-tag { align-self: center; padding: 3px; border: 1px solid var(--line-soft); color: #a79a71; font: 5px var(--mono); }
-.quest-journal-panel { padding: 9px; border: 1px solid var(--line-soft); background: rgba(10,18,20,.3); }
-.quest-journal-list { display: grid; gap: 6px; margin-top: 7px; }
-.quest-journal-card { padding: 8px; border: 1px solid var(--line-soft); background: rgba(255,255,255,.025); }
-.quest-journal-heading { display: flex; justify-content: space-between; gap: 7px; }
-.quest-journal-heading h3 { margin: 2px 0; font: 15px var(--serif); font-weight: 400; }
-.quest-journal-heading p { max-width: 450px; margin: 0; color: #aab5a9; font-size: 7px; }
-.quest-status-pill { align-self: start; padding: 3px 4px; border: 1px solid var(--line-soft); color: #cbb986; font: 5px var(--mono); }
-.quest-stage-list { display: flex; flex-wrap: wrap; gap: 4px; margin: 7px 0 0; padding: 0; list-style: none; }
-.quest-stage { min-width: 95px; display: flex; align-items: center; gap: 5px; padding: 4px 6px; border: 1px solid var(--line-soft); }
-.quest-stage-index { color: var(--gold); font: 8px var(--mono); }
-.quest-stage-copy { display: grid; }
-.quest-stage-copy strong { font-size: 7px; font-weight: 500; }
-.quest-stage-copy small { color: #87968d; font: 5px var(--mono); }
+.quest-journal-panel { min-height: 285px; display: flex; flex-direction: column; gap: 6px; padding: 7px; border: 1px solid var(--line-soft); background: rgba(10,18,20,.3); }
+.quest-journal-heading { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+.quest-journal-heading > div { min-width: 0; }
+.quest-journal-heading small { color: var(--gold); font: 5px var(--mono); letter-spacing: .1em; }
+.quest-journal-heading h2 { margin: 2px 0 0; font: 16px/1.1 var(--serif); font-weight: 400; }
+.quest-record-count { color: #9ba89c; font: 5px var(--mono); text-align: right; }
+.quest-filter-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3px; padding: 3px; border: 1px solid var(--line-soft); background: rgba(5,11,13,.3); }
+.quest-filter-button { min-width: 0; min-height: 23px; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 3px 5px; border: 1px solid transparent; background: transparent; color: #aab5aa; font: 6px var(--mono); }
+.quest-filter-button b { color: #839188; font-size: 5px; font-weight: 400; }
+.quest-filter-button:hover, .quest-filter-button.selected { border-color: rgba(215,179,111,.42); background: rgba(215,179,111,.09); color: #eed9a6; }
+.quest-filter-button.selected b { color: var(--gold); }
+.quest-journal-layout { min-height: 190px; flex: 1; display: grid; grid-template-columns: minmax(122px,.76fr) minmax(0,1.55fr); gap: 6px; }
+.quest-contract-index { min-width: 0; padding: 4px; border: 1px solid var(--line-soft); background: rgba(5,11,13,.28); }
+.quest-contract-list { display: grid; align-content: start; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.quest-contract-select { width: 100%; min-width: 0; min-height: 53px; display: grid; gap: 3px; padding: 5px; border: 1px solid var(--line-soft); background: rgba(255,255,255,.025); color: #d8d2bf; text-align: left; }
+.quest-contract-select:hover, .quest-contract-select.selected { border-color: rgba(215,179,111,.56); background: linear-gradient(115deg, rgba(215,179,111,.12), rgba(255,255,255,.025)); }
+.quest-contract-route { overflow: hidden; color: #bdab7d; font: 5px var(--mono); text-overflow: ellipsis; white-space: nowrap; }
+.quest-contract-select > strong { overflow: hidden; font: 10px/1.15 var(--serif); font-weight: 400; text-overflow: ellipsis; }
+.quest-contract-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 4px; color: #849187; font: 5px var(--mono); }
+.quest-contract-meta small { font: inherit; }
+.quest-contract-select.complete .quest-contract-meta small:first-child { color: #9fb49b; }
+.quest-contract-select.locked .quest-contract-meta small:first-child { color: #b68f7e; }
+.quest-contract-detail { min-width: 0; display: flex; flex-direction: column; gap: 5px; padding: 7px; border: 1px solid var(--line-soft); background: linear-gradient(145deg, rgba(38,52,52,.72), rgba(11,19,21,.7)); }
+.quest-detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 5px; }
+.quest-detail-heading > div { min-width: 0; }
+.quest-detail-heading > div > small { color: #bdab7d; font: 5px var(--mono); letter-spacing: .08em; }
+.quest-detail-heading h3 { margin: 2px 0 0; color: #e4dcc8; font: 15px/1.1 var(--serif); font-weight: 400; }
+.quest-status-pill { flex: 0 0 auto; align-self: start; padding: 3px 4px; border: 1px solid var(--line-soft); color: #cbb986; font: 5px var(--mono); }
+.quest-status-pill.complete { color: #a7b99d; border-color: rgba(147,181,140,.3); }
+.quest-status-pill.locked { color: #c09282; }
+.quest-detail-summary { margin: 0; color: #aab5a9; font-size: 7px; line-height: 1.35; }
+.quest-progress-heading { display: flex; align-items: center; justify-content: space-between; gap: 5px; color: #bdab7d; font: 5px var(--mono); }
+.quest-progress-heading strong { color: #d8d1bd; font: 6px var(--mono); }
+.quest-progress-heading small { color: #87958c; font: inherit; }
+.quest-progress-track { height: 3px; overflow: hidden; background: rgba(5,11,13,.7); }
+.quest-progress-track span { height: 100%; display: block; background: linear-gradient(90deg,#8f996c,#dcc17e); }
+.quest-stage-list { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.quest-stage { min-height: 27px; display: grid; grid-template-columns: 16px minmax(0,1fr) auto; align-items: center; gap: 4px; padding: 3px 4px; border: 1px solid var(--line-soft); background: rgba(5,11,13,.22); }
+.quest-stage-index { color: var(--gold); font: 7px var(--mono); text-align: center; }
+.quest-stage-copy { min-width: 0; display: grid; gap: 1px; }
+.quest-stage-copy strong { overflow: hidden; color: #c5c8b7; font-size: 7px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.quest-stage-copy small, .quest-stage > small { color: #87968d; font: 5px var(--mono); }
 .quest-stage.current { border-color: rgba(215,179,111,.5); background: rgba(215,179,111,.08); }
+.quest-stage.current .quest-stage-index, .quest-stage.current > small { color: var(--gold); }
 .quest-stage.complete .quest-stage-index { color: var(--green); }
+.quest-detail-footer { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: auto; padding-top: 4px; border-top: 1px solid var(--line-soft); }
+.quest-detail-footer > div { min-width: 0; display: grid; gap: 2px; }
+.quest-detail-footer small { color: #89978d; font: 5px var(--mono); }
+.quest-detail-footer strong { overflow: hidden; color: #d4c7a4; font: 7px var(--serif); font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+.quest-detail-footer .text-button { min-height: 22px; flex: 0 0 auto; padding: 3px 5px; font-size: 5px; }
+.quest-empty-state { min-height: 100%; grid-column: 1 / -1; display: grid; align-content: center; justify-items: center; gap: 5px; padding: 12px; border: 1px dashed var(--line-soft); color: #aab5a9; text-align: center; }
+.quest-empty-state strong { color: #e1d2b1; font: 13px var(--serif); font-weight: 400; }
+.quest-empty-state span { font-size: 7px; }
 .quest-locked-note, .empty-window { padding: 8px; border: 1px dashed var(--line-soft); color: #95a197; font-size: 7px; }
 .journal-list { display: grid; gap: 4px; margin-top: 6px; }
 .journal-list article { display: flex; gap: 6px; padding: 4px; border-bottom: 1px solid var(--line-soft); color: #aeb7aa; font-size: 7px; }

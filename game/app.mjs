@@ -29,7 +29,9 @@ const ui = {
   mapZoom: 1,
   tradeEnabled: false,
   peaceMode: true,
-  chatLines: []
+  chatLines: [],
+  questFilter: "all",
+  selectedQuestId: null
 };
 if (state.phase === "victory" || state.phase === "defeat") {
   ui.openWindows = ["results"];
@@ -157,6 +159,7 @@ const UI_PHRASES = [
   ["PREFERENCES", "PREFERENSI"], ["Town Exchange", "Bursa Kota"], ["Journey", "Perjalanan"], ["Crew", "Awak"],
   ["Pack", "Bekal"], ["Journal", "Jurnal"], ["Preferences", "Preferensi"], ["OPEN PACK", "BUKA BEKAL"],
   ["ACTIVE ERRAND", "TUGAS AKTIF"], ["Active errand", "Tugas aktif"], ["ACTIVE CONTRACTS", "KONTRAK AKTIF"], ["QUEST JOURNAL", "JURNAL MISI"], ["CURRENT", "SAAT INI"], ["UPCOMING", "BERIKUTNYA"], ["IN PROGRESS", "BERJALAN"], ["DONE", "SELESAI"],
+  ["ROUTE CONTRACTS · ORIGINAL PROTOTYPE", "KONTRAK RUTE · PROTOTIPE ORISINAL"], ["Route ledger", "Buku rute"], ["ALL CONTRACTS", "SEMUA KONTRAK"], ["OPEN CONTRACTS", "KONTRAK TERBUKA"], ["COMPLETED CONTRACTS", "KONTRAK SELESAI"], ["FILTER CONTRACTS", "SARING KONTRAK"], ["SELECT A CONTRACT", "PILIH KONTRAK"], ["STEP PROGRESS", "PROGRES TAHAP"], ["STEPS", "TAHAP"], ["OPEN ROUTE CHART →", "BUKA PETA RUTE →"], ["No contracts match this filter.", "Tidak ada kontrak pada penyaring ini."], ["Choose another view to return to the route ledger.", "Pilih tampilan lain untuk kembali ke buku rute."], ["ROUTE", "RUTE"],
   ["BEFORE YOU LEAVE", "SEBELUM BERANGKAT"], ["Pack for the road", "Siapkan bekal"], ["TRAVEL PARTNER", "REKAN PERJALANAN"],
   ["DAILY BOARD · PROTOTYPE QUOTES", "PAPAN HARGA · NILAI PROTOTIPE"], ["GOOD", "BARANG"], ["BUY", "BELI"], ["SELL", "JUAL"],
   ["MARKS", "MARK"], ["LOCKED", "TERKUNCI"], ["AVAILABLE", "TERSEDIA"], ["COMPLETED", "SELESAI"], ["CLEARED", "DITUNTASKAN"],
@@ -379,20 +382,50 @@ function renderInventory() {
     (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
 }
 function renderQuestJournal() {
-  const cards = QUESTS.map((quest) => {
+  const progressById = new Map(QUESTS.map((quest) => [quest.id, getQuestProgress(state, quest.id)]));
+  const unlockedById = new Map(QUESTS.map((quest) => [quest.id, isQuestUnlocked(state, quest.id)]));
+  const isOpen = (quest) => unlockedById.get(quest.id) && !progressById.get(quest.id).complete;
+  const filter = ["all", "open", "completed"].includes(ui.questFilter) ? ui.questFilter : "all";
+  ui.questFilter = filter;
+  const counts = {
+    all: QUESTS.length,
+    open: QUESTS.filter(isOpen).length,
+    completed: QUESTS.filter((quest) => progressById.get(quest.id).complete).length
+  };
+  const visibleQuests = QUESTS.filter((quest) => filter === "all" || (filter === "open" ? isOpen(quest) : progressById.get(quest.id).complete));
+  const selectedQuest = visibleQuests.find((quest) => quest.id === ui.selectedQuestId) ||
+    visibleQuests.find(isOpen) || visibleQuests[0] || null;
+  ui.selectedQuestId = selectedQuest?.id || null;
+  const filters = [
+    ["all", label("All", "Semua"), "ALL CONTRACTS"],
+    ["open", label("Open", "Terbuka"), "OPEN CONTRACTS"],
+    ["completed", label("Completed", "Selesai"), "COMPLETED CONTRACTS"]
+  ].map(([id, text, ariaLabel]) => '<button type="button" class="quest-filter-button ' + (filter === id ? "selected" : "") + '" data-action="quest-filter" data-filter="' + id + '" aria-label="' + label(ariaLabel, ariaLabel === "ALL CONTRACTS" ? "SEMUA KONTRAK" : ariaLabel === "OPEN CONTRACTS" ? "KONTRAK TERBUKA" : "KONTRAK SELESAI") + '" aria-pressed="' + (filter === id) + '"><span>' + text + '</span><b>' + counts[id] + '</b></button>').join("");
+  const list = visibleQuests.map((quest) => {
     const progress = getQuestProgress(state, quest.id);
     const unlocked = isQuestUnlocked(state, quest.id);
     const status = !unlocked ? "LOCKED" : progress.complete ? "COMPLETED" : progress.completedCount ? "IN PROGRESS" : "AVAILABLE";
     const statusClass = !unlocked ? "locked" : progress.complete ? "complete" : progress.completedCount ? "progress" : "available";
-    const stages = unlocked ? '<ol class="quest-stage-list">' + progress.stages.map((stage, index) => {
+    const titleId = "quest-index-title-" + quest.id;
+    return '<li><button type="button" class="quest-contract-select ' + statusClass + (selectedQuest?.id === quest.id ? " selected" : "") + '" data-action="quest-select" data-quest-id="' + quest.id + '" aria-pressed="' + (selectedQuest?.id === quest.id) + '" aria-labelledby="' + titleId + '"><span class="quest-contract-route">' + safe(findRoute(quest.routeId).name) + '</span><strong id="' + titleId + '">' + safe(quest.title) + '</strong><span class="quest-contract-meta"><small>' + status + '</small><small>' + progress.completedCount + ' / ' + progress.totalStages + ' STEPS</small></span></button></li>';
+  }).join("");
+  let detail = '<div class="quest-empty-state"><strong>No contracts match this filter.</strong><span>Choose another view to return to the route ledger.</span></div>';
+  if (selectedQuest) {
+    const progress = progressById.get(selectedQuest.id);
+    const unlocked = unlockedById.get(selectedQuest.id);
+    const status = !unlocked ? "LOCKED" : progress.complete ? "COMPLETED" : progress.completedCount ? "IN PROGRESS" : "AVAILABLE";
+    const statusClass = !unlocked ? "locked" : progress.complete ? "complete" : progress.completedCount ? "progress" : "available";
+    const visibleCompleted = unlocked ? progress.completedCount : 0;
+    const percentage = Math.round((visibleCompleted / Math.max(1, progress.totalStages)) * 100);
+    const stages = unlocked ? '<ol class="quest-stage-list" aria-label="' + label("Contract steps", "Tahap kontrak") + '">' + progress.stages.map((stage, index) => {
       const current = !stage.complete && progress.currentStage?.id === stage.id;
       const stageStatus = stage.complete ? "DONE" : current ? "CURRENT" : "UPCOMING";
       const stageClass = stage.complete ? "complete" : current ? "current" : "upcoming";
       return '<li class="quest-stage ' + stageClass + '" ' + (current ? 'aria-current="step"' : "") + '><span class="quest-stage-index">' + (stage.complete ? "✓" : String(index + 1).padStart(2, "0")) + '</span><span class="quest-stage-copy"><strong>' + safe(stage.label) + '</strong><small>' + stageStatus + '</small></span></li>';
-    }).join("") + '</ol>' : '<div class="quest-locked-note"><span>◈</span><span>UNLOCKS AFTER ' + quest.requiresQuests.map((questId) => findQuest(questId)?.title).filter(Boolean).map((title) => '<strong>' + safe(title) + '</strong>').join(" · ") + ' IS COMPLETED</span></div>';
-    return '<article class="quest-journal-card ' + statusClass + '"><div class="quest-journal-heading"><div><small>CONTRACT · ' + safe(findRoute(quest.routeId).name.toUpperCase()) + '</small><h3>' + safe(quest.title) + '</h3><p>' + safe(quest.summary) + '</p></div><span class="quest-status-pill ' + statusClass + '">' + status + '</span></div>' + stages + '</article>';
-  }).join("");
-  return '<section class="panel quest-journal-panel"><div class="panel-head"><div><small>QUEST JOURNAL · CURRENT OBJECTIVES</small><h2>Active contracts</h2></div><button type="button" class="text-button" data-tab="journey">VIEW JOURNEY →</button></div><div class="quest-journal-list">' + cards + '</div></section>';
+    }).join("") + '</ol>' : '<div class="quest-locked-note"><span>◈</span><span>UNLOCKS AFTER ' + selectedQuest.requiresQuests.map((questId) => findQuest(questId)?.title).filter(Boolean).map((title) => '<strong>' + safe(title) + '</strong>').join(" · ") + ' IS COMPLETED</span></div>';
+    detail = '<section class="quest-contract-detail ' + statusClass + '" aria-live="polite"><div class="quest-detail-heading"><div><small>' + safe(findRoute(selectedQuest.routeId).name.toUpperCase()) + ' · ROUTE CONTRACT</small><h3>' + safe(selectedQuest.title) + '</h3></div><span class="quest-status-pill ' + statusClass + '">' + status + '</span></div><p class="quest-detail-summary">' + safe(selectedQuest.summary) + '</p><div class="quest-progress-heading"><span>STEP PROGRESS</span><strong>' + visibleCompleted + ' / ' + progress.totalStages + ' <small>STEPS</small></strong></div><div class="quest-progress-track" role="progressbar" aria-label="' + label("Step progress", "Progres tahap") + '" aria-valuemin="0" aria-valuemax="' + progress.totalStages + '" aria-valuenow="' + visibleCompleted + '"><span style="width:' + percentage + '%"></span></div>' + stages + '<div class="quest-detail-footer"><div><small>ROUTE</small><strong>' + safe(findRoute(selectedQuest.routeId).name) + '</strong></div><button type="button" class="text-button" data-tab="journey">OPEN ROUTE CHART →</button></div></section>';
+  }
+  return '<section class="panel quest-journal-panel"><div class="quest-journal-heading"><div><small>ROUTE CONTRACTS · ORIGINAL PROTOTYPE</small><h2>Route ledger</h2></div><span class="quest-record-count">' + QUESTS.length + ' RECORDS · ' + counts.completed + ' COMPLETED</span></div><div class="quest-filter-row" role="group" aria-label="Filter contracts">' + filters + '</div><div class="quest-journal-layout"><nav class="quest-contract-index" aria-label="Select a contract"><ol class="quest-contract-list">' + list + '</ol></nav>' + detail + '</div></section>';
 }
 function renderJournal() {
   return renderSettlement() + '<section class="journal-banner"><div><small>FIELD NOTES · DAY ' + String(state.day).padStart(2, "0") + '</small><h2>A journey is made of small decisions.</h2><p>Every order, purchase and discovery is recorded here on this device.</p></div><span class="journal-seal">≋</span></section>' + renderQuestJournal() +
@@ -705,6 +738,8 @@ document.addEventListener("click", (event) => {
   const action = button.dataset.action;
   if (!action) return;
   if (action === "start") transition(startRoute(state));
+  else if (action === "quest-filter") { ui.questFilter = button.dataset.filter; render(); }
+  else if (action === "quest-select") { ui.selectedQuestId = button.dataset.questId; render(); }
   else if (action === "hire") transition(hireScout(state));
   else if (action === "buy") transition(buyItem(state, button.dataset.item));
   else if (action === "craft") transition(craftRecipe(state, button.dataset.recipe));
