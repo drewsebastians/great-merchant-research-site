@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 21424)
+Total output lines: 809
+
 import { ITEMS, PARTY_LIMIT, QUESTS, RECIPES, ROUTE_LINKS, ROUTES, SCOUT_COST, createInitialState, findItem, findRoute, findQuest } from "./data.mjs";
 import { buyItem, changeTab, craftRecipe, equipItem, hireScout, isRouteUnlocked, performAction, recoverInTown, resetJourney, returnToTown, selectRoute, sellItem, setFormationFront, setLanguage, setTarget, startRoute, useTonic, withdrawFromBattle } from "./engine.mjs";
 import { clearGame, loadGame, saveGame } from "./storage.mjs";
@@ -349,42 +352,7 @@ function renderProduction() {
     const output = findItem(recipe.output.itemId);
     const materials = Object.entries(recipe.inputs).map(([itemId, quantity]) => quantity + ' × ' + safe(findItem(itemId)?.name || itemId)).join(' + ');
     const available = Object.entries(recipe.inputs).every(([itemId, quantity]) => (state.inventory[itemId] || 0) >= quantity);
-    return '<article class="recipe-card"><div class="recipe-glyph">⚒</div><div class="recipe-copy"><strong>' + safe(recipe.name) + '</strong><small>' + materials + ' → ' + recipe.output.quantity + ' × ' + safe(output.name) + '</small><span>Sell value: ' + output.sellPrice + ' marks · Materials in pack: ' + Object.entries(recipe.inputs).map(([itemId]) => (state.inventory[itemId] || 0) + ' ' + safe(findItem(itemId)?.name || itemId)).join(', ') + '</span></div><button type="button" class="tiny-button" data-action="craft" data-recipe="' + recipe.id + '" ' + (!available || state.phase !== "town" ? "disabled" : "") + '>MAKE</button></article>';
-  }).join("") + '</div></section>';
-}
-function renderRoster() {
-  const hasScout = state.party.some((unit) => unit.id === "scout");
-  const weapon = findItem(state.equipment?.weapon);
-  return '<section class="roster-banner"><div><small>HEARTHCROSS · HIRING BOARD</small><h2>Travel light. Watch each other&#39;s backs.</h2><p>Set the front member before you leave. Formation changes turn order and how the crew screens incoming hits.</p></div><div class="slot-count">' + state.party.length + '<i> / ' + PARTY_LIMIT + '</i><small>CREW SLOTS</small></div></section>' +
-    '<div class="roster-grid"><section class="panel roster-panel"><div class="panel-head"><div><small>ACTIVE FORMATION</small><h2>Road crew</h2></div><span class="status-pill">' + state.party.length + ' MEMBERS</span></div>' +
-    state.party.map((unit, index) => '<div class="roster-member"><span class="formation-index">0' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><div class="roster-member-info"><strong>' + safe(unit.name) + '</strong><small>' + safe(unit.role) + '</small>' + bar(unit.hp, unit.maxHp, "health") + '</div>' + (unit.id === state.formationFrontId ? '<span class="role-tag front-tag">FRONT</span>' : '<button type="button" class="formation-toggle" data-formation-front="' + unit.id + '">MOVE TO FRONT</button>') + '</div>').join("") +
-    '<div class="equipment-slot"><div><small>WEAPON SLOT</small><strong>' + safe(weapon?.name || "Empty") + '</strong><span>' + (weapon ? "+" + weapon.strikeBonus + " Strike damage" : "Equip a blade from your pack.") + '</span></div><button type="button" class="text-button" data-tab="inventory">OPEN PACK →</button></div>' +
-    '<div class="formation-note">Prototype rule: the front member takes the first attack and opens the crew turn. The rear member takes 2 less damage from screened hits.</div></section>' +
-    '<section class="panel hire-panel"><div class="hire-portrait"><img src="./assets/scout.svg" alt=""></div><small>AVAILABLE FOR HIRE</small><h2>Tarin Reed</h2><span class="role-tag">TRAIL SCOUT</span><p>Knows the ridge paths. Adds a follow-up strike and keeps an eye on the crew&#39;s supplies.</p><div class="hire-footer"><span><small>CONTRACT</small><strong>' + SCOUT_COST + ' marks</strong></span><button type="button" class="secondary-button" data-action="hire" ' + (hasScout || state.coin < SCOUT_COST || state.party.length >= PARTY_LIMIT ? "disabled" : "") + '>' + (hasScout ? "IN YOUR CREW" : "HIRE SCOUT") + '<span>→</span></button></div></section></div>';
-}
-function renderInventory() {
-  const total = Object.values(state.inventory).reduce((sum, count) => sum + count, 0);
-  const itemCards = ITEMS.map((item) => {
-    const quantity = state.inventory[item.id] || 0;
-    const equipped = state.equipment?.weapon === item.id;
-    let actions = '<span class="bound-tag">' + (item.kind === "quest" ? "QUEST" : "SUPPLY") + '</span>';
-    if (item.kind === "equipment") actions = equipped ? '<button type="button" data-action="unequip" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>UNEQUIP</button>' : quantity > 0 ? '<div class="equipment-actions"><button type="button" data-action="equip" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>EQUIP</button><button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (state.phase !== "town" ? "disabled" : "") + '>SELL</button></div>' : '<span class="bound-tag">WEAPON SLOT</span>';
-    else if (item.id === "tonic") actions = '<button type="button" data-action="use-tonic" class="tiny-button" ' + (quantity < 1 || state.party.every((unit) => unit.hp === unit.maxHp) ? "disabled" : "") + '>USE</button>';
-    else if (item.sellPrice !== null) actions = '<button type="button" data-action="sell" data-item="' + item.id + '" class="tiny-button" ' + (quantity < 1 || state.phase !== "town" ? "disabled" : "") + '>SELL</button>';
-    return '<article class="inventory-card"><span class="item-glyph ' + item.kind + '-glyph">' + item.glyph + '</span><div class="inventory-copy"><strong data-locale-preserve>' + safe(item.name) + '</strong><small data-locale-preserve>' + safe(item.detail) + '</small><span class="inventory-quantity">' + (equipped ? "EQUIPPED" : "QUANTITY") + ' <b>' + (equipped ? "WEAPON SLOT" : quantity) + '</b></span></div>' + actions + '</article>';
-  }).join("");
-  return '<section class="pack-banner"><div><small>TRAVEL KIT · CARRY LIMIT 20 EACH</small><h2>Every item has a purpose.</h2><p>Use a Field Tonic to restore the crew member who needs it most.</p></div><span class="pack-total">' + total + '<small>ITEMS</small></span></section>' +
-    '<section class="panel pack-panel"><div class="panel-head"><div><small>YOUR PACK</small><h2>Supplies and cargo</h2></div><span class="status-pill">' + state.inventory.ration + ' RATIONS</span></div><div class="inventory-grid">' +
-    itemCards + '</div>' +
-    (state.phase === "battle" ? '<div class="pack-battle-note">The road is still active. Using a tonic spends your crew order and the raiders will respond.</div>' : '') + '</section>';
-}
-function renderQuestJournal() {
-  const cards = QUESTS.map((quest) => {
-    const progress = getQuestProgress(state, quest.id);
-    const unlocked = isQuestUnlocked(state, quest.id);
-    const status = !unlocked ? "LOCKED" : progress.complete ? "COMPLETED" : progress.completedCount ? "IN PROGRESS" : "AVAILABLE";
-    const statusClass = !unlocked ? "locked" : progress.complete ? "complete" : progress.completedCount ? "progress" : "available";
-    const stages = unlocked ? '<ol class="quest-stage-list">' + progress.stages.map((stage, index) => {
+    return '<article class="recipe-card"><div class="recipe-glyph">⚒</div><div class="recipe-copy"><strong>' + safe(recipe.name) + '</strong><small>' + materials + ' → ' + recipe.output.quantity + ' × ' + safe(output.name) + '</small><span>Sell value: ' + output.sellPrice + ' marks · Materials in pack: ' + Object.entries(recipe.inputs).map(([itemId]) => (state.inventory[itemId] || 0) + ' ' + safe(findItem(itemId)?.name || itemId)).join(', ') + '</span></div><button type="button" class="tiny-button" data-action="craft" data-recipe="' + recipe.id + '" ' + (!available || state.phase !== "town" ? "disabl…1424 tokens truncated…stages.map((stage, index) => {
       const current = !stage.complete && progress.currentStage?.id === stage.id;
       const stageStatus = stage.complete ? "DONE" : current ? "CURRENT" : "UPCOMING";
       const stageClass = stage.complete ? "complete" : current ? "current" : "upcoming";
@@ -549,7 +517,7 @@ function renderClientWindow() {
     const isResult = name === "results";
     const active = name === ui.activeWindow;
     const titleId = "client-window-title-" + name;
-    const centerX = names.length === 2 ? (index === 0 ? "28%" : "72%") : "50%";
+    const centerX = names.length === 2 ? (index === 0 ? "39%" : "61%") : "50%";
     return '<section class="client-window ' + (name === "market" ? "shop-window " : "") + (active ? "window-active" : "window-behind") + '" data-window-name="' + name + '" style="--window-center-x:' + centerX + ';z-index:' + (index + 1) + '" role="dialog" aria-modal="false" aria-labelledby="' + titleId + '"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="' + titleId + '">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" data-window-close="' + name + '" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content-' + name + '">' + localizeUI(renderWindowContent(name)) + '</div></section>';
   }).join("") + '</div>';
 }

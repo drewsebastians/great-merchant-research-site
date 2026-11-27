@@ -219,6 +219,9 @@ test("context windows open and close without returning to dashboard pages", () =
   assert.equal((element("#client-window-root").innerHTML.match(/role="dialog"/g) || []).length, 2);
   assert.match(element("#client-window-root").innerHTML, /aria-modal="false"/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /window-scrim/);
+  assert.match(element("#client-window-root").innerHTML, /--window-center-x:39%/);
+  assert.match(element("#client-window-root").innerHTML, /--window-center-x:61%/);
+  assert.match(gameStyles, /\.client-window-layer\.window-layer-two \.client-window[^}]*width: min\(54%, 610px\)/);
   assert.ok(element("#client-window-root").innerHTML.indexOf('data-window-name="inventory"') < element("#client-window-root").innerHTML.indexOf('data-window-name="quest"'));
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /WAYFARER CLIENT WINDOW/);
