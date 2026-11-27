@@ -26,6 +26,12 @@ jobs:
           node --check game/sw.js
           node --test tests/*.test.mjs
           node scripts/validate-game-content.mjs
+      - name: Verify deployed v23 CSS and service worker
+        run: |
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/styles.css?v=23' -o /tmp/live-css
+          cmp game/styles.css /tmp/live-css
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/sw.js?v=23' -o /tmp/live-sw
+          cmp game/sw.js /tmp/live-sw
       - name: Install isolated browser-test dependency
         run: npm install --no-save --no-package-lock playwright@1.55.0
       - name: Browser smoke tests on exact game, with disposable saves
@@ -36,7 +42,7 @@ jobs:
           import { chromium } from 'playwright';
           import assert from 'node:assert/strict';
           const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
-          const origin='http://127.0.0.1:8765/game/';
+          const origin='https://drewsebastians.github.io/great-merchant-research-site/game/';
           const key='wayfarers-ledger:v5:save';
           const win=name=>'[data-window-name="'+name+'"]';
           const menu=name=>'#client-menu [data-window="'+name+'"]';
