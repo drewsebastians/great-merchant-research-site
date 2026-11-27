@@ -82,3 +82,5 @@ The blueprint gate is not passed because the visual-treatment item remains open:
 ## Scope note
 
 This review records the implemented macro structure, not an exact Xian client build or a current-Xian match. It does not claim pixel coordinates, screen ratio, font, icon set, key mapping, battle timing or game balance. Public guide imagery was not copied into the repository; private research records and media remain untouched.
+
+**27 November follow-up:** Pages run `45951202359` succeeded for the documentation-only commit `df83d46`. The production and development refs remain aligned, with `c32d9bf` as the latest game-code change. This repository-state update does not alter the fidelity finding or close the blueprint acceptance gate.

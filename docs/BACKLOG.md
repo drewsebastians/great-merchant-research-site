@@ -65,6 +65,7 @@ These tasks remain complete as original prototype functionality. Their completio
 
 ## Verification recorded this update
 
+- [x] Confirm the rollback checkpoint `checkpoint/pre-client-density-pass-2026-11-27` remains at `eb007f6`, research main remains at `f52446e`, and production/development refs are aligned. The development checkout still has the documented encrypted-vault blob `748f8863212c1a2911c53569e7c934293c5e4205`; the read-only research repository was not modified. Latest game-code commit is `c32d9bf`; documentation-only Pages run `45951202359` succeeded.
 - [x] `node --check` on app and service-worker modules; commit `c32d9bf` passes 39/39 tests.
 - [x] 39/39 Node tests, including three-zone HUD/window layout assertions, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
 - [x] Game content validator and `git diff --check` before the `c32d9bf` publication.
