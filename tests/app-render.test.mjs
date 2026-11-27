@@ -129,7 +129,7 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.doesNotMatch(gameHtml, /class="brand"/);
   assert.match(gameStyles, /\.topbar \{ height: 28px; display: flex;/);
   assert.match(gameStyles, /grid-template-rows: minmax\(330px, 1fr\) 118px/);
-  assert.match(gameStyles, /\.lower-hud \{[^}]*minmax\(260px,\.9fr\)[^}]*minmax\(500px,2\.05fr\)[^}]*minmax\(320px,1\.05fr\)[^}]*padding: 4px 8px;[^}]*border-bottom:/);
+  assert.match(gameStyles, /\.lower-hud \{[^}]*minmax\(0,1fr\) minmax\(0,2fr\) minmax\(0,1fr\)[^}]*padding: 4px 8px;[^}]*border-bottom:/);
   assert.match(gameHtml, /class="client-controls" role="group" aria-label="Client menu and campaign date"/);
   assert.match(gameStyles, /\.client-menu \{ display: grid; grid-template-columns: repeat\(7, minmax\(0,1fr\)\); grid-template-rows: 1fr 1fr;/);
   assert.match(gameStyles, /\.client-menu-button\.state-toggle:nth-child\(8\) \{ grid-column: 1 \/ span 3; grid-row: 2; \}/);
@@ -142,13 +142,14 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /\.client-window-layer \{[^}]*pointer-events: none/);
   assert.match(gameStyles, /\.client-window:not\(\.window-active\) \{ display: none; \}/);
   assert.match(gameStyles, /\.window-titlebar \{ min-height: 32px;/);
+  assert.match(gameStyles, /\.window-titlebar \{[^}]*url\("\.\/assets\/window-engraving\.svg"\)/);
   assert.match(gameStyles, /\.window-titlebar \{[^}]*border-top: 1px solid/);
   assert.match(gameStyles, /\.window-titlebar h2 \{[^}]*font: 14px\/1\.1 var\(--serif\);/);
   assert.match(gameStyles, /\.screen-status \{ display: none; \}/);
   assert.match(gameStyles, /@media \(max-width: 900px\)/);
   assert.match(gameStyles, /@media \(max-height: 700px\) and \(min-width: 901px\)/);
   assert.match(gameStyles, /grid-template-rows: minmax\(300px,1fr\) 120px/);
-  assert.match(gameStyles, /grid-template-columns: minmax\(180px,\.9fr\) minmax\(310px,2\.05fr\) minmax\(270px,1\.05fr\)/);
+  assert.match(gameStyles, /grid-template-columns: minmax\(0,1fr\) minmax\(0,2fr\) minmax\(0,1fr\)/);
   assert.match(gameStyles, /\.hud-date time \{ color: #e2d5ad; font: 10px\/1 var\(--mono\);/);
   assert.match(gameStyles, /grid-template-columns: minmax\(0,1fr\); grid-template-rows: auto 90px 106px/);
   click(fakeButton({ action: "onboarding-close" }));
@@ -226,6 +227,7 @@ test("context windows open and close without returning to dashboard pages", () =
   assert.match(element("#client-window-root").innerHTML, /--window-center-x:37%/);
   assert.match(element("#client-window-root").innerHTML, /--window-center-x:72%/);
   assert.match(gameStyles, /\.client-window-layer\.window-layer-two \.client-window[^}]*width: min\(34%, 520px\)/);
+  assert.match(gameStyles, /\.client-window-layer\.window-layer-two \.client-window[^}]*height: min\(60%, 440px\)/);
   assert.ok(element("#client-window-root").innerHTML.indexOf('data-window-name="inventory"') < element("#client-window-root").innerHTML.indexOf('data-window-name="quest"'));
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /WAYFARER CLIENT WINDOW/);

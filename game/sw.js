@@ -1,4 +1,4 @@
-const CACHE_NAME = "wayfarers-ledger-shell-v14";
+const CACHE_NAME = "wayfarers-ledger-shell-v15";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -21,7 +21,8 @@ const APP_SHELL = [
   "./assets/raider.svg",
   "./assets/scout.svg",
   "./assets/skirmisher.svg",
-  "./assets/wayfarer.svg"
+  "./assets/wayfarer.svg",
+  "./assets/window-engraving.svg"
 ];
 
 self.addEventListener("install", (event) => {
