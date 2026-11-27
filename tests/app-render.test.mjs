@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 const elements = new Map();
 const clickHandlers = [];
 const submitHandlers = [];
+const contextMenuHandlers = [];
 const keyHandlers = [];
 const storage = new Map();
 let scheduledNoticeTimer = null;
@@ -36,6 +37,7 @@ globalThis.document = {
   addEventListener(type, handler) {
     if (type === "click") clickHandlers.push(handler);
     else if (type === "submit") submitHandlers.push(handler);
+    else if (type === "contextmenu") contextMenuHandlers.push(handler);
     else keyHandlers.push(handler);
   },
   body: { dataset: {} }
@@ -91,6 +93,15 @@ function click(button) {
     return null;
   } };
   clickHandlers.at(-1)({ target });
+}
+function contextMenu(button) {
+  let prevented = false;
+  const target = { closest(selector) {
+    if (selector === "#portrait-rail [data-unit-select]") return button?.inPortraitRail && button?.dataset?.unitSelect ? button : null;
+    return null;
+  } };
+  contextMenuHandlers.at(-1)({ target, preventDefault() { prevented = true; } });
+  return prevented;
 }
 function openWindow(name) { click(fakeButton({ window: name })); }
 function action(name, extra = {}) { click(fakeButton({ action: name, ...extra })); }
@@ -213,6 +224,35 @@ test("travel, recruitment, trade, battle commands, withdrawal and local saves re
   assert.equal(savedState().lastSettlement.rewardCoin, 0);
   assert.ok(savedState().party.every((unit) => unit.hp > 0));
   assert.equal(document.body.dataset.mode, "field");
+});
+
+test("portrait right-click opens selected status without changing the saved journey", () => {
+  const before = savedState();
+  assert.ok(before.party.some((unit) => unit.id === "scout"));
+  const journeyBefore = {
+    phase: before.phase,
+    day: before.day,
+    coin: before.coin,
+    completedRoutes: before.completedRoutes,
+    routeRuns: before.routeRuns,
+    party: before.party,
+    inventory: before.inventory
+  };
+  assert.equal(contextMenu(fakeButton({ unitSelect: "scout" }, { inPortraitRail: true })), true);
+  assert.match(element("#client-window-root").innerHTML, /data-window-name="status"/);
+  assert.match(element("#client-window-root").innerHTML, /class="status-member selected" data-status-member="scout" role="listitem" aria-current="true"/);
+  assert.match(element("#client-window-root").innerHTML, /SELECTED PORTRAIT/);
+  assert.match(element("#portrait-rail").innerHTML, /left click: inventory · right click: status/i);
+  const statusOpen = savedState();
+  assert.deepEqual({ phase: statusOpen.phase, day: statusOpen.day, coin: statusOpen.coin, completedRoutes: statusOpen.completedRoutes, routeRuns: statusOpen.routeRuns, party: statusOpen.party, inventory: statusOpen.inventory }, journeyBefore);
+
+  click(fakeButton({ unitSelect: "mara" }));
+  assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
+  const inventoryOpen = savedState();
+  assert.deepEqual({ phase: inventoryOpen.phase, day: inventoryOpen.day, coin: inventoryOpen.coin, completedRoutes: inventoryOpen.completedRoutes, routeRuns: inventoryOpen.routeRuns, party: inventoryOpen.party, inventory: inventoryOpen.inventory }, journeyBefore);
+  action("close-window");
+  action("close-window");
+  assert.equal(element("#client-window-root").innerHTML, "");
 });
 
 test("context windows open and close without returning to dashboard pages", () => {

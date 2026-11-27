@@ -467,7 +467,10 @@ function renderRouteWindow() {
 }
 function renderStatusWindow() {
   const attack = state.party.reduce((total, unit) => total + (unit.id === "mara" ? 14 : 7), 0) + (findItem(state.equipment?.weapon)?.strikeBonus || 0);
-  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("ROAD RATIONS", "RANSUM JALAN") + '</small><strong>' + state.inventory.ration + '</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party">' + state.party.map((unit) => unitCard(unit, false)).join("") + '</div></section>';
+  return '<section class="status-window"><div class="status-metrics"><div><small>' + label("LEVEL", "NIVEL") + '</small><strong>01</strong></div><div><small>' + label("ROAD RATIONS", "RANSUM JALAN") + '</small><strong>' + state.inventory.ration + '</strong></div><div><small>' + label("TOTAL ATTACK", "TOTAL SERANGAN") + '</small><strong>' + attack + '</strong></div><div><small>' + label("CREDIT LEVEL", "TINGKAT KREDIT") + '</small><strong>01</strong></div><div><small>' + label("MONEY", "UANG") + '</small><strong>' + state.coin + ' M</strong></div></div><p class="prototype-note">' + label("Prototype-only values. They do not reproduce Xian character formulas.", "Nilai khusus prototipe. Angka ini tidak menyalin rumus karakter Xian.") + '</p><div class="status-party" role="list">' + state.party.map((unit) => {
+    const selected = ui.selectedUnitId === unit.id;
+    return '<div class="status-member ' + (selected ? "selected" : "") + '" data-status-member="' + safe(unit.id) + '" role="listitem" aria-current="' + selected + '">' + (selected ? '<span class="status-member-marker">' + label("SELECTED PORTRAIT", "POTRET DIPILIH") + '</span>' : "") + unitCard(unit, false) + '</div>';
+  }).join("") + '</div></section>';
 }
 function renderPropertyWindow() {
   return '<section class="property-window"><div class="window-intro"><small>' + label("HEARTHCROSS · PROPERTY & LEDGER", "HEARTHCROSS · PROPERTI & BUKU") + '</small><h2>' + label("Local holdings", "Aset lokal") + '</h2><p>' + label("This original prototype tracks your coin and the results of each completed route.", "Prototipe orisinal ini mencatat uang dan hasil dari setiap rute yang selesai.") + '</p></div>' +
@@ -480,7 +483,8 @@ function renderCommunityWindow() {
 function renderPortraitRail() {
   return state.party.map((unit, index) => {
     const active = ui.selectedUnitId === unit.id;
-    return '<button type="button" class="portrait-slot ' + (active ? "selected" : "") + '" data-unit-select="' + unit.id + '" aria-label="' + safe(unit.name) + ', ' + safe(unit.role) + ', ' + Math.max(0, unit.hp) + ' of ' + unit.maxHp + (state.phase === "battle" ? "" : ", open inventory") + '" aria-pressed="' + active + '"><span class="portrait-index">' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><strong>' + safe(unit.name.split(" ")[0]) + '</strong><span class="portrait-role">' + safe(unit.role) + '</span>' + bar(unit.hp, unit.maxHp, "health") + '</button>';
+    const interactionHint = state.phase === "battle" ? "" : label("Left click: inventory · right click: status", "Klik kiri: inventaris · klik kanan: status");
+    return '<button type="button" class="portrait-slot ' + (active ? "selected" : "") + '" data-unit-select="' + unit.id + '" aria-label="' + safe(unit.name) + ', ' + safe(unit.role) + ', ' + Math.max(0, unit.hp) + ' of ' + unit.maxHp + (state.phase === "battle" ? "" : ", " + label("open inventory; right-click for status", "buka inventaris; klik kanan untuk status")) + '"' + (interactionHint ? ' title="' + safe(interactionHint) + '"' : "") + ' aria-pressed="' + active + '"><span class="portrait-index">' + (index + 1) + '</span><img src="' + portrait(unit.id) + '" alt=""><strong>' + safe(unit.name.split(" ")[0]) + '</strong><span class="portrait-role">' + safe(unit.role) + '</span>' + bar(unit.hp, unit.maxHp, "health") + '</button>';
   }).join("") + '<button type="button" class="portrait-add" data-window="character" aria-label="' + label("Open character and mercenary window", "Buka jendela karakter dan pengawal") + '">＋<small>' + state.party.length + '/' + PARTY_LIMIT + '</small></button>';
 }
 function renderOverview() {
@@ -800,6 +804,15 @@ document.addEventListener("click", (event) => {
     render();
   }
 });
+
+document.addEventListener("contextmenu", (event) => {
+  const portraitButton = event.target.closest("#portrait-rail [data-unit-select]");
+  if (!portraitButton || guideOpen || state.phase === "battle") return;
+  event.preventDefault();
+  ui.selectedUnitId = portraitButton.dataset.unitSelect;
+  openWindow("status");
+});
+
 document.addEventListener("submit", (event) => {
   if (event.target?.id !== "local-chat-form") return;
   event.preventDefault();
