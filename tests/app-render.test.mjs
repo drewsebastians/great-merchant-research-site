@@ -214,6 +214,34 @@ test("expanded original map traps focus, closes with Escape and preserves the jo
   assert.deepEqual(savedState(), before);
 });
 
+test("system window groups visible controls by mode without claiming Xian key bindings", () => {
+  click(fakeButton({ action: "onboarding-close" }));
+  const before = savedState();
+  const progressBefore = { phase: before.phase, day: before.day, coin: before.coin, inventory: before.inventory, party: before.party };
+
+  openWindow("system");
+  let html = element("#client-window-root").innerHTML;
+  assert.equal((html.match(/class="mode-command-card"/g) || []).length, 3);
+  assert.match(html, /Field \/ town/);
+  assert.match(html, /Shop/);
+  assert.match(html, /Battlefield/);
+  assert.match(html, /Move, Attack, Hold, or Stop/);
+  assert.match(html, /Xian key mappings and battle timing remain unverified/);
+  assert.deepEqual({ phase: savedState().phase, day: savedState().day, coin: savedState().coin, inventory: savedState().inventory, party: savedState().party }, progressBefore);
+  action("close-window", { windowClose: "system" });
+
+  click(fakeButton({ languageOption: "id" }));
+  openWindow("system");
+  html = element("#client-window-root").innerHTML;
+  assert.match(html, /Lapangan \/ kota/);
+  assert.match(html, /Pilih rute dan berangkat/);
+  assert.match(html, /Pilih unit atau kelompok/);
+  assert.match(html, /Pemetaan tombol dan waktu pertempuran Xian belum terverifikasi/i);
+  assert.match(html, /role="list"/);
+  action("close-window", { windowClose: "system" });
+  click(fakeButton({ languageOption: "en" }));
+});
+
 test("travel, recruitment, trade, battle commands, withdrawal and local saves remain connected", () => {
   click(fakeButton({ action: "onboarding-close" }));
   openWindow("travel");

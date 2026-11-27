@@ -449,9 +449,27 @@ function renderSettlement() {
 }
 function renderPreferences() {
   const language = state.language || "en";
-  return '<section class="preferences-banner"><div><small>HEARTHCROSS · PLAYER SETTINGS</small><h2>Make the journey yours.</h2><p>Choose the interface language and the combat input that suit you.</p></div><span class="market-stamp">LOCAL<br>SETTINGS</span></section>' +
+  const commandModes = [
+    {
+      name: label("Field / town", "Lapangan / kota"),
+      kicker: label("ON THE FIELD", "DI LAPANGAN"),
+      actions: [label("Choose a route and set out", "Pilih rute dan berangkat"), label("Open client windows", "Buka jendela klien"), label("Add a local field note", "Tambahkan catatan lapangan lokal")]
+    },
+    {
+      name: label("Shop", "Toko"),
+      kicker: label("IN THE SHOP", "DI TOKO"),
+      actions: [label("Select a listed good", "Pilih barang yang tersedia"), label("Buy or sell one item", "Beli atau jual satu barang"), label("Use a town workshop recipe", "Gunakan resep bengkel kota")]
+    },
+    {
+      name: label("Battlefield", "Medan tempur"),
+      kicker: label("IN THE BATTLEFIELD", "DI MEDAN TEMPUR"),
+      actions: [label("Select a unit or group", "Pilih unit atau kelompok"), label("Move, Attack, Hold, or Stop", "Pindah, Serang, Tahan, atau Hentikan"), label("Withdraw from the encounter", "Mundur dari pertemuan")]
+    }
+  ];
+  const modeGuide = '<section class="mode-command-guide" aria-labelledby="mode-command-title"><div class="mode-command-heading"><div><small>' + label("CONTROL REFERENCE", "REFERENSI KONTROL") + '</small><h3 id="mode-command-title">' + label("Commands by client mode", "Perintah menurut mode klien") + '</h3></div><span class="status-pill">' + label("ON-SCREEN BUTTONS", "TOMBOL DI LAYAR") + '</span></div><div class="mode-command-grid" role="list">' + commandModes.map((mode) => '<article class="mode-command-card" role="listitem"><small>' + mode.kicker + '</small><h4>' + mode.name + '</h4><ul>' + mode.actions.map((action) => '<li><span aria-hidden="true">◇</span><span>' + action + '</span></li>').join("") + '</ul></article>').join("") + '</div><p class="mode-command-note">' + label("The generic official shortcut guide groups controls by field, shop and battlefield. This prototype uses buttons; Xian key mappings and battle timing remain unverified.", "Panduan pintasan umum membagi kontrol menjadi lapangan, toko, dan medan tempur. Prototipe ini memakai tombol; pemetaan tombol dan waktu pertempuran Xian belum terverifikasi.") + '</p></section>';
+  return '<section class="preferences-banner"><div><small>HEARTHCROSS · PLAYER SETTINGS</small><h2>Make the journey yours.</h2><p>' + label("Choose the interface language and review controls by client mode.", "Pilih bahasa antarmuka dan tinjau kontrol tiap mode klien.") + '</p></div><span class="market-stamp">LOCAL<br>SETTINGS</span></section>' +
     '<section class="panel preferences-panel"><div class="preference-row"><div class="preference-copy"><small>' + label("DISPLAY", "TAMPILAN") + '</small><h3>' + label("Choose an interface language", "Pilih bahasa antarmuka") + '</h3><p>' + label("Common interface labels change language. Story and item descriptions remain in English.", "Label antarmuka utama berubah sesuai bahasa. Cerita dan deskripsi barang tetap dalam bahasa Inggris.") + '</p></div><div class="language-options" role="group" aria-label="' + label("Interface language", "Bahasa antarmuka") + '"><button type="button" data-language-option="en" class="' + (language === "en" ? "selected" : "") + '" aria-pressed="' + (language === "en") + '">English</button><button type="button" data-language-option="id" class="' + (language === "id" ? "selected" : "") + '" aria-pressed="' + (language === "id") + '">Bahasa Indonesia</button></div></div>' +
-    '<div class="preference-row"><div class="preference-copy"><small>' + label("CONTROLS", "KONTROL") + '</small><h3>' + label("Pointer and touch commands", "Perintah dengan penunjuk dan sentuhan") + '</h3><p>' + label("Use the on-screen controls. Xian key mappings and battle timing remain unverified for this prototype.", "Gunakan kontrol di layar. Pemetaan tombol dan waktu pertempuran Xian belum terverifikasi untuk prototipe ini.") + '</p></div><span class="status-pill">' + label("KEYS UNVERIFIED", "TOMBOL BELUM TERVERIFIKASI") + '</span></div>' +
+    modeGuide +
     '<p class="preferences-note">' + label("Preferences save with this local journey and stay on this device.", "Preferensi tersimpan bersama perjalanan lokal ini di perangkat ini.") + '</p></section>';
 }
 function renderRouteWindow() {
