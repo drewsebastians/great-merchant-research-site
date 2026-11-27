@@ -549,7 +549,7 @@ function renderClientWindow() {
     const isResult = name === "results";
     const active = name === ui.activeWindow;
     const titleId = "client-window-title-" + name;
-    const centerX = names.length === 2 ? (index === 0 ? "39%" : "61%") : "50%";
+    const centerX = names.length === 2 ? (index === 0 ? "37%" : "72%") : "50%";
     return '<section class="client-window ' + (name === "market" ? "shop-window " : "") + (active ? "window-active" : "window-behind") + '" data-window-name="' + name + '" style="--window-center-x:' + centerX + ';z-index:' + (index + 1) + '" role="dialog" aria-modal="false" aria-labelledby="' + titleId + '"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="' + titleId + '">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" data-window-close="' + name + '" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content-' + name + '">' + localizeUI(renderWindowContent(name)) + '</div></section>';
   }).join("") + '</div>';
 }

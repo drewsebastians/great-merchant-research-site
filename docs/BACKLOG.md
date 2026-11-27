@@ -34,12 +34,17 @@
 - [x] Replace the single modal scrim with layered, nonmodal contextual windows. Two desktop windows are shown side by side over the undimmed scene; clicking an exposed window brings it forward, and Escape closes only the front window. At the narrow breakpoint, the same stack keeps the active window in front for readability. Commits `6830d00` and `4e1e930` deployed successfully in Pages runs 45926424401 and 45926785566.
 - [x] Bump the app-shell cache to v8 for the focus behavior. The live production check confirmed inventory/quest layering, focus, front-window close, shop mode and the preserved day 05 / 102-mark save.
 - [x] Add an independently authored inset rail, center fasteners and midpoint fittings to the contextual-window frame; bump the app-shell cache to v9. Commit `aa86f74` deployed in Pages run 45944691666; the production browser showed inventory and quest together, verified focus and Escape behavior, and kept the save at day 05 / 102 marks.
+- [x] Add an original campaign date derived from journey day and a separately labeled device-local clock; replace the misleading prototype `STAMINA` label with `RATIONS`; bump the app-shell cache to v10. Commit `4eb720f` deployed in Pages run 45946408400; production showed day 05 / 102 marks and no horizontal overflow at 1363 CSS pixels.
+- [x] Correct the earlier reading of the 14 Jan 2017 screenshot: its two centered windows are side by side with a small gap, not overlapping. The overlap in `bc05a2c` was based on the mistaken interpretation and is superseded by this local layout pass. The app-module truncation incident was repaired in `eb007f6` from checkpoint `checkpoint/pre-overlap-window-layout-2026-11-27`; the local and remote Git blob hashes matched before repair.
+- [x] Rework the desktop lower HUD into three broad zones and place the menu and compact date/time strip together at right. The local 1363px preview measures 303/690/354px (about 22.5%/51.2%/26.3%); these figures describe only this prototype viewport.
+- [x] Place the two desktop contextual windows side by side with a small gap, matching only the visible 2017 screenshot arrangement. At a 1363px local viewport, the preview measured 432px windows with a 13px gap. Production deployment verification is pending.
+- [x] Bump the PWA app-shell cache from v11 to v14 for the revised lower HUD and window layout; automated service-worker checks cover the new shell version. Live offline mode remains unverified.
 - [x] Verify the deployed 900px responsive breakpoint at 779 CSS pixels after run 45784931192; browser-zoom emulations at 779px, 681px and 340px show no visible horizontal scrolling. These checks do not replace physical-device testing.
 - [x] Polish the 779px topbar: commit `ca683f0` hides the duplicate mode chip while retaining the full location title; verified in Pages run 45787017262.
 - [x] Recheck 779px, 681px and 340px browser-width emulations after the compact utility/HUD pass. At 175%, 200% and 400% zoom, no horizontal scrolling appeared; at 340px the transient notice dismissed and the day 05 / 102-mark HUD remained visible. These checks do not replace physical-device testing.
 - [ ] Verify on a physical narrow device, check keyboard focus and accessible labels, and test actual PWA offline behavior. The browser's organization policy blocked DevTools, so the live offline toggle was not attempted; automated service-worker tests are mocked.
 - [x] Shorten top/header chrome and lower HUD; use a darker double border and tighter title spacing for original contextual windows. Commit `05c2607` deployed in Pages run 45786650163.
-- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. The added inner rail and fittings refine the frame, which is still simpler than the 2017 screenshot; current Xian client version and exact geometry remain unverified.
+- [ ] Continue comparing independently authored contextual-window trim and compact HUD proportions with available dated Xian frames. The frame is still simpler than the 2017 screenshot; current Xian client version and exact geometry remain unverified.
 
 ## Retained V5.0 playable work
 
@@ -60,12 +65,15 @@ These tasks remain complete as original prototype functionality. Their completio
 
 ## Verification recorded this update
 
-- [x] `node --check` on app and service-worker modules; `node --test` passes 39/39 after `4e1e930`.
-- [x] 39/39 Node tests, including shell/window coverage, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
-- [x] Game content validator and `git diff --check`.
+- [x] `node --check` on app and service-worker modules; current local candidate passes 39/39 tests.
+- [x] 39/39 Node tests, including three-zone HUD/window layout assertions, transient notice expiry, the playable loop, withdrawal and save/PWA behavior.
+- [x] Game content validator and `git diff --check` after local candidate changes.
 - [x] Production desktop browser visual verification and context-window smoke checks.
 - [x] Post-`4e1e930` production browser check: the cache-v8 build reloads into the illustrated town, inventory and quest windows layer, clicking focuses a window, Escape closes only the front one, shop mode is separate, and the saved journey remains day 05 / 102 marks. Both route images loaded after `1784c24`.
 - [x] Post-`aa86f74` production screenshot and interaction check: the cache-v9 client shows the new inset rail, two windows remain over the field, clicking an exposed frame focuses it, Escape closes only the front window, and the save remains day 05 / 102 marks.
+- [x] Post-`eb007f6` production check: the then-current build showed overlapping Inventory and Quest windows; clicking the exposed Inventory titlebar raised it and Escape closed it to reveal Quest. This result was subsequently superseded after correcting the 2017 screenshot interpretation.
+- [x] Local preview check after the side-by-side layout pass: two 432px windows with a 13px gap at 1363px viewport; click-to-focus, Escape close/reveal and distinct shop mode worked. Production check is pending deployment.
+- [x] Confirm successful Pages run `45947396844` corresponds to `eb007f632d0a5830015f33ca48b0391543e1e62e`; verify production browser loads the complete module without an app-script parse error.
 - [x] Documentation follow-up committed as `967f574` and deployed successfully in Pages run 45927330146.
 - [x] Final deployment record committed as `3366b2e` and deployed successfully in Pages run 45927567313; production workflow linked the run to that exact commit.
 - [x] Historical Xian field screenshot visually compared with the production layout; date, scope and unknown patch are recorded in the fidelity review.

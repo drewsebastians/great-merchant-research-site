@@ -45,14 +45,16 @@
             <button type="submit" aria-label="Add local note">↵</button>
           </form>
         </section>
-        <nav class="client-menu" id="client-menu" aria-label="Client menu"></nav>
-        <div class="hud-date" id="campaign-date" aria-label="Original campaign calendar and device-local time">
-          <small class="hud-date-heading" id="campaign-season">YEAR 01 · BUDBREAK</small>
-          <div class="hud-date-main">
-            <strong class="hud-date-day"><span id="day-count">01</span><i id="campaign-day-label">DAY</i></strong>
-            <time id="device-time" aria-label="Device local time">--:--</time>
+        <div class="client-controls" role="group" aria-label="Client menu and campaign date">
+          <nav class="client-menu" id="client-menu" aria-label="Client menu"></nav>
+          <div class="hud-date" id="campaign-date" aria-label="Original campaign calendar and device-local time">
+            <small class="hud-date-heading" id="campaign-season">YEAR 01 · BUDBREAK</small>
+            <div class="hud-date-main">
+              <strong class="hud-date-day"><span id="day-count">01</span><i id="campaign-day-label">DAY</i></strong>
+              <time id="device-time" aria-label="Device local time">--:--</time>
+            </div>
+            <small class="hud-date-footer" id="clock-label">DEVICE LOCAL TIME</small>
           </div>
-          <small class="hud-date-footer" id="clock-label">DEVICE LOCAL TIME</small>
         </div>
       </section>
     </main>
