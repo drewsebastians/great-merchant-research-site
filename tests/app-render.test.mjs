@@ -117,6 +117,8 @@ test("desktop shell is scene-first with client portraits, minimap, HUD, chat and
   assert.match(gameStyles, /\.lower-hud \{[^}]*padding: 4px 6px;/);
   assert.match(gameStyles, /\.client-window::before \{[^}]*background:/);
   assert.match(gameStyles, /\.client-window::before \{[^}]*radial-gradient\(circle/);
+  assert.match(gameStyles, /\.client-window::after \{[^}]*inset: 4px; border: 1px solid/);
+  assert.match(gameStyles, /\.client-window::after \{[^}]*radial-gradient\(circle[^}]*linear-gradient\(90deg, transparent, rgba\(221,191,125/);
   assert.match(gameStyles, /\.client-window \{[^}]*0 0 0 3px rgba\(207,180,120,\.32\)/);
   assert.match(gameStyles, /\.client-window-layer \{[^}]*pointer-events: none/);
   assert.match(gameStyles, /\.client-window:not\(\.window-active\) \{ display: none; \}/);
