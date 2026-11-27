@@ -1,10 +1,10 @@
 # Xian The Great Merchant Interface Fidelity Blueprint
 
-> Verified implementation update: v24 Inventory and Character Status context pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
+> Verified implementation update: v25 HUD readability pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
 
 **Version:** 1.0  
 **Governs:** Development Plan v5.1  
-**Updated:** 27 November 2026
+**Updated:** 28 November 2026
 **Target:** Xian The Great Merchant desktop-client experience, adapted for a browser game
 
 ## Decision and correction
@@ -130,6 +130,6 @@ Until all eight checks pass, retain the status “playable prototype; TGM interf
 PWA shell v24 deploys the Inventory and Status presentation pass under implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` (Pages run `46010209631`). Existing vitality/focus, equipped weapon and cargo are grouped in Inventory; Status surfaces the selected character and accessible crew selectors. Selection is not saved. Isolated browser validation `46009842569` passed at desktop and two narrow widths, including English/Indonesian labels, save preservation and offline reload. Production UI and the existing day 05 / 102-mark save were checked after deployment. These checks establish prototype behavior only. The historical Indonesian Episode 2 screen has mixed image provenance, the Global Server lead has metadata but no frame, and the remaining image leads are unidentified; no geometry or exact controls can yet be derived.
 
 
-### Candidate review — 28 November 2026
+### Verified HUD implementation update — 28 November 2026
 
-The v25 HUD pass is an original responsive usability change: overview/chat labels use 8–9px, menu labels use 8px and the menu wraps over five columns and two rows across desktop and narrow widths, and buttons have a 44px minimum height. These values are not sourced from Xian and do not satisfy the blueprint's reference-comparison gate. The latest search still lacks an inspectable Xian frame linked to a capture build or patch. Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source references remain distinct in the evidence ledger.
+Implementation `9c537e5e4973d645ebd9f546dce224758515196d` ships the original responsive HUD usability update as v25. Overview/chat labels use 8–9px, menu labels use 8px, the menu wraps over five columns and two rows across desktop and narrow widths, and buttons have a 44px minimum height. Validation run `46084604216` passed; Pages run `46084804013` deployed successfully and the live production CSS/service worker match the implementation commit. These values are not sourced from Xian and do not satisfy the blueprint's reference-comparison gate. The latest search still lacks an inspectable Xian frame linked to a capture build or patch. Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source references remain distinct in the evidence ledger.

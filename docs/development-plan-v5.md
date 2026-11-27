@@ -1,9 +1,9 @@
 # Development Plan v5.1 — Xian TGM Interface-Fidelity Reset
 
-> Verified implementation update: v24 Inventory and Character Status context pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
+> Verified implementation update: v25 HUD readability pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
 
 **Project:** Wayfarer's Ledger, an original browser game using Xian The Great Merchant as a direct interface reference  
-**Updated:** 27 November 2026
+**Updated:** 28 November 2026
 **Repository:** drewsebastians/great-merchant-research-site  
 **Controlling specification:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
@@ -95,6 +95,6 @@ Evidence is recorded in [the Inventory and Status reference note](inventory-stat
 Implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` advances the shell to v24. Inventory displays existing selected-crew HP/Focus and equipped-weapon context before cargo. Status displays the selected character and accessible roster controls; changing selection does not alter persisted journey fields. No new game values, formulas, save keys or source assets were introduced. Isolated run `46009842569` passed 42/42 tests, syntax, content validation, Git diff/preservation checks, desktop paired-window checks, two mobile widths, bilingual labels, save/reload checks and offline reload. Pages run `46010209631` succeeded, and the live page showed the new panels with the day 05 / 102-mark journey intact. See [the dated evidence ledger](inventory-status-evidence-2026-11-27.md); source identity remains uncertain and the blueprint gate stays open.
 
 
-### 28 November 2026 — HUD legibility candidate
+### Verified HUD legibility pass — 28 November 2026
 
-The lower HUD's source CSS fell to 4–6px labels at narrow widths and packed nine actions into one row. The v25 candidate sets overview/chat labels to 8–9px, menu labels to 8px across viewports, wraps them, gives menu buttons a 44px minimum height and lays the menu out as five columns by two rows across desktop and narrow widths. This is a responsive usability correction based on our own CSS and viewport constraints, not a TGM measurement. It changes no state, game rule, art, save field or formula. Validate with existing checks and disposable desktop/narrow browser profiles before promotion; verify the PWA shell cache upgrade and actual offline reload.
+Implementation `9c537e5e4973d645ebd9f546dce224758515196d` advances the PWA shell to v25. The lower HUD's source CSS fell to 4–6px labels at narrow widths and packed nine actions into one row. The release sets overview/chat labels to 8–9px, menu labels to 8px across viewports, wraps labels, uses five columns by two rows and provides 44px menu-button minimum height. This responsive usability correction comes from our own CSS and viewport constraints, not a TGM measurement. No state, game rule, art, save field or formula changed. Validation run `46084604216` passed all 42 tests and desktop/narrow browser, bilingual, save/reload and offline checks; Pages run `46084804013` succeeded and production file parity was confirmed. Continue version-identifiable screenshot research separately; physical-device and broader accessibility checks remain open.

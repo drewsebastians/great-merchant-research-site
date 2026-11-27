@@ -29,7 +29,7 @@ No newly inspected image or video frame can be identified as an Xian client scre
 
 ## Implementation boundary
 
-The v25 candidate responds to the project's own CSS and narrow-viewport layout: labels were 4–6px and nine menu buttons shared a single row on mobile. It sets overview/chat labels to 8–9px, menu labels to 8px across viewports; labels wrap, the menu uses five columns over two rows across desktop and narrow widths, and buttons have a 44px minimum height. These are original usability choices, not measurements or controls learned from TGM. Gameplay, save schema, original assets and encrypted research vault remain untouched.
+The v25 release responds to the project's own CSS and narrow-viewport layout: labels were 4–6px and nine menu buttons shared a single row on mobile. It sets overview/chat labels to 8–9px, menu labels to 8px across viewports; labels wrap, the menu uses five columns over two rows across desktop and narrow widths, and buttons have a 44px minimum height. These are original usability choices, not measurements or controls learned from TGM. Validation run `46084604216` passed 42/42 existing tests and actual Chromium browser checks at 1363×936, 390×844 and 340×740, including bilingual labels, menu target size, save/reload preservation and v25 offline reload. Pages run `46084804013` succeeded; production CSS and worker match implementation `9c537e5e4973d645ebd9f546dce224758515196d` byte-for-byte, and a read-only live review showed day 05 / 102 marks. Production offline mode was not tested in the user's browser. Gameplay, save schema, original assets and encrypted research vault remain untouched.
 
 ## Open fidelity and verification items
 

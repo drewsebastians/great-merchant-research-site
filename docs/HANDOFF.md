@@ -1,8 +1,8 @@
 # Development Handoff
 
-> Current verified release: PWA shell v24. The candidate-only notes below are historical and superseded by the verified release record at the end.
+> Current verified release: PWA shell v25. Earlier candidate notes are historical; see the current handoff at the end.
 
-**Updated:** 27 November 2026
+**Updated:** 28 November 2026
 **Next task:** P0 — find a version-identifiable Xian field/window frame; keep the fidelity gate open
 
 ## Start here
@@ -10,7 +10,7 @@
 1. Read docs/tgm-interface-blueprint-v1.md for the interface structure, evidence limits and acceptance gate.
 2. Read docs/ui-fidelity-review-v5.md for the dated sources, implementation comparison and unresolved checks.
 3. Read docs/STATUS.md and docs/BACKLOG.md, then continue the highest-priority unchecked task.
-4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. Latest implementation commit `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457`, Pages run 46010209631, shell v24; isolated validation run 46009842569 passed. Main and development are aligned through the documentation follow-up.
+4. Production game: https://drewsebastians.github.io/great-merchant-research-site/game/. v25 implementation `9c537e5e4973d645ebd9f546dce224758515196d`, Pages run `46084804013`; validation run `46084604216` passed. The live CSS/service worker match the commit and the production game was reviewed read-only. `main` and development are aligned on the implementation; this handoff is their documentation follow-up.
 5. Preserve the user's existing local game progress. The new CI checks used disposable day 05 / 102 marks saves, not the user's actual browser; no user local storage was accessed. Use the isolated validation branch workflow for future candidate and live checks.
 
 ## Repository and recovery
@@ -84,10 +84,10 @@ Candidate branch: `candidate/quest-inset-detail-2026-11-27`, based on `b11a6bacc
 Implementation `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` is deployed as PWA shell v24 in Pages run `46010209631`. Validation run `46009842569` passed the existing 42-test suite, syntax/content/diff checks and disposable-browser checks at 1363×936, 390×844 and 340×740, including localization, save preservation around selector use, reload and offline reload. Rollback checkpoint: `checkpoint/pre-inventory-status-pass-2026-11-27` at `936f6eae66896c14e0e4c0e0016e7da9a0d9900b`. The live game showed the new Inventory crew/weapon context and Status selected-character profile/roster while day 05 / 102 marks remained visible. Selection is presentation-only. Next, continue version-identifiable screenshot research across historical Indonesian Episode 2, Global Server and unidentified clients. Keep unverified geometry, controls and patch details unresolved, and keep the blueprint gate open.
 
 
-## Handoff — 28 November 2026
+## Current handoff — 28 November 2026
 
-Start from GitHub. The v24 deployed baseline is `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457`; `main` and `development/v5-first-playable-slice` were docs-aligned at `9efb48ad84b834da0a77754ca4301b26ade37691`. Candidate `candidate/hud-readability-pass-2026-11-28` and rollback `checkpoint/pre-hud-readability-pass-2026-11-28` are isolated at that base.
+Start from the latest GitHub heads. The v25 implementation is `9c537e5e4973d645ebd9f546dce224758515196d`, validated in run `46084604216` and deployed in Pages run `46084804013`. The public production CSS/worker bytes were compared to that commit; the live game rendered the updated five-column, two-row HUD in Indonesian while the existing day 05 / 102-mark save remained visible. The review was read-only. Candidate `candidate/hud-readability-pass-2026-11-28` and rollback `checkpoint/pre-hud-readability-pass-2026-11-28` remain.
 
-The v25 candidate changes only HUD CSS, the service-worker cache name and its PWA test expectation. It sets overview/chat labels to 8–9px, menu labels to 8px across viewports, wraps labels, changes the nine-control menu from a single row to five columns across two rows on desktop and mobile, and gives each menu button a 44px minimum height. No save schema or gameplay behavior is touched. The evidence search did not produce a version-identifiable Xian screenshot; see `docs/hud-readability-evidence-2026-11-28.md`.
+The 42-test suite, syntax/content/diff checks, save preservation and real Chromium checks at 1363×936, 390×844 and 340×740 passed. English/Indonesian labels, 44px minimum menu targets, reload persistence and v25 offline reload in disposable browser contexts passed. The lower HUD now has 8–9px overview/chat text and 8px menu labels. No game rule, save schema, original asset, formula or research vault content changed.
 
-Next: inspect the full diff; run all existing tests, content validation, syntax and preservation checks; then use an isolated GitHub Actions browser run at 1363×936, 390×844 and 340×740 for bilingual controls, save preservation/reload and actual offline reload. Compare the current live v24 CSS and worker with the v24 commit before promotion. If validation passes, align `main` and `development/v5-first-playable-slice`, confirm Pages deployment and the public game, and replace this pending note with the exact release SHAs/run IDs. Keep the rollback ref. Do not claim the TGM fidelity gate is passed. Physical Android/iOS, broader keyboard/accessibility and user-browser offline checks are still open.
+The screenshot search still has no inspectable Xian frame tied to a capture build or patch. Keep Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source evidence separate; see `docs/hud-readability-evidence-2026-11-28.md`. Keep the status “playable prototype; TGM interface fidelity in progress.” Next work: continue looking for a version-identifiable Xian screenshot or frame, then compare only details it actually establishes. Physical Android/iOS, broader keyboard/accessibility and direct offline testing in the user's production browser remain open. Research main is still read-only at `f52446e6a8f25a9cff4fe15a21e63b976df85317`; vault blob remains `748f8863212c1a2911c53569e7c934293c5e4205`.

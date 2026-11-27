@@ -1,8 +1,8 @@
 # Development Backlog
 
-> Current verified release: PWA shell v24. The candidate-only notes below are historical and superseded by the verified release record at the end.
+> Current verified release: PWA shell v25. Earlier candidate notes are historical; see the verified release record at the end.
 
-**Updated:** 27 November 2026
+**Updated:** 28 November 2026
 **Plan:** Development Plan v5.1 — Xian TGM Interface-Fidelity Reset
 **Specification:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
@@ -157,13 +157,13 @@ Candidate branch: `candidate/quest-inset-detail-2026-11-27`, based on `b11a6bacc
 - Historical Indonesian Episode 2, Global Server and unidentified/mixed-source evidence remain separate in [the evidence ledger](inventory-status-evidence-2026-11-27.md). Exact Xian geometry, patch and detailed controls remain unresolved; keep the fidelity gate open.
 
 
-## HUD readability candidate — 28 November 2026
+## Verified HUD readability release — 28 November 2026
 
-Candidate: `candidate/hud-readability-pass-2026-11-28`; rollback: `checkpoint/pre-hud-readability-pass-2026-11-28` at base `9efb48ad84b834da0a77754ca4301b26ade37691`.
+Implementation commit `9c537e5e4973d645ebd9f546dce224758515196d`; candidate `candidate/hud-readability-pass-2026-11-28`; rollback `checkpoint/pre-hud-readability-pass-2026-11-28` at base `9efb48ad84b834da0a77754ca4301b26ade37691`.
 
-- [x] Continue the Xian screenshot search and record Indonesian Episode 2, Global Server, other regional clients and mixed/unidentified sources separately; no version-identifiable Xian frame was found.
-- [x] Improve code-verified HUD readability: replace the cramped nine-control row with five columns/two rows, wrap labels, set menu labels to 8px across viewports, and provide 44px menu-button height; update PWA cache to v25.
-- [ ] Run the existing test suite, content/syntax/diff checks, and desktop/mobile browser checks for localization, save preservation and offline PWA behavior.
-- [ ] Promote only after validation; verify Pages deployment and live production, then record exact SHAs and run IDs.
+- [x] Search for inspectable, version-identifiable Xian screenshots and keep Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source material separate; no qualifying Xian frame was found.
+- [x] Improve responsive HUD readability: five-column/two-row menu, wrapped 8px labels, 8–9px overview/chat labels and 44px menu-button minimum height; bump the PWA cache to v25.
+- [x] Validation run `46084604216`: 42/42 tests; syntax, content, diff and game-state preservation checks; Chromium desktop 1363×936 and mobile 390×844/340×740; English/Indonesian labels, save selection/reload preservation and actual offline reload passed.
+- [x] Promote after validation. Pages run `46084804013` succeeded; live CSS and service worker match commit `9c537e5` byte-for-byte, and the production browser showed the updated Indonesian menu with day 05 / 102 marks visible.
 
-This candidate changes CSS, the PWA cache version, its expected cache tests and project documentation only. Physical Android/iOS, broader keyboard/accessibility and offline testing in the user's production browser remain open.
+No gameplay, save schema, source asset or encrypted vault changed. Physical Android/iOS, broader keyboard/accessibility and offline testing in the user's production browser remain open. The blueprint fidelity gate remains open.

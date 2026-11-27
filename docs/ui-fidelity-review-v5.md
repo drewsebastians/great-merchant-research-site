@@ -1,8 +1,8 @@
 # Interface Fidelity Review — V5.1 Xian TGM Reset
 
-> Current verified release: PWA shell v24. The candidate-only notes below are historical and superseded by the verified release record at the end.
+> Current verified release: PWA shell v25. Earlier candidate notes are historical; see the verified release record at the end.
 
-**Updated:** 27 November 2026
+**Updated:** 28 November 2026
 **Scope:** V5.0 production baseline, V5.1 deployed client and available Xian/TGM references
 **Authority:** [TGM Interface Fidelity Blueprint](tgm-interface-blueprint-v1.md)
 
@@ -141,4 +141,4 @@ Commit `be7ddd88e5b25fee9fdbbc9a7f63c29f21a53457` (v24) renders the selected mem
 
 A new search across Xian Episode 2, official Global notices, current Great Merchant references and video leads did not yield an inspectable frame tied to an Xian capture build/patch. The 2016 Indonesian Episode 2 tutorial remains explicit about its guide context but its screenshots have mixed provenance and no confirmed capture build. KotakGame metadata reports a 27 Jul 2015 screenshot update, but the image itself was not inspectable. The Global Server v34411 notice identifies that client and date but supplies no qualifying Xian frame. A V34300 “new UI” video surfaced from HK/TW material; that regional client is kept separate and is not evidence for Xian. Refer to `docs/hud-readability-evidence-2026-11-28.md`.
 
-The v25 candidate addresses demonstrably tiny labels and tightly packed controls in our own narrow layout. Its font sizes, wrapping and touch dimensions are independent prototype usability choices; they do not imply source measurements. No fidelity-gate item is newly satisfied.
+The v25 HUD release (`9c537e5e4973d645ebd9f546dce224758515196d`) addresses tiny labels and tightly packed controls in our own responsive layout. Font sizes, wrapping and touch dimensions are independent prototype usability choices; they do not imply source measurements. Validation run `46084604216` passed the existing suite and desktop/narrow browser checks; Pages run `46084804013` deployed it, and production files match the commit. No fidelity-gate item is newly satisfied.
