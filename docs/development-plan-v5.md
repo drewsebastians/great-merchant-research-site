@@ -132,3 +132,7 @@ The newly checked Indonesian community post dated 7 January 2016 shows a Windows
 ### KotakGame catalog metadata — 28 November 2026
 
 A new KotakGame result lists an Xian Episode 2 “Screenshot Update” dated 27 July 2015, but the page fetch returned HTTP 403 and no image or build link was exposed. This is Indonesian catalog metadata only; it does not satisfy the visual-evidence gate or justify an implementation change.
+
+### RepeatLoop image-source follow-up — 28 November 2026
+
+A newly inspected 16 September 2018 community article embeds a character-selection image and a partial field/HUD/chat crop. The article does not attribute either image or connect it to a capture date, server, client build or patch; the surrounding page also references separate Indonesian and Global contexts. Classify both as unidentified/mixed-source historical comparators. The evidence does not satisfy the visual-fidelity gate or justify a prototype change. See the ledger.
