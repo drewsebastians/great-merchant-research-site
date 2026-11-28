@@ -322,3 +322,19 @@ No direct page was reopened for the previously blocked KotakGame catalog route. 
 ### Classification and decision
 
 No new visual comparator was established in this pass. Keep Indonesian Episode 2, Global/International, HK/TW, Korea, USA and unidentified/mixed-source evidence separate. Do not infer image scope from a blog label, shared version string, patch date, archive placeholder or article date. Continue only with genuinely new public routes that expose an original inspectable gameplay frame and independently link that specific frame to a known or reasonably narrowed build. No source image, client asset or private research material was copied. The research repository remains read-only; this pass did not open its contents.
+
+
+## New public-route sweep — 28 November 2026 (follow-up)
+
+Four new public routes were inspected. Two expose gameplay frames in an Indonesian Episode 2 article context, but neither links its specific frame to a named client build or patch. The remaining inspected images are selection screens rather than gameplay. No UI or code change is supported; keep “playable prototype; TGM interface fidelity in progress.”
+
+| Page URL | Publication date | Region/server stated by the page | Explicit build/patch label | Frame-to-build link and classification |
+| --- | --- | --- | --- | --- |
+| [Pinguo Blogger: 11 game online terbaru](https://pinguoblogger.blogspot.com/2015/11/11-game-online-terbaru-pc-dan-android.html) | 5 Nov 2015 | Indonesian article context; identifies Xian Episode 2 and 8ternals. The frame’s server is unverified. | None. The in-game date display is not capture/build metadata. | A gameplay screenshot with a field and HUD is embedded, but the page does not tie that frame to a build. Unknown-build comparator only. |
+| [XianTGMIndo: Perkenalam Xian The Great Merchant](https://xiantgmindo.blogspot.com/2016/07/perkenalam-xian-great-merchant.html?m=0) | 10 Jul 2016 | Indonesian community blog; the text contrasts the earlier Xian appearance with later Episode 2. The image source/scope is not established. | The image visibly carries “2004”; this is not a client build label. | The inspected image is a character-selection screen, not gameplay. No frame-to-build link. |
+| [RaGEZONE: The Great Merchant / Kyosyoden request thread](https://forum.ragezone.com/threads/request-%E5%B7%A8%E5%95%86-the-great-merchant-kyosyoden.1263622/) | 10 Apr 2026 | Mixed/unidentified: the post discusses Korean, Chinese/Japanese and Indonesian versions; the attached frame is not assigned to one. | “Ver1.2301” is visible in the attached image, but the post does not attribute that label to the attachment’s client. | The inspected attachment is a character/server-selection screen, not gameplay. The visible version text is not a page-level frame-to-build link. |
+| [XianTGMIndo: Game Intro Xian TGM Indonesia Episode 2](https://xiantgmindo.blogspot.com/2016/07/game-intro-xian-tgm-indonesia-episode-2.html) | 10 Jul 2016 | Indonesian Episode 2 guide context; the specific screenshot’s server session is not independently identified. | None. The in-game calendar display is not capture/build metadata. | An embedded gameplay/HUD frame is visually inspectable, but the article gives no patch/build label and does not link that frame to one. Unknown-build comparator only. |
+
+A navigation link on the 2016 XianTGMIndo page led once to the already logged XianTGM game-information route. It resolved to a Google interstitial; it was recognized as a duplicate and not retried or used as evidence. Do not revisit that route without a genuinely new public access path.
+
+Keep Indonesian Episode 2, Global/International, HK/TW, Korea, USA and unidentified/mixed-source evidence separate. No source image or client asset was copied, no private research material was opened, and the production save was not touched.
