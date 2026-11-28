@@ -168,3 +168,8 @@ The Duniaku article dated 6 May 2015 confirms Xian Episode 2/8ternals context an
 ## Continued Xian video-source search — 28 November 2026
 
 A newly inspected YouTube archive presents itself as “The Great Merchant(TGM)-Xian Episode2 | Official” and links to the TGM Indonesia Facebook page. Its tutorial thumbnails expose historical Xian Episode 2 scene/window previews, but the archive provides only approximate “9y ago” upload metadata; channel ownership, capture date and client build are unverified. The opened video player remained at 0:00. Wadah Games and 3CUSTOMPAINT routes added publication/promotional context but no inspectable build-linked game frame. See the evidence ledger for precise observations and queries. No implementation change is justified; the fidelity gate remains open.
+
+
+## Continued Xian community-image search — 28 November 2026
+
+A new public route yielded an inspectable 328×188 inventory-window crop embedded in a Xian TGM Indonesia guide post dated 6 October 2017. The blog’s mixed-source bibliography does not identify this specific image’s origin, capture date, server or build. It is logged only as an unidentified/mixed-source historical comparator; it does not support a UI change or close the fidelity gate. Details and limits are in [the evidence ledger](hud-readability-evidence-2026-11-28.md).

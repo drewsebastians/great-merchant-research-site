@@ -129,3 +129,8 @@ Do not repeat these same blocked routes without a new source path. The next usef
 ## Xian publisher-channel archive search — 28 November 2026
 
 The latest public-route search found an inspectable YouTube archive labelled “The Great Merchant(TGM)-Xian Episode2 | Official.” Its tutorial thumbnails show historical in-game scene/window previews, but the page’s “9y ago” age is approximate upload metadata, not a capture date or build. The channel links to TGM Indonesia’s Facebook page, but ownership was not independently verified. The opened Part 4 player remained black/loading at 0:00. Wadah Games and 3CUSTOMPAINT add no inspectable frame-to-build link. No implementation change is supported; keep the fidelity gate open and maintain “playable prototype; TGM interface fidelity in progress.” See the evidence ledger for exact queries and boundaries.
+
+
+## Xian community-image follow-up — 28 November 2026
+
+A new route on the Xian TGM Indonesia community guide page dated 6 October 2017 exposes an inspectable 328×188 inventory crop (syw0008.bmp) with a selected Herding Command tooltip. The article’s Indonesian Episode 2 context is known; the image-specific provenance, capture date, server and build are not. It is recorded only as an unidentified/mixed-source historical comparator. No UI or game change is justified. Continue from current GitHub heads by searching only new public routes for a build-linked frame; retain regional/source separation, preserve the production save and keep the status “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.

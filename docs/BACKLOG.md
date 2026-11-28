@@ -197,3 +197,10 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Inspect a newly found Xian Episode 2 publisher-labelled YouTube archive and its tutorial thumbnails. The visible previews are historical comparators; no patch/build or capture date is linked, and the opened video remained at 0:00.
 - [x] Check new Wadah Games and 3CUSTOMPAINT routes; neither yielded an inspectable client frame tied to a build.
 - [ ] Continue the build-linked frame search. Keep prototype geometry unchanged and the TGM fidelity gate open. Exact searches and evidence limits are in `docs/hud-readability-evidence-2026-11-28.md`.
+
+
+### Xian Indonesian guide image follow-up — 28 November 2026
+
+- [x] Inspect the newly found 6 October 2017 Xian TGM Indonesia community-guide route and its embedded syw0008.bmp inventory crop (328×188).
+- [x] Keep the post’s Indonesian Episode 2 context separate from the image’s unverified source, capture date, server and build; log the crop as an unidentified/mixed-source historical comparator only.
+- [ ] Continue seeking a new public frame/post linked to a known or reasonably narrowed Xian build. Do not adjust the UI from this crop. Preserve the fidelity gate and product status.

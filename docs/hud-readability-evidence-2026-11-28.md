@@ -181,3 +181,24 @@ The [Part 4 video page](https://www.youtube.com/watch?v=uNeY70_EAR4) identifies 
 - **Unverified or unavailable:** channel ownership, exact video publication dates, frame capture dates, client builds/patches, and the underlying footage from the Part 4 player.
 - **Assumptions:** none. Do not assign a build from the channel label, “9y ago,” or the 2015/2016 article dates.
 - **Conclusion:** no frame was tied to a known or reasonably narrowed build. The thumbnail previews are historical comparators only. No UI, code, geometry, controls, stats, formulas or game rules change is supported.
+
+
+## Xian Indonesian community-guide inventory crop — 28 November 2026
+
+### Directly inspected
+
+The [“Tips Saat Melakukan Battle Herding” community guide](https://xiantgmindo.blogspot.com/2017/10/tips-saat-melakukan-battle-herding.html) is dated 6 October 2017 and appears on a blog identifying itself as a Guide for Xian The Great Merchant Episode 2 / Xian TGM Indonesia. Its embedded [syw0008.bmp image](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiVdbWhlfnARs5sBx90wfi4IGKMeSE531gQMwIdofju9aqTBQOfHzcZSgukKB86Acy4qBpSFL2pjGETVg5uP7BEpICXLdeGdvYLMPoOQQS0Bk_Rva6OZQE__573ibruYv1PP3banlCJyAY/s400/syw0008.bmp) was opened and visually inspected at 328×188 pixels. It shows a cropped inventory window and a selected Herding Command tooltip; it does not show the full field, HUD or client layout.
+
+### Source metadata and limits
+
+The article date is publication metadata, not the screenshot capture date. The blog’s bibliography says its images, videos and article material draw from several sites and player contributions, but gives no image-specific attribution for syw0008.bmp. The image’s capture date, original source, server, client build and patch are unknown. The Indonesian Episode 2 wording identifies the article’s context; it does not independently identify the screenshot’s server/build.
+
+### Classification and result
+
+- **Direct observation:** an inspectable game-interface crop of an inventory window.
+- **Source metadata:** a community article dated 6 October 2017 under Indonesian Xian Episode 2 guide context.
+- **Unverified or unavailable:** image provenance, capture date, server, client build and patch.
+- **Assumptions:** none. Do not infer the image’s server or version from the article context or the item shown.
+- **Classification:** unidentified/mixed-source historical comparator, attached to an Indonesian Episode 2 guide post. It cannot establish current-Xian geometry, controls, stats or game rules.
+
+No source image was copied into the development repository. No UI change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”
