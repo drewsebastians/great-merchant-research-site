@@ -367,7 +367,7 @@ test("context windows open and close without returning to dashboard pages", () =
   assert.ok(element("#client-window-root").innerHTML.indexOf('data-window-name="quest"') < element("#client-window-root").innerHTML.indexOf('data-window-name="inventory"'));
   let prevented = false;
   keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
-  assert.equal(prevented, false);
+  assert.equal(prevented, true);
   assert.match(element("#client-window-root").innerHTML, /Quest information/);
   assert.doesNotMatch(element("#client-window-root").innerHTML, /Inventory · party pack/);
   action("close-window");
@@ -396,6 +396,33 @@ test("local chat is explicit and does not change game progression", () => {
   assert.match(element("#chat-feed").innerHTML, /Ready for the road/);
   assert.equal(savedState().phase, "town");
   assert.match(element("#chat-feed").innerHTML, /local/i);
+});
+
+test("context windows move focus on open, active-window change, Escape and close", () => {
+  click(fakeButton({ action: "onboarding-close" }));
+  const before = savedState();
+
+  openWindow("quest");
+  assert.equal(document.activeElement, element('[data-window-name="quest"] .window-close'));
+  openWindow("inventory");
+  assert.equal(document.activeElement, element('[data-window-name="inventory"] .window-close'));
+  click(fakeButton({ windowName: "quest" }));
+  assert.equal(document.activeElement, element('[data-window-name="quest"] .window-close'));
+
+  let prevented = false;
+  keyHandlers.at(-1)({ key: "Escape", preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.match(element("#client-window-root").innerHTML, /Inventory · party pack/);
+  assert.equal(document.activeElement, element('[data-window-name="inventory"] .window-close'));
+
+  action("close-window", { windowClose: "inventory" });
+  assert.equal(element("#client-window-root").innerHTML, "");
+  assert.equal(document.activeElement, element('#client-menu [data-window="inventory"]'));
+  const after = savedState();
+  assert.equal(after.day, before.day);
+  assert.equal(after.coin, before.coin);
+  assert.deepEqual(after.inventory, before.inventory);
+  assert.deepEqual(after.party, before.party);
 });
 
 test("reload clears a stale saved toast without changing journey progress", async () => {

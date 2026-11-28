@@ -625,6 +625,21 @@ function renderClientWindow() {
     return '<section class="client-window ' + (name === "market" ? "shop-window " : "") + (active ? "window-active" : "window-behind") + '" data-window-name="' + name + '" style="--window-center-x:' + centerX + ';z-index:' + (index + 1) + '" role="dialog" aria-modal="false" aria-labelledby="' + titleId + '"><header class="window-titlebar"><span class="window-mark" aria-hidden="true">◇</span><h2 id="' + titleId + '">' + titles[name] + '</h2>' + (isResult ? '' : '<button type="button" class="window-close" data-action="close-window" data-window-close="' + name + '" aria-label="' + label("Close window", "Tutup jendela") + '">×</button>') + '</header><div class="window-content" id="game-content-' + name + '">' + localizeUI(renderWindowContent(name)) + '</div></section>';
   }).join("") + '</div>';
 }
+function focusClientWindow(name = ui.activeWindow) {
+  if (!name || name === "results") return false;
+  const closeButton = document.querySelector('[data-window-name="' + name + '"] .window-close');
+  if (!closeButton) return false;
+  closeButton.focus?.();
+  return true;
+}
+function focusClientMenuButton(name) {
+  if (!name) return;
+  document.querySelector('#client-menu [data-window="' + name + '"]')?.focus?.();
+}
+function focusAfterClientWindowClose(closedName) {
+  if (focusClientWindow()) return;
+  focusClientMenuButton(closedName);
+}
 function openWindow(name) {
   if (state.phase === "battle" && ["travel", "market", "character", "property"].includes(name)) return;
   const tabNames = { travel: "journey", market: "market", character: "roster", inventory: "inventory", status: "roster", property: "journal", quest: "journal", community: "journal", system: "preferences" };
@@ -633,6 +648,7 @@ function openWindow(name) {
   ui.openWindows.push(name);
   ui.activeWindow = name;
   render();
+  focusClientWindow(name);
 }
 function closeGuide() {
   guideOpen = false;
@@ -757,6 +773,7 @@ document.addEventListener("click", (event) => {
     ui.openWindows.push(clickedWindow);
     ui.activeWindow = clickedWindow;
     render();
+    focusClientWindow(clickedWindow);
   }
   const unitButton = event.target.closest("[data-unit-select]");
   if (unitButton) {
@@ -834,6 +851,7 @@ document.addEventListener("click", (event) => {
       ui.openWindows = ui.openWindows.filter((name) => name !== closing);
       ui.activeWindow = ui.openWindows.at(-1) || null;
       render();
+      focusAfterClientWindowClose(closing);
     }
   }
   else if (action === "return-town") transition(returnToTown(state));
@@ -927,9 +945,12 @@ document.addEventListener("keydown", (event) => {
     return;
   }
   if (event.key === "Escape" && ui.activeWindow && ui.activeWindow !== "results") {
+    event.preventDefault();
+    const closing = ui.activeWindow;
     ui.openWindows = ui.openWindows.filter((name) => name !== ui.activeWindow);
     ui.activeWindow = ui.openWindows.at(-1) || null;
     render();
+    focusAfterClientWindowClose(closing);
   }
 });
 render();
