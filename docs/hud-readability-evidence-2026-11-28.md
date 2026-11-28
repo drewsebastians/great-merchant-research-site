@@ -367,3 +367,16 @@ No qualifying gameplay frame tied to a named or reasonably narrowed build was fo
 | [Bahamut GNN Hong Kong server article](https://gnn.gamer.com.tw/detail.php?sn=126880) | Not verified from the page | Not verified | Not verified | Not assessed: direct page open returned 403; no article image was inspectable. Do not classify from search metadata. |
 
 The result remains metadata/comparator material only. No source image or client asset was copied; no code or UI change is supported. Keep “playable prototype; TGM interface fidelity in progress.” Continue only through genuinely new public routes, using this ledger as the exclusion list.
+
+## Indonesian-language quest frame — 28 November 2026
+
+The 11 July 2016 [Xian Episode 2 shortcut guide](https://xiantgmindo.blogspot.com/2016/07/menu-dan-fungsi-tombol-shortcut-bagian-2.html) displays [syw0212.bmp](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgv3a6FZOFS8uHmBa1hQMGKL1xZ_FW64YpR_bDW6pO08TtNTaw-wVT9arGXnvekf0_BUlcl1v0XxqGOtMDyUflz86qcQ202KfD5hGu7fhsamjc5n8Rap-mqXEinLn0JAg9BPCbZ342IzQlK/s400/syw0212.bmp), an inspected 400×300 image with Indonesian quest text over an in-game field and a visible lower HUD. The guide gives Indonesian Episode 2 context and credits several sources for its media collectively. The frame itself has no visible build/patch label or source-specific attribution, and its capture date and server are unstated. Retain it as an unidentified/mixed-source historical comparator. It supplies no frame-to-build link or basis for an implementation change.
+
+Other routes screened in the same pass:
+
+| Page URL | Publication date | Stated region/server | Explicit build/patch and frame linkage |
+| --- | --- | --- | --- |
+| [Community map guide](https://xiantgmindo.blogspot.com/2016/07/map-dan-menu-didalamnya.html) | 16 Jul 2016 | Xian Episode 2 article context; image server unverified. | No build in retrieved text. The article refers to illustrations, but none was visually inspected. |
+| [Community combat demo](https://xiantgmindo.blogspot.com/2016/07/video-demo-skill-cowo-china-xiantgm_15.html) | 15 Jul 2016 | Xian Episode 2 article context; footage server unverified. | No build in retrieved text. The embedded player could not be retrieved, so no footage frame was inspected. |
+| [HappyTuk pre-download announcement](https://www.mangot5.com/Index/News/NoticeDetail?contentNo=69536) | 6 Aug 2026 on the game listing; platform copy updated 13 Aug | TW publisher context; individual server unstated in the retrieved body. | Upcoming rendering update described without a displayed build number in the inspected material. No gameplay frame was exposed. |
+| [HappyTuk update preview and quiz](https://gs.mangot5.com/game/gs/notice/detail?contentNo=70669) | 5 Nov 2026 | TW publisher context; individual server unstated in the retrieved body. | Upcoming update described without a displayed build number in the inspected material. No gameplay frame was exposed. |
