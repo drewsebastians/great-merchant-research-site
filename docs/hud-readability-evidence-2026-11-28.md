@@ -248,3 +248,42 @@ Queries used:
 - **Classification:** Indonesian publisher/catalog metadata lead only; not visual evidence or a historical image comparator.
 
 No retry or alternate route was used after the 403 response. No UI or code change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”
+
+## RepeatLoop community article image check — 28 November 2026
+
+### Directly inspected
+
+The new [RepeatLoop article, “Xian The Great Merchant, Game Lawas yang tetap menarik”](https://repeatloop.blogspot.com/2018/09/xian-great-merchant-game-lawas-yang-menarik.html), is dated 16 September 2018. Its text describes the Indonesian 8ternals Episode 2 relaunch, reports that service ended in February 2018, and also points readers to a then-current official version under a different publisher. The page’s comments later distinguish Indonesian and Global play. These are statements and comments on that page, not independent verification of either screenshot’s server.
+
+Two linked in-article images were opened and visually inspected:
+
+- The embedded 640×421 image is a character/country-selection screen with a portrait grid and a character-information panel.
+- The second image is a 532×751 tall crop (the page embeds a 284×400 version). It shows a field scene, a left-side party portrait stack, lower status/currency areas and chat; the crop does not show a complete client or minimap.
+
+The article associates these images with its Xian discussion, but does not individually attribute them, state their capture dates, or name a server, client build or patch. Its 2018 publication date is not a capture date. Keep both as **unidentified/mixed-source historical comparators attached to Indonesian Episode 2 editorial context**; do not assign either image to Indonesian Episode 2 or Global Server. They add no verified geometry, control, stat, formula or game-rule evidence.
+
+### Other new community routes
+
+- The [Xian TGM Indonesia guide post on elemental attributes](https://xiantgmindo.blogspot.com/2020/08/atribut-element-system-general-guide.html), dated 26 August 2020, describes an element system as a recent update but supplies no client build or image-to-build link. The blog’s own bibliography names Indonesian, Korean, Global and Chinese source sites and player contributions; keep the article’s regional scope unresolved.
+- New [The Great Merchant Indonesia community posts](https://xianindo.blogspot.com/2015/12/item-black-market.html) provide dated text guides, not inspectable client frames. A separate trade-route page explicitly discusses an international-server context; do not treat its content as Indonesian Episode 2 evidence.
+- The linked MMOiNdo guide and the tgm.astagames.com route did not expose page bodies through the approved reader. No site status, image or build was inferred from those access failures.
+
+### Search strings used
+
+- "The Great Merchant Xian Episode 2" screenshots build patch 8ternals community forum
+- site:repeatloop.blogspot.com/2018/09/xian-great-merchant-game-lawas-yang-menarik.html Xian Great Merchant screenshot
+- site:xiantgmindo.blogspot.com/2020/08/atribut-element-system-general-guide.html Xian element screenshot
+- site:xianindo.blogspot.com/2015 "screenshot" "The Great Merchant Indonesia" patch
+- site:xianindo.blogspot.com "Xian Indonesia" "Screenshot" "update"
+- site:xianindo.blogspot.com/2016 "Xian Indonesia" screenshot version
+- site:tgm.astagames.com Xian The Great Merchant patch update screenshot
+- site:facebook.com/tgmindonesia "Xian Episode 2" screenshot patch 2017
+- site:mmoindo.club/mmo-indonesia/the-great-merchant Xian screenshot patch build
+
+### Classification and result
+
+- **Direct observation:** two inspectable original images embedded in a dated community article; one character-selection screen and one partial field/HUD/chat crop.
+- **Source metadata:** article publication date and its Xian/8ternals narrative; later comments and links refer to distinct Indonesian and Global contexts.
+- **Unverified or unavailable:** each image’s provenance, capture date, server, client build and patch; the body of the linked MMOiNdo and Astagames routes.
+- **Assumptions:** none. The article date, its service-closure statement and approximate upload or update labels do not identify the screenshots’ build.
+- **Conclusion:** no frame was linked to a known or reasonably narrowed Xian build. No UI, code, asset, geometry, control, stats, formula or game-rule change is supported. The research repository remains read-only; no source-client or private-research material was copied.
