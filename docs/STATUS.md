@@ -181,3 +181,7 @@ A newly checked Indonesian Xian community post dated 7 January 2016 embeds a Win
 ## KotakGame metadata-only lead — 28 November 2026
 
 A KotakGame search result lists a 27 July 2015 “Screenshot Update” for Xian Episode 2, but direct page retrieval returned HTTP 403 and the result exposes no image or build link. It is recorded only as Indonesian catalog metadata, not visual evidence; no UI change is supported. The search and access limit are in the evidence ledger.
+
+## Continued Xian image-source search — 28 November 2026
+
+A newly inspected RepeatLoop article dated 16 September 2018 contains two inspectable game images: a character-selection screen and a partial field/party/HUD/chat crop. Neither image has an individual source, capture date, server or build/patch, and the article includes separate Indonesian and Global-era context. They remain unidentified/mixed-source historical comparators. Additional guide routes supplied no image-to-build link. No implementation, UI or asset changed; the TGM fidelity gate remains open. Continue with genuinely new public routes only. See [the evidence ledger](hud-readability-evidence-2026-11-28.md). Keep “playable prototype; TGM interface fidelity in progress,” and keep physical-device, broader accessibility and direct production-browser offline checks open.
