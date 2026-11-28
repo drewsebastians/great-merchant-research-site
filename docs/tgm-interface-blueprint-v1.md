@@ -170,3 +170,7 @@ The 7 January 2016 Indonesian Xian community post was inspected. Its embedded ex
 ### KotakGame metadata lead — 28 November 2026
 
 The KotakGame catalog search result labels an Xian Episode 2 listing with a 27 July 2015 “Screenshot Update.” The page was not retrievable (HTTP 403), and no frame or build link is available from the search result. This metadata-only lead does not affect the blueprint or its open fidelity gate.
+
+### RepeatLoop community images — 28 November 2026
+
+A new dated community article exposes two inspectable images: a character-selection screen and a partial field/HUD/chat crop. The images are not tied individually to a capture date, server, build or patch, and the article contains separate Indonesian and Global context. Keep them in the unidentified/mixed-source comparator set. They do not change any screen requirement, prototype measurement or item in the eight-part fidelity gate.
