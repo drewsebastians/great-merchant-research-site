@@ -176,3 +176,7 @@ The dated Indonesian community post embeds a Windows Explorer folder view rather
 ### KotakGame catalog result — 28 November 2026
 
 The indexed game listing shows a 27 July 2015 “Screenshot Update” entry, but the page returned HTTP 403 and no screenshot or build link was inspectable. Treat this as metadata only; it contributes no visual comparison and does not change the open fidelity gate.
+
+### RepeatLoop image-source review — 28 November 2026
+
+The newly inspected [16 September 2018 article](https://repeatloop.blogspot.com/2018/09/xian-great-merchant-game-lawas-yang-menarik.html) embeds a character-selection screen and a tall partial field crop showing portraits, lower status/currency and chat. The article links them to its Xian discussion but provides no image-specific provenance, capture date, server, build or patch; its text also distinguishes Indonesian history from a different current official-version context. Keep both images as unidentified/mixed-source historical comparators. They establish no current-Xian geometry or controls, so the deployed layout and fidelity status remain unchanged.
