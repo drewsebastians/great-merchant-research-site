@@ -142,3 +142,7 @@ A new Indonesian community route dated 7 January 2016 was inspected. Its embedde
 ## KotakGame catalog lead — 28 November 2026
 
 A new KotakGame search result lists a 27 July 2015 “Screenshot Update” for Xian Episode 2, with 8ternals/AK Interactive catalog metadata. Fetching the page returned HTTP 403; no image or build link was visible in the result. Record it only as Indonesian catalog metadata, do not retry this route without a genuinely new public access path, and continue the search with new routes. No implementation change is justified.
+
+## RepeatLoop image-source follow-up — 28 November 2026
+
+A new dated RepeatLoop article exposes two inspectable Xian-labelled images, but their server, capture date and build/patch are unverified. The page mixes Indonesian Episode 2 history with a separate official-version context, so the images remain unidentified/mixed-source comparators. No UI or code change is supported. Continue only through new public routes; keep the research repository read-only, preserve the production save, and retain “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.
