@@ -216,3 +216,10 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Check the newly found KotakGame Xian Episode 2 catalog result. It lists a 27 July 2015 “Screenshot Update,” but direct page retrieval returned HTTP 403 and no image/build link was inspectable.
 - [x] Classify it as Indonesian catalog metadata only; do not treat the label as a screenshot or infer a build.
 - [ ] Continue searching only new public routes for an inspectable frame linked to a known or reasonably narrowed Xian build. Keep UI and fidelity status unchanged.
+
+### RepeatLoop image-source check — 28 November 2026
+
+- [x] Inspect the new dated RepeatLoop community article and open its two embedded images at their original public URLs.
+- [x] Record the visible character-selection screen and partial field/HUD/chat crop without treating article date as capture date.
+- [x] Keep both images unidentified/mixed-source; neither is tied to a server, capture build or patch.
+- [ ] Continue only with new public routes that can link an inspectable frame to a known or reasonably narrowed build. Do not change UI from these comparators; keep the fidelity gate open.
