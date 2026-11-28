@@ -1,0 +1,159 @@
+name: Keyboard window focus candidate validation
+on:
+  push:
+    branches:
+      - validation/keyboard-window-focus-2026-11-28
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f272f5ee567d3659da16822ddfe32b45cb1fb8a8
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact candidate, regression boundary, tests and content
+        run: |
+          test "$(git rev-parse HEAD)" = 'f272f5ee567d3659da16822ddfe32b45cb1fb8a8'
+          git diff --check 251fee77588cd8432c86bde12a0b1af167472b4f HEAD
+          git diff --exit-code 251fee77588cd8432c86bde12a0b1af167472b4f HEAD -- game/data.mjs game/engine.mjs game/quests.mjs game/storage.mjs game/index.html game/manifest.webmanifest game/styles.css game/assets data
+          node --check game/app.mjs
+          node --check game/sw.js
+          node --check tests/app-render.test.mjs
+          node --check tests/pwa.test.mjs
+          node --test tests/*.test.mjs
+          node scripts/validate-game-content.mjs
+      - name: Verify deployed v25 stylesheet and worker baseline
+        run: |
+          git show 9c537e5e4973d645ebd9f546dce224758515196d:game/styles.css > /tmp/v25-style.css
+          git show 9c537e5e4973d645ebd9f546dce224758515196d:game/sw.js > /tmp/v25-sw.js
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/styles.css?v=25' -o /tmp/live-style.css
+          curl -fsS --retry 3 'https://drewsebastians.github.io/great-merchant-research-site/game/sw.js?v=25' -o /tmp/live-sw.js
+          cmp /tmp/v25-style.css /tmp/live-style.css
+          cmp /tmp/v25-sw.js /tmp/live-sw.js
+      - name: Install isolated browser-test dependency
+        run: npm install --no-save --no-package-lock playwright@1.55.0
+      - name: Browser checks on desktop and narrow viewports
+        run: |
+          mkdir -p /tmp/keyboard-focus-screens
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/keyboard-focus-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS 'http://127.0.0.1:8765/game/' -o /dev/null; then break; fi
+            sleep 1
+          done
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+          const browser = await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
+          const origin='http://127.0.0.1:8765/game/';
+          const key='wayfarers-ledger:v5:save';
+          const menu=name=>'#client-menu [data-window="'+name+'"]';
+          const win=name=>'.client-window[data-window-name="'+name+'"]';
+          const stable=value=>{const copy=structuredClone(value);delete copy.activeTab;delete copy.language;delete copy.log;delete copy.notice;return copy;};
+          const documentWidth=page=>page.locator('html').evaluate(e=>e.scrollWidth);
+          try {
+            for (const [width,height,mobile] of [[1363,936,false],[390,844,true],[340,740,true]]) {
+              const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:1});
+              const page=await context.newPage();
+              const errors=[];
+              page.on('pageerror',error=>errors.push(error.message));
+              await page.goto(origin);
+              await page.locator(menu('inventory')).waitFor();
+              await page.evaluate(async key=>{
+                const {createInitialState}=await import('./data.mjs');
+                const s=createInitialState();
+                Object.assign(s,{day:5,coin:102,onboardingSeen:true,language:'en'});
+                s.party.push({id:'scout',name:'Tarin Reed',role:'Trail Scout',hp:34,maxHp:46,focus:1,maxFocus:2,portrait:'assets/scout.svg'});
+                s.inventory={ration:1,tonic:0,tea:3,fittings:1,'tool-roll':0,edge:0,seal:1};
+                localStorage.setItem(key,JSON.stringify(s));
+              },key);
+              await page.reload();
+              await page.locator(menu('inventory')).waitFor();
+              const baseline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(baseline.day,5);assert.equal(baseline.coin,102);assert.equal(baseline.party.length,2);
+              const hud=await page.locator('#client-menu').evaluate(el=>{
+                const buttons=[...el.querySelectorAll('.client-menu-button')].map(button=>{
+                  const r=button.getBoundingClientRect(),label=button.querySelector('small'),lr=label.getBoundingClientRect();
+                  return {height:r.height,width:r.width,labelFont:parseFloat(getComputedStyle(label).fontSize),labelHeight:lr.height,labelWidth:lr.width,buttonWidth:r.width,labelText:label.textContent.trim(),y:r.y};
+                });
+                return {columns:getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length,buttons};
+              });
+              assert.equal(hud.buttons.length,9);
+              assert.equal(hud.columns,5,JSON.stringify(hud));
+              assert.ok(hud.buttons.every(b=>b.height>=44&&b.labelFont>=8&&b.labelWidth<=b.buttonWidth+1),JSON.stringify(hud));
+              const rows=[...new Set(hud.buttons.map(b=>Math.round(b.y)))];
+              assert.equal(rows.length,2,JSON.stringify(hud));
+              assert.ok(hud.buttons.every(b=>b.labelHeight<=10),JSON.stringify(hud));
+              await page.screenshot({path:'/tmp/keyboard-focus-screens/screen-'+width+'.png',fullPage:true});
+              assert.equal(await documentWidth(page),width);
+              await page.locator(menu('inventory')).click();
+              await page.locator(win('inventory')+' .inventory-context-strip').waitFor();
+              assert.match(await page.locator(win('inventory')).innerText(),/Supplies and cargo/);
+              assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window-close')),'inventory');
+              await page.locator(menu('status')).click();
+              await page.locator(win('status')+' .status-selected-profile').waitFor();
+              assert.equal(await page.locator(win('status')+' .status-member').count(),2);
+              assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window-close')),'status');
+              if(!mobile){
+                await page.locator(win('inventory')+' .window-titlebar').click();
+                assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window-close')),'inventory');
+              }
+              await page.keyboard.press('Escape');
+              const remaining=mobile?'inventory':'status';
+              assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window-close')),remaining,'Escape returns focus to the remaining window');
+              await page.keyboard.press('Escape');
+              const closed=mobile?'inventory':'status';
+              assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window')),closed,'closing the last window returns focus to its menu button');
+              const pairedSave=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.deepEqual(stable(pairedSave),stable(baseline),'window focus and Escape preserve the journey');
+              await page.locator(menu('system')).click();
+              await page.locator('[data-language-option="id"]').click();
+              assert.equal(await page.locator('html').getAttribute('lang'),'id');
+              assert.match(await page.locator('#client-menu').innerText(),/Perjalanan/);
+              await page.keyboard.press('Escape');
+              await page.locator(menu('status')).click();
+              const statusId=await page.locator(win('status')).innerText();
+              assert.match(statusId,/PROFIL KARAKTER/);assert.match(statusId,/VITALITAS/);
+              const afterId=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(afterId.language,'id');assert.deepEqual(stable(afterId),stable(baseline));
+              await page.keyboard.press('Escape');await page.locator(menu('system')).click();
+              await page.locator('[data-language-option="en"]').click();
+              const afterEn=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.equal(afterEn.language,'en');assert.deepEqual(stable(afterEn),stable(baseline));
+              await page.reload();await page.locator(menu('inventory')).waitFor();
+              const afterReload=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.deepEqual(stable(afterReload),stable(baseline));
+              await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
+              const caches=await page.evaluate(()=>caches.keys());
+              assert.ok(caches.includes('wayfarers-ledger-shell-v26'),JSON.stringify(caches));
+              assert.ok(!caches.includes('wayfarers-ledger-shell-v25'),JSON.stringify(caches));
+              assert.equal(await documentWidth(page),width);
+              await context.setOffline(true);await page.reload();
+              await page.locator(menu('inventory')).waitFor({timeout:10000});
+              await page.locator(menu('inventory')).click();
+              await page.locator(win('inventory')+' .inventory-context-strip').waitFor();
+              assert.match(await page.locator(win('inventory')).innerText(),/Supplies and cargo/);
+              assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-window-close')),'inventory');
+              const offline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+              assert.deepEqual(stable(offline),stable(baseline));
+              await context.setOffline(false);
+              assert.deepEqual(errors,[],JSON.stringify(errors));
+              console.log('PASS '+width+'x'+height+' '+(mobile?'mobile':'desktop')+' focus, localization, save and v26 offline reload');
+              await context.close();
+            }
+          } finally { await browser.close(); }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: keyboard-window-focus-screens
+          path: /tmp/keyboard-focus-screens
+          if-no-files-found: ignore
