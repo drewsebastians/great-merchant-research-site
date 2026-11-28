@@ -191,3 +191,9 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Inspect the current Duniaku article rendering and its current header image. The article refers to an example Aged/Victory Coin screenshot, but the example is absent from the current body; the visible header is an IDN placeholder, not a game frame.
 - [x] Check Wayback availability for the linked old 8ternals event page at timestamp 201505. The API returned no snapshot for that timestamp; record this separately from direct replay. The legacy page itself was not inspectable and no origin status was verified.
 - [ ] Find an inspectable original field/context-window frame linked to a known or reasonably narrowed Xian client build. Do not change UI or geometry based on the article text, marketing, or version labels alone.
+
+### Xian publisher-channel archive follow-up — 28 November 2026
+
+- [x] Inspect a newly found Xian Episode 2 publisher-labelled YouTube archive and its tutorial thumbnails. The visible previews are historical comparators; no patch/build or capture date is linked, and the opened video remained at 0:00.
+- [x] Check new Wadah Games and 3CUSTOMPAINT routes; neither yielded an inspectable client frame tied to a build.
+- [ ] Continue the build-linked frame search. Keep prototype geometry unchanged and the TGM fidelity gate open. Exact searches and evidence limits are in `docs/hud-readability-evidence-2026-11-28.md`.

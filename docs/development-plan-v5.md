@@ -114,3 +114,7 @@ The follow-up search added a 2022 RepeatLoop video labelled “Xian The Great Me
 ### Coin-event screenshot search follow-up — 28 November 2026
 
 The Duniaku article supplies contemporary Xian Episode 2/8ternals and event-date metadata and says an example Aged/Victory Coin screenshot follows. The current article body does not expose that image; its current header asset is a generic IDN placeholder. The linked former 8ternals page returned no Wayback snapshot for the requested May 2015 timestamp and could not be directly inspected. Text/image searches produced no frame or build link. This does not satisfy any fidelity criterion; keep the interface and prototype measurements unchanged. See the detailed query/access ledger in `docs/hud-readability-evidence-2026-11-28.md`.
+
+### Xian publisher-channel archive update — 28 November 2026
+
+A new public YouTube archive branded “The Great Merchant(TGM)-Xian Episode2 | Official” exposes tutorial thumbnails with field scenes and contextual-window previews. This is historical visual material only: “9y ago” is approximate upload metadata, the underlying player remained at 0:00, and no frame is linked to a capture build or patch. A channel link to the TGM Indonesia Facebook page is metadata, not independent proof of account ownership. New Wadah Games and 3CUSTOMPAINT routes yielded no qualifying frame. Keep the fidelity gate and prototype dimensions unchanged; the Xian build-linked evidence task remains open. See the evidence ledger.

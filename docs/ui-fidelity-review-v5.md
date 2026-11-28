@@ -158,3 +158,7 @@ The search found no inspectable field/window frame tied to a known or reasonably
 ### Coin-event screenshot source search — 28 November 2026
 
 The 6 May 2015 Duniaku article confirms a contemporary Xian Episode 2/8ternals event reference and mentions an example Aged/Victory Coin screenshot. Direct inspection of the current article body found no example image; the visible current header is a generic IDN placeholder. A May 2015 Wayback availability query for the linked old 8ternals event page returned no snapshot for that requested timestamp; the old page itself was not inspectable. No new field/window frame, capture date, patch or build link was found. No fidelity finding or implementation dimension changes; see the query ledger.
+
+### Publisher-channel thumbnail review — 28 November 2026
+
+The newly found YouTube channel archive is branded “The Great Merchant(TGM)-Xian Episode2 | Official” and links to the TGM Indonesia Facebook page. Its visible tutorial thumbnails include Xian Episode 2 scene and contextual-window previews; the opened Part 4 video player stayed at 0:00. The displayed “9y ago” age is not a capture date, and no build/patch marker was found. Treat the preview thumbnails only as historical comparators. They do not justify a specific visual adjustment or close the fidelity gate. The Wadah Games and 3CUSTOMPAINT pages add only release/promotional context. See the ledger.

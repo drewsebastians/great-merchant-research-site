@@ -152,3 +152,7 @@ A follow-up search found no inspectable Xian gameplay frame tied to a known or r
 ### Coin-event source-search note — 28 November 2026
 
 A contemporary Duniaku article mentions an Aged/Victory Coin example screenshot in its Xian Episode 2 event coverage, but the current article body does not expose the image and the linked former publisher page was not inspectable. The requested May 2015 Wayback availability query returned no snapshot; this metadata does not establish the absence of captures at other times. No Xian build or interface evidence was added. The blueprint's acceptance gate and all prototype measurements remain unchanged; see the evidence ledger.
+
+### Historical thumbnail source update — 28 November 2026
+
+A newly inspected YouTube archive with Xian Episode 2 branding exposes tutorial thumbnails showing scene/client-window previews. The underlying video player remained at 0:00, and neither the thumbnail nor page identifies a capture date, client build or patch. The channel’s “Official” label and Facebook link are metadata, not independent verification of ownership. These thumbnails may be recorded as historical comparators only; they do not support geometry, control or rule changes. The eight-item fidelity gate remains open.

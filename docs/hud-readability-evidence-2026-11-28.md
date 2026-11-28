@@ -144,3 +144,40 @@ The image-search result inspected was for a modern mobile Great Merchant adaptat
 - **Assumptions:** none. Do not infer that the absent example was a field/window screenshot, infer its capture date from the article or asset path, or assign it a patch/build.
 
 No qualifying Xian field/contextual-window frame was found. No interface, controls, geometry, formula, stat, or game rule change is supported. Continue only through a new accessible archive or dated community/publisher post; treat any build-unknown frame as a historical comparator. The research repository remains read-only and no research media was copied.
+
+## Xian Episode 2 publisher-labelled video archive — 28 November 2026
+
+### Directly inspected page and image preview
+
+A new public route, the [YouTube Videos archive for “The Great Merchant(TGM)-Xian Episode2 | Official”](https://www.youtube.com/@thegreatmerchanttgm-xianep7896/videos), was inspected in the browser. At access time the channel page displayed 57 videos and a Facebook link resolving to the public TGM Indonesia page. The page title, channel branding, video titles, displayed “9y ago” age and outbound link are source metadata; channel ownership and the videos’ server/build are not independently confirmed.
+
+The archive lists multiple videos titled as Xian Episode 2 tutorials, including “[TUTORIAL] QUEST NPC japan MASUDASU” and its parts. Their visible preview thumbnails show in-game scenes, a left portrait strip, lower client controls and at least one framed contextual window. These are inspectable thumbnail previews and may be used only as historical visual comparators. The displayed age is approximate upload metadata, not a capture date; no thumbnail or title identifies a patch/build.
+
+The [Part 4 video page](https://www.youtube.com/watch?v=uNeY70_EAR4) identifies an 8:39 Xian Episode 2 tutorial and displays “9y ago,” but its player remained black/loading at 0:00 during inspection. No underlying footage frame, exact publication date, server proof or build label was inspected. Do not treat the poster preview as proof of the footage’s capture build, infer a patch, or retune geometry from it.
+
+### Other new routes that did not qualify
+
+- The [Wadah Games article](https://wadahgames.blogspot.com/2015/11/5-game-online-yang-akan-rilis-di-tahun.html), dated 21 Nov 2015, discusses Xian Episode 2 and names 8ternals and a 13 Feb 2015 OBT date. Its two Xian-related image proxies timed out; the article does not link an inspectable client frame to a build. Record only as historical release-context metadata.
+- The [3CUSTOMPAINT article](https://3custompaint.blogspot.com/2016/10/helm-nolan-bertema-game-great-merchant-xian-episode-2.html), dated 2 Oct 2016, describes an 8ternals-commissioned Xian-themed helmet. It is promotional artwork context, not an in-game frame or build record.
+
+### Exact search strings used
+
+1. `"Xian The Great Merchant" screenshot Indonesian forum Kaskus 8ternals`
+2. `"The Great Merchant Xian Episode 2" screenshot 2015 Indonesia community`
+3. `"Xian TGM Indonesia" patch screenshot forum 8ternals 2015`
+4. `"Official Teaser - The Great Merchant (Xian Eps 2)"`
+5. `site:youtube.com/watch "Official Teaser" "Xian Eps 2" 8ternals`
+6. `site:facebook.com 8ternals "Xian Episode 2" "patch" 2016 screenshot`
+7. `"The Great Merchant Xian Episode 2" "Wadah Games" screenshot`
+8. `site:blogger.googleusercontent.com "The Great Merchant Xian Episode 2" 2015`
+9. `"Official Teaser - The Great Merchant (Xian Eps 2)" 8ternals YouTube`
+10. `"The Great Merchant" "Xian Episode 2" gameplay trailer 2015 8ternals`
+11. `site:youtube.com/@thegreatmerchanttgm-xianep7896 Xian Episode 2 Official Teaser`
+
+### Classification and result
+
+- **Direct observation:** an inspectable YouTube archive page and its preview thumbnails; a separate linked video page whose player stayed at 0:00.
+- **Source metadata:** channel title/branding, titles and approximate upload ages, visible links, and the dated Wadah Games / 3CUSTOMPAINT article text.
+- **Unverified or unavailable:** channel ownership, exact video publication dates, frame capture dates, client builds/patches, and the underlying footage from the Part 4 player.
+- **Assumptions:** none. Do not assign a build from the channel label, “9y ago,” or the 2015/2016 article dates.
+- **Conclusion:** no frame was tied to a known or reasonably narrowed build. The thumbnail previews are historical comparators only. No UI, code, geometry, controls, stats, formulas or game rules change is supported.
