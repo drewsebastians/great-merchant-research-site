@@ -1,3 +1,6 @@
+From https://github.com/drewsebastians/great-merchant-research-site
+ * branch            validation/keyboard-window-focus-2026-11-28 -> FETCH_HEAD
+ * [new branch]      validation/keyboard-window-focus-2026-11-28 -> origin/validation/keyboard-window-focus-2026-11-28
 name: Keyboard window focus candidate validation
 on:
   push:
@@ -117,7 +120,7 @@ jobs:
               await page.locator(menu('system')).click();
               await page.locator('[data-language-option="id"]').click();
               assert.equal(await page.locator('html').getAttribute('lang'),'id');
-              assert.match(await page.locator('#client-menu').innerText(),/Perjalanan/);
+              assert.match(await page.locator('#client-menu').innerText(),/Inventaris/);
               await page.keyboard.press('Escape');
               await page.locator(menu('status')).click();
               const statusId=await page.locator(win('status')).innerText();
