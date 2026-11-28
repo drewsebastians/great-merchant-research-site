@@ -1,6 +1,6 @@
 # Interface Fidelity Review — V5.1 Xian TGM Reset
 
-> Current verified release: PWA shell v25. Earlier candidate notes are historical; see the verified release record at the end.
+> Current verified release: PWA shell v26. Earlier candidate notes are historical; see the verified release record at the end.
 
 **Updated:** 28 November 2026
 **Scope:** V5.0 production baseline, V5.1 deployed client and available Xian/TGM references
@@ -143,8 +143,8 @@ A new search across Xian Episode 2, official Global notices, current Great Merch
 
 The v25 HUD release (`9c537e5e4973d645ebd9f546dce224758515196d`) addresses tiny labels and tightly packed controls in our own responsive layout. Font sizes, wrapping and touch dimensions are independent prototype usability choices; they do not imply source measurements. Validation run `46084604216` passed the existing suite and desktop/narrow browser checks; Pages run `46084804013` deployed it, and production files match the commit. No fidelity-gate item is newly satisfied.
 
-### Candidate keyboard focus pass — 28 November 2026
+### Verified keyboard-focus pass — 28 November 2026
 
-Candidate `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` improves focus entry and recovery when client windows open, come forward, close or dismiss with Escape. Validation run `46095629624` passed 43/43 tests and Chromium checks at desktop 1363×936 and mobile 390×844/340×740, including English/Indonesian labels, unchanged day 05 / 102-mark save state, reload and v26 offline behavior. It makes no Xian-derived geometry or control claim and is pending promotion/deployment at this documentation point.
+Implementation `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` improves focus entry and recovery when client windows open, come forward, close or dismiss with Escape. Validation run `46095629624` passed 43/43 tests and Chromium checks at desktop 1363×936 and mobile 390×844/340×740, including English/Indonesian labels, unchanged day 05 / 102-mark save state, reload and v26 offline behavior. Pages run `46095920214` deployed the v26 shell successfully; the read-only production page reloaded in Indonesian with day 05 / 102 marks visible, and the deployed service worker reports v26. It makes no Xian-derived geometry or control claim.
 
 The new Software Informer listing/image lead labels a login screen “Ver 2.5221” and identifies developer 8ternals, but it does not establish an Xian Episode 2 server/build or image capture date. Keep it in unidentified/mixed-source evidence; do not use it for interface reconstruction. Physical Android/iOS, broader accessibility and direct offline testing in the user's production browser remain open; the fidelity gate remains open.

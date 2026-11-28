@@ -1,6 +1,6 @@
 # Xian The Great Merchant Interface Fidelity Blueprint
 
-> Verified implementation update: v25 HUD readability pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
+> Verified implementation update: v26 keyboard-focus pass is deployed; see the release and evidence note at the end. The fidelity gate is unchanged.
 
 **Version:** 1.0  
 **Governs:** Development Plan v5.1  
@@ -134,8 +134,8 @@ PWA shell v24 deploys the Inventory and Status presentation pass under implement
 
 Implementation `9c537e5e4973d645ebd9f546dce224758515196d` ships the original responsive HUD usability update as v25. Overview/chat labels use 8–9px, menu labels use 8px, the menu wraps over five columns and two rows across desktop and narrow widths, and buttons have a 44px minimum height. Validation run `46084604216` passed; Pages run `46084804013` deployed successfully and the live production CSS/service worker match the implementation commit. These values are not sourced from Xian and do not satisfy the blueprint's reference-comparison gate. The latest search still lacks an inspectable Xian frame linked to a capture build or patch. Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source references remain distinct in the evidence ledger.
 
-### Candidate keyboard-focus pass — 28 November 2026
+### Verified keyboard-focus pass — 28 November 2026
 
-Candidate `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` adds keyboard focus handling for client-window open/front/close/Escape actions and advances the offline shell cache to v26. Isolated run `46095629624` passed 43/43 tests and desktop/mobile browser checks at 1363×936, 390×844 and 340×740, with localization, save preservation, reload and offline PWA behavior. This is a prototype accessibility improvement, not a TGM-sourced control or fidelity match; it is pending promotion and deployment.
+Implementation `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` adds keyboard focus handling for client-window open/front/close/Escape actions and advances the offline shell cache to v26. Isolated run `46095629624` passed 43/43 tests and desktop/mobile browser checks at 1363×936, 390×844 and 340×740, with localization, save preservation, reload and offline PWA behavior. Pages run `46095920214` deployed the shell; production's worker reports v26 and the live game showed the Indonesian interface with day 05 / 102 marks. This is a prototype accessibility improvement, not a TGM-sourced control or fidelity match.
 
 The 2.5221 login-screen image from Software Informer is kept under unidentified/mixed-source evidence because no Xian Episode 2 server, capture build or capture date is established. It supplies no interface geometry, input behavior or game-system fact for this blueprint. Physical-device testing, broader keyboard/screen-reader review and direct offline testing in the user's production browser remain open; the fidelity gate remains open.
