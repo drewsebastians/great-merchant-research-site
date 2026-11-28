@@ -147,3 +147,8 @@ The 2.5221 login-screen image from Software Informer is kept under unidentified/
 ### Continued evidence search — 28 November 2026
 
 A follow-up search found no inspectable Xian gameplay frame tied to a known or reasonably narrowed build. The 2022 RepeatLoop video in the reference table could not be inspected beyond its page metadata. The Wayback availability API lists a 30 Apr 2016 capture for the 8ternals V2.6019 notice, while direct replay currently says the page is not archived. The separate V2.5404 marketing banner and V2.6019 notice remain unlinked to any frame. A third-party USA-version V2.6019 reference is excluded as non-Xian evidence. These findings do not satisfy the visual-treatment gate; keep the fidelity status and design measurements unchanged. See [the evidence ledger](hud-readability-evidence-2026-11-28.md).
+
+
+### Coin-event source-search note — 28 November 2026
+
+A contemporary Duniaku article mentions an Aged/Victory Coin example screenshot in its Xian Episode 2 event coverage, but the current article body does not expose the image and the linked former publisher page was not inspectable. The requested May 2015 Wayback availability query returned no snapshot; this metadata does not establish the absence of captures at other times. No Xian build or interface evidence was added. The blueprint's acceptance gate and all prototype measurements remain unchanged; see the evidence ledger.

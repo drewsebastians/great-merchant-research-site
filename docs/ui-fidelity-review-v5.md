@@ -153,3 +153,8 @@ The new Software Informer listing/image lead labels a login screen “Ver 2.5221
 ### Continued Xian source-search pass — 28 November 2026
 
 The search found no inspectable field/window frame tied to a known or reasonably narrowed Xian build. A 24 Aug 2022 RepeatLoop video has an Indonesia-labelled Xian title, but the player remained black at 0:00 after one reload, so no footage frame or build could be inspected. The 8ternals Wayback availability record lists a 30 Apr 2016 capture for the V2.6019 notice; direct replay reports that the URL is not archived. A third-party Japanese blog uses V2.6019 for a USA-version reference; this is kept separate and does not establish regional build equivalence. No UI implementation was made and no fidelity criterion changed. See [the evidence ledger](hud-readability-evidence-2026-11-28.md).
+
+
+### Coin-event screenshot source search — 28 November 2026
+
+The 6 May 2015 Duniaku article confirms a contemporary Xian Episode 2/8ternals event reference and mentions an example Aged/Victory Coin screenshot. Direct inspection of the current article body found no example image; the visible current header is a generic IDN placeholder. A May 2015 Wayback availability query for the linked old 8ternals event page returned no snapshot for that requested timestamp; the old page itself was not inspectable. No new field/window frame, capture date, patch or build link was found. No fidelity finding or implementation dimension changes; see the query ledger.

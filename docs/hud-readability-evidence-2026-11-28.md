@@ -87,3 +87,60 @@ This targeted pass checked dated Indonesian community and editorial pages, a pub
 - The new pass did not change any prior category assignments: Xian Indonesian Episode 2, Global Server, HK/TW, Korea, USA and unidentified/mixed-source material remain separate. Shared title words, version strings, article dates and marketing labels do not identify a frame’s server, capture date or client build.
 
 No source-client image or text was copied into the public development repository. No geometry, controls, formulas, stats or gameplay rules were inferred from these leads. Implementation remains blocked on inspectable evidence that supports a specific change.
+
+
+## Coin-event screenshot lead: targeted follow-up — 28 November 2026
+
+### Page content inspected
+
+The current non-AMP [Duniaku article](https://duniaku.idntimes.com/game/konsol-pc/event-besar-the-great-merchant-xian-00-ygqb6-lrh6p9) is dated 6 May 2015, 12:13 WIB, by Ferry. It explicitly names The Great Merchant — Xian Episode 2 and says it was published by 8ternals. Its text describes a Coin Collector event running 25–29 May 2015 and says participants could send a screenshot of their Aged Coin and Victory Coin totals to the linked [The Great Merchant Indonesia Facebook page](https://www.facebook.com/tgmindonesia). The article says an example screenshot follows.
+
+Direct inspection of the current article body found no example image in that section. Its current page image is served from a URL with a `/post/20250307/` path and, at 1200×798, is a generic IDN placeholder rather than a game screen: [current article header image](https://image.idntimes.com/post/20250307/upload_0292784930007535995bcd3459ef77ef.png?tr=w-1200,f-webp,q-75&width=1200&format=webp&quality=75). That current page asset is not the referenced coin-count screenshot. The path is asset metadata, not a screenshot capture date. No screenshot content, client build, server identity beyond the article's Xian Episode 2 context, or capture date was inspected.
+
+The article links the former publisher page [event-big-event-merchant-mayday](http://tgm.8ternals.com/blog/event-big-event-merchant-mayday/) and the Facebook page above. These links are leads in a contemporary editorial article; no page body or post containing the example screenshot was independently inspected.
+
+### Archive and access outcomes
+
+- The [Wayback availability API query for the former event page](https://archive.org/wayback/available?url=http%3A%2F%2Ftgm.8ternals.com%2Fblog%2Fevent-big-event-merchant-mayday%2F&timestamp=201505) with requested timestamp `201505` returned `{"url":"http://tgm.8ternals.com/blog/event-big-event-merchant-mayday/","archived_snapshots":{},"timestamp":"201505"}`. This is availability metadata for that requested timestamp; it returned no replay URL. It does not establish that no capture exists at any other time, and no direct replay body was available to inspect.
+- The [CDX query](https://web.archive.org/cdx/search/cdx?url=tgm.8ternals.com%2Fblog%2Fevent-big-event-merchant-mayday%2F&output=json&filter=statuscode%3A200) was reported by the approved web reader as not accessible through that tool; no CDX response was inspected.
+- The current former-publisher URL did not load in the cloud browser (`net::ERR_HTTP2_PROTOCOL_ERROR`). The browser policy also rejected the subsequent issue-report action for that legacy HTTP URL, so no origin status or page body was confirmed. The reader's direct open also returned “not accessible via this tool.” Do not describe this as a site-served 403/404 or as proof the page is gone.
+- Searches targeting the linked Facebook page did not surface a dated post containing the screenshot. The page itself was not opened.
+
+The older 8ternals 20 April 2016 V2.6019 notice is a separate URL and remains classified separately: its availability record reports a 30 April 2016 capture at 08:30:31 UTC, while direct replay reports “The Wayback Machine has not archived that URL.” Neither outcome links that notice's version label to a gameplay frame.
+
+### Exact search strings
+
+Text searches:
+
+1. `"Aged Coin" "Victory Coin" Xian 8ternals screenshot`
+2. `"Aged" "Victory Coin" "Xian" Duniaku screenshot event 2015`
+3. `site:tgm.8ternals.com "Victory Coin" Xian event`
+4. `"Coin Collector" "Aged Coin" "Xian" 8ternals Indonesia`
+5. `"event-big-event-merchant-mayday" 8ternals Wayback`
+6. `"event-big-event-merchant-mayday" "Coin Collector"`
+7. `site:facebook.com/tgmindonesia "Aged Coin" "Victory Coin"`
+8. `site:facebook.com "The Great Merchant Indonesia" "Victory Coin" 2015 event screenshot`
+9. `site:lasthero-xian2.blogspot.com 2015 "Aged Coin" "Victory Coin"`
+10. `"25 Mei" "Aged Coin" "Victory Coin" "The Great Merchant" Indonesia`
+11. `"Coin Collector Event" "Victory Coin" Xian Indonesia 2015 8ternals`
+12. `"The Great Merchant Indonesia" "Aged Coin" "2015" screenshot Xian`
+
+Image searches:
+
+1. `"Aged Coin" "Victory Coin" Xian screenshot 8ternals`
+2. `Xian Episode 2 Indonesia Coin Collector event Aged Victory Coin screenshot`
+3. `"4 Event Besar Menyambut Bulan Mei" screenshot Aged Coin Victory Coin Xian`
+4. `"Aged & Victory Coin" The Great Merchant Xian 2015 screenshot`
+5. `site:facebook.com/tgmindonesia "Aged" "Victory Coin"`
+6. `site:archive.org "event-big-event-merchant-mayday"`
+
+The image-search result inspected was for a modern mobile Great Merchant adaptation and was excluded; it was not an Xian Episode 2 PC frame.
+
+### Classification and result
+
+- **Verified article content:** Duniaku's current article text names Xian Episode 2/8ternals, gives its publication time, dates the event, and refers to an example screenshot. This is contemporary editorial source content, not the screenshot itself.
+- **Source metadata:** the 8ternals event URL and Facebook page are linked destinations; the Wayback response above is availability metadata only. The current IDN header placeholder and its URL path describe current page media, not 2015 game capture metadata.
+- **Unavailable material:** the referenced coin-count example, the linked old publisher page body, a matching Facebook event post, and any frame-to-build link were not inspectable.
+- **Assumptions:** none. Do not infer that the absent example was a field/window screenshot, infer its capture date from the article or asset path, or assign it a patch/build.
+
+No qualifying Xian field/contextual-window frame was found. No interface, controls, geometry, formula, stat, or game rule change is supported. Continue only through a new accessible archive or dated community/publisher post; treat any build-unknown frame as a historical comparator. The research repository remains read-only and no research media was copied.

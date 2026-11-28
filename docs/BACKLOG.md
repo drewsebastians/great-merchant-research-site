@@ -183,3 +183,11 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Recheck the 8ternals patch-notice availability record and try its returned Wayback capture URL. The API reports the 30 April 2016 snapshot, but the direct replay says the URL is not archived.
 - [x] Search exact V2.6019 references, Xian Indonesia page/video leads and indexed images. The RepeatLoop video metadata is dated 24 August 2022, but the player stayed black after one reload; a third-party USA-version V2.6019 mention is excluded as non-Xian. No qualifying gameplay frame/build link was found.
 - [ ] Continue the version-identifiable Xian frame search. Do not retune geometry, controls or gameplay based on these leads.
+
+
+### Coin-event example follow-up — 28 November 2026
+
+- [x] Search exact coin-name, 8ternals event URL, Facebook page, community archive and image-index terms; record the exact queries in the evidence ledger.
+- [x] Inspect the current Duniaku article rendering and its current header image. The article refers to an example Aged/Victory Coin screenshot, but the example is absent from the current body; the visible header is an IDN placeholder, not a game frame.
+- [x] Check Wayback availability for the linked old 8ternals event page at timestamp 201505. The API returned no snapshot for that timestamp; record this separately from direct replay. The legacy page itself was not inspectable and no origin status was verified.
+- [ ] Find an inspectable original field/context-window frame linked to a known or reasonably narrowed Xian client build. Do not change UI or geometry based on the article text, marketing, or version labels alone.

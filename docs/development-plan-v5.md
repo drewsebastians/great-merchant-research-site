@@ -109,3 +109,8 @@ The v25 HUD pass addresses the project's own small-screen label and menu-density
 ### Continued source-search pass — 28 November 2026
 
 The follow-up search added a 2022 RepeatLoop video labelled “Xian The Great Merchant Indonesia,” but its page’s video player remained black at 0:00 after one reload. No frame or footage build was inspectable. The Wayback availability record reports the 30 Apr 2016 capture of the separate 8ternals V2.6019 notice; direct replay currently says the URL is not archived. An exact-version search also surfaced a third-party USA-version V2.6019 reference, which is not Xian evidence. These records do not narrow any screenshot’s build; no interface change is justified. See [the continued evidence ledger](hud-readability-evidence-2026-11-28.md). The fidelity gate and physical-device/accessibility/offline checks remain open.
+
+
+### Coin-event screenshot search follow-up — 28 November 2026
+
+The Duniaku article supplies contemporary Xian Episode 2/8ternals and event-date metadata and says an example Aged/Victory Coin screenshot follows. The current article body does not expose that image; its current header asset is a generic IDN placeholder. The linked former 8ternals page returned no Wayback snapshot for the requested May 2015 timestamp and could not be directly inspected. Text/image searches produced no frame or build link. This does not satisfy any fidelity criterion; keep the interface and prototype measurements unchanged. See the detailed query/access ledger in `docs/hud-readability-evidence-2026-11-28.md`.

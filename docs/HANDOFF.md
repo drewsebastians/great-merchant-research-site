@@ -112,9 +112,16 @@ No newly inspected frame is tied to an identified Xian client build. The dated D
 
 ### Next research actions
 
-1. Search the Duniaku article’s exact “Aged & Victory Coin” reference for a publicly inspectable original image or official event post. Keep any image’s page date separate from its capture date and demand an explicit or defensibly narrowed client-build link.
+1. The Duniaku coin-example route was inspected on 28 Nov 2026; the current article body does not expose its referenced image, the May 2015 Wayback availability query returned no snapshot, and the linked legacy publisher URL could not be inspected. Continue only from a new public archive or dated publisher/community route, and keep any source date separate from image capture/build dates.
 2. Continue with targeted public archive, publisher and community searches. For each new Wayback lead, record the availability API response and direct replay result separately. Do not infer that API availability means the archived body is accessible.
 3. Treat any newly inspectable but build-unknown frame as a historical comparator only. Keep Indonesian Episode 2, Global Server, HK/TW, Korea, USA and unidentified/mixed-source records in separate categories.
 4. Do not change the UI or claim a fidelity improvement unless the inspected frame supports a specific change. Keep the product status “playable prototype; TGM interface fidelity in progress.”
 5. Preserve the research repository as read-only and verify that its main head and encrypted vault blob remain untouched. Do not copy source-client assets, screenshots or private research material into the public development repository.
 6. Keep physical Android/iOS checks, broader keyboard/screen-reader accessibility checks and direct offline testing in the user’s production browser open. Do not repeat the v26 keyboard-focus work or test offline by altering the production browser. The existing validation run 46095629624 predates this docs-only search follow-up.
+
+
+## Coin-event source-search follow-up — 28 November 2026
+
+The targeted Duniaku route has now been inspected. Its 6 May 2015 article names Xian Episode 2 and 8ternals and says a Coin Collector example screenshot follows, but the current article body does not render that image. The visible current header is a generic IDN placeholder. A May 2015 Wayback availability query for the linked former 8ternals event page returned an empty `archived_snapshots` object; this does not prove there are no captures at other timestamps. Direct access to the legacy HTTP page failed in the cloud browser, with no origin status or body confirmed. Exact text/image searches for the old event URL, Facebook page and community posts found no alternative screenshot. See the ledger for every query and the distinction between metadata and unavailable content.
+
+Do not repeat these same blocked routes without a new source path. The next useful lead must be an inspectable original screenshot or a dated official/community post whose image can be linked to a known or reasonably narrowed client build. If a new image is inspectable but its build remains unknown, log it as a historical comparator only. Preserve regional/source categories; no UI change is justified by this pass.
