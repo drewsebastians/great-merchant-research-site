@@ -257,8 +257,8 @@ The new [RepeatLoop article, “Xian The Great Merchant, Game Lawas yang tetap m
 
 Two linked in-article images were opened and visually inspected:
 
-- The embedded 640×421 image is a character/country-selection screen with a portrait grid and a character-information panel.
-- The second image is a 532×751 tall crop (the page embeds a 284×400 version). It shows a field scene, a left-side party portrait stack, lower status/currency areas and chat; the crop does not show a complete client or minimap.
+- The embedded [640×421 image](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiuzh1ZQSBJcvtm2oPZU_V5k1LsG0zux_NZj8h6Ot9CeNfWrstw7EIUnDOhLkTN7iyR8zW6XrHlXHW10c_wMlk4wqVVNvDtkQK0AIH_GvRGSShOPK4o7s4ERhgIhGPdlJRExQf2x7PGQgmO/s1600/gambar+karakter.jpg) is a character/country-selection screen with a portrait grid and a character-information panel.
+- The [second image](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_FhXBo7yPg0ANy6yDYkyZ0KXecM-lfkk08N2y4O-0vEGBmV6Gk7UO1z-NyN9Z-oy3fm1_RnbSXR5EJi33z-KG69BGKHm5GagfbUFRiXSoCbmbYsVfbUh7bcrZbMzxplLD7YNneLaAe-ea/s1600/1111.jpg) is a 532×751 tall crop (the page embeds a 284×400 version). It shows a field scene, a left-side party portrait stack, lower status/currency areas and chat; the crop does not show a complete client or minimap.
 
 The article associates these images with its Xian discussion, but does not individually attribute them, state their capture dates, or name a server, client build or patch. Its 2018 publication date is not a capture date. Keep both as **unidentified/mixed-source historical comparators attached to Indonesian Episode 2 editorial context**; do not assign either image to Indonesian Episode 2 or Global Server. They add no verified geometry, control, stat, formula or game-rule evidence.
 
