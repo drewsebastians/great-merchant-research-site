@@ -100,7 +100,7 @@ Use the official interface and shortcut guides for visible client structure and 
 
 ## Next work
 
-1. Seek an inspectable, dated Xian field/window frame with a known or narrowed client version. The 14 Jan 2017 tutorial screenshot is viewable but only its article date is known; the 2019 panel also has unknown capture date and patch. The 2023, 2025 and 22 May 2026 video players yielded no inspectable frame. Do not retune dimensions or claim current-Xian geometry without stronger evidence.
+1. Seek an inspectable, dated Xian field/window frame with a known or narrowed client version. The 14 Jan 2017 tutorial screenshot is viewable but only its article date is known; the 2019 panel also has unknown capture date and patch. New 8ternals archive pages show a V2.5404 marketing card and a separate 20 Apr 2016 V2.6019 patch notice, but neither identifies a screenshot build; the historical Feature guide is also not tied to its image capture builds. The `[2.52GS] / TW2` Taiwan/private-server stream remains inspectable only at its cover. See [the evidence ledger](hud-readability-evidence-2026-11-28.md). Do not retune dimensions or claim current-Xian geometry without stronger evidence.
 2. Compare the lower HUD and dual-window density again when a newer Xian frame is available. The new 880×580 single quest-window size and 21px heading are prototype readability choices, not Xian specifications; the lower HUD remains unmeasured against Xian.
 3. Perform physical-device and broader keyboard/accessibility checks through permitted workflows. Actual Chromium offline reload passed in isolated CI for v22, v23 and v24. Production DevTools remains blocked by browser policy; do not work around that restriction.
 

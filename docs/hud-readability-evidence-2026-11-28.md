@@ -2,11 +2,13 @@
 
 ## Result
 
-No newly inspected image or video frame can be identified as an Xian client screenshot tied to a capture build or patch. Do not use this search to infer exact Xian dimensions, control placement, formulas or game rules. Earlier verified comparators remain historical, version-unknown leads.
+No newly inspected image or video frame can be identified as an Xian client screenshot tied to a capture build or patch. The additional 8ternals archive pages provide Indonesian publisher and patch-label metadata, while a `[2.52GS] / TW2` stream remains an uninspectable Taiwan/private-server lead. None links a specific gameplay frame to a known or narrowed client build. Do not infer exact Xian dimensions, control placement, formulas or game rules from these references.
 
 ## Historical Indonesian Episode 2
 
 - [Xian TGM Indonesia Episode 2 guide](https://xiantgmindo.blogspot.com/2016/07/game-intro-xian-tgm-indonesia-episode-2.html) is explicitly labeled for the Indonesian Episode 2 context. Retrieval is blocked by an interstitial in this review, and the guide's images are acknowledged as gathered from multiple sites in the existing source record. They do not establish image capture date or patch.
+- The archived [8ternals Indonesian publisher homepage, snapshot 17 May 2016](https://web.archive.org/web/20160517205401/http://tgm.8ternals.com/) displays a promotional banner reading “NEW PATCH RELEASE V2.5404.” The banner is marketing artwork, not a gameplay screenshot. The same homepage separately lists a 20 April 2016 update notice. Its [archived notice, captured 30 April 2016](https://web.archive.org/web/20160430083031/http://tgm.8ternals.com/blog/blog/q2w3e4r51qw2/wAIMqCsOcLMXvKg160419203148), says “Patch V 2.6019 Notes” and “Patch v.26019.” These are separate publisher-page references; they do not establish the patch shown in any particular screenshot or frame, and their labels should not be reconciled into a capture-build claim.
+- The archived [8ternals Feature guide, snapshot 3 November 2015](https://web.archive.org/web/20151103013804/http://tgm.8ternals.com/guide/feature.php), presents Economic, Battle and Social sections with linked feature images. The page gives no capture date or client-build link for those images. Treat it as a historical Indonesian publisher guide, not version-specific gameplay evidence.
 - [KotakGame's Episode 2 listing](https://www.kotakgame.com/gamebox/detail/20/4623/) reports a screenshot update dated 27 July 2015. The page returns 403 to the inspection tool, so no image was inspected and no UI evidence was added.
 - Existing January 2016 and January 2017 Xian-labeled image leads remain historical; the article dates are not proven capture dates and their client patch/build is unknown.
 
@@ -18,6 +20,7 @@ No newly inspected image or video frame can be identified as an Xian client scre
 ## Other regional clients — kept separate
 
 - The unofficial [Kirin Merchant community site](https://thekirinmerchant.com/) links a V34300 “new UI” video from a channel labeled HK/TW. This is another regional client lead, not an Xian frame, and it was not used to set HUD dimensions.
+- The YouTube stream [“[2.52GS] GSOL (TW2) — One Hour of Grinding”](https://www.youtube.com/watch?v=f3mIBbc0khs), published 6 August 2026, has a description identifying the game as a Taiwan-based private server. The search result exposed its title and description, but the video page fetch was throttled and no gameplay frame was inspectable beyond its cover. The `[2.52GS]` title label is not linked to any specific captured frame or to the Indonesian Xian Episode 2 client; keep it in the Taiwan/private-server lead set.
 - Korean-server references are likewise not Xian evidence unless a source independently identifies the Xian server/build.
 
 ## Unidentified or mixed-source leads

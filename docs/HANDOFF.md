@@ -54,7 +54,7 @@ Public references rechecked 27 Nov 2026 include the official interface, shortcut
 
 ## Next concrete actions
 
-- Find an inspectable, dated Xian field/window screenshot or video frame that identifies or narrows the client version. The 14 Jan 2017 image is visible but its capture date and patch are unknown; the 2019 quest panel has the same uncertainty, and the 2023, 2025 and 22 May 2026 players yielded no frame.
+- Find an inspectable, dated Xian field/window screenshot or video frame that identifies or narrows the client version. The 14 Jan 2017 image is visible but its capture date and patch are unknown; the 2019 quest panel has the same uncertainty, and the 2023, 2025 and 22 May 2026 players yielded no frame. The new 8ternals V2.5404 banner, separate V2.6019 notice and 2015 Feature guide are historical Indonesian publisher references without frame-build linkage. The `[2.52GS] / TW2` stream is a Taiwan/private-server lead inspectable only at its cover. Details and archive links are in `docs/hud-readability-evidence-2026-11-28.md`.
 - When stronger evidence is available, compare it with the deployed quest panel and lower HUD before changing proportions again. The new 880×580 window and 21px heading are prototype readability choices; the 1:2:1 HUD ratio and current-client geometry remain unresolved.
 - The isolated v24 browser workflow completed an actual offline reload through the service worker. Physical Android/iOS installation and offline behavior remain open; do not bypass managed-browser DevTools restrictions.
 - Continue to describe the product as “playable prototype; TGM interface fidelity in progress” until the blueprint gate, including the visual-treatment comparison, is satisfied.
