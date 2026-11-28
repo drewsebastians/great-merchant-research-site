@@ -167,3 +167,12 @@ Implementation commit `9c537e5e4973d645ebd9f546dce224758515196d`; candidate `can
 - [x] Promote after validation. Pages run `46084804013` succeeded; live CSS and service worker match commit `9c537e5` byte-for-byte, and the production browser showed the updated Indonesian menu with day 05 / 102 marks visible.
 
 No gameplay, save schema, source asset or encrypted vault changed. Physical Android/iOS, broader keyboard/accessibility and offline testing in the user's production browser remain open. The blueprint fidelity gate remains open.
+
+## Candidate keyboard-focus pass — 28 November 2026
+
+- [x] Add keyboard focus placement to client-window open/front/close and Escape flows; bump the service-worker cache to v26.
+- [x] Validate candidate `f272f5ee567d3659da16822ddfe32b45cb1fb8a8`: run `46095629624` passed 43/43 tests and Chromium checks at 1363×936, 390×844 and 340×740, including bilingual labels, save preservation, reload and offline PWA behavior.
+- [ ] Promote the validated candidate to `main` and `development/v5-first-playable-slice`, deploy Pages and verify production assets and behavior.
+- [ ] Continue searching for an inspectable Xian frame paired with a known or narrowed client build. The new Software Informer 2.5221 login screen remains unidentified and is not Xian gameplay evidence.
+
+The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28` at base `251fee77588cd8432c86bde12a0b1af167472b4f`. Research remains read-only; the encrypted vault is unchanged. Keep physical Android/iOS, broader keyboard/accessibility checks and direct offline testing in the user's production browser open. The TGM fidelity gate remains open.
