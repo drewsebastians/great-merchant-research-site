@@ -202,3 +202,23 @@ The article date is publication metadata, not the screenshot capture date. The b
 - **Classification:** unidentified/mixed-source historical comparator, attached to an Indonesian Episode 2 guide post. It cannot establish current-Xian geometry, controls, stats or game rules.
 
 No source image was copied into the development repository. No UI change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”
+
+## Xian screenshot-instructions page — 28 November 2026
+
+### Directly inspected
+
+The [“Membuat Screenshot” community post](https://lasthero-xian2.blogspot.com/2016/01/membuat-screenshot.html) is dated 7 January 2016. Its embedded example was visually inspected on the page: it is a Windows Explorer view of a Xian/TGM client folder, accompanied by the page caption “contoh file hasil screenshot.” It is not an in-game frame; no field, HUD or game interface is visible.
+
+### Source metadata and limits
+
+The date belongs to the article, not to a gameplay capture. The post is on a community blog identifying itself with Xian versi 2 / Indonesia context, but the file-manager illustration does not identify an in-game screenshot’s capture date, server, client build or patch. Do not use the folder listing to infer those attributes.
+
+### Classification and result
+
+- **Direct observation:** the article embeds a Windows Explorer view, not an inspectable game frame.
+- **Source metadata:** community post dated 7 January 2016 under Indonesian Xian guide context.
+- **Unverified or unavailable:** any gameplay image’s capture date, server, client build and patch.
+- **Assumptions:** none.
+- **Classification:** checked, non-qualifying source route; it is not an interface comparator and supplies no build-linked frame.
+
+No image was copied. No UI, geometry, control, stats, formulas or game rules change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”

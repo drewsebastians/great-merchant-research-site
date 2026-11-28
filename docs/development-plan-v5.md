@@ -124,3 +124,7 @@ A new public YouTube archive branded “The Great Merchant(TGM)-Xian Episode2 | 
 ### New community-image route — 28 November 2026
 
 The newly inspected [Xian TGM Indonesia herding guide](https://xiantgmindo.blogspot.com/2017/10/tips-saat-melakukan-battle-herding.html) contains a small inventory-window image dated only by its 6 October 2017 article. The blog acknowledges mixed source material; this image is not individually attributed, and its capture date, server and build remain unknown. Keep it as an unidentified/mixed-source historical comparator. It adds no current-Xian geometry, control or rules evidence, so the fidelity gate and prototype layout remain unchanged. See the evidence ledger.
+
+### Xian screenshot-instructions route — 28 November 2026
+
+The newly checked Indonesian community post dated 7 January 2016 shows a Windows Explorer view of a Xian/TGM folder, not gameplay. It provides no inspectable frame or build link, so it does not satisfy the visual-fidelity evidence gate and does not justify an implementation change. Keep the interface measurements unchanged; see the evidence ledger.

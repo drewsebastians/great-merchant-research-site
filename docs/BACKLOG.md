@@ -204,3 +204,9 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Inspect the newly found 6 October 2017 Xian TGM Indonesia community-guide route and its embedded syw0008.bmp inventory crop (328×188).
 - [x] Keep the post’s Indonesian Episode 2 context separate from the image’s unverified source, capture date, server and build; log the crop as an unidentified/mixed-source historical comparator only.
 - [ ] Continue seeking a new public frame/post linked to a known or reasonably narrowed Xian build. Do not adjust the UI from this crop. Preserve the fidelity gate and product status.
+
+### Xian screenshot-guide route follow-up — 28 November 2026
+
+- [x] Inspect the new 7 January 2016 Indonesian Xian screenshot-instructions post and its embedded example; it shows a Windows Explorer folder view, not a game frame.
+- [x] Keep the article date separate from any screenshot capture date; no server/build/patch can be identified from this route.
+- [ ] Continue searching only new public routes for an inspectable frame tied to a known or reasonably narrowed Xian build. Keep the fidelity gate open and do not change UI from this non-qualifying route.

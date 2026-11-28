@@ -134,3 +134,7 @@ The latest public-route search found an inspectable YouTube archive labelled “
 ## Xian community-image follow-up — 28 November 2026
 
 A new route on the Xian TGM Indonesia community guide page dated 6 October 2017 exposes an inspectable 328×188 inventory crop (syw0008.bmp) with a selected Herding Command tooltip. The article’s Indonesian Episode 2 context is known; the image-specific provenance, capture date, server and build are not. It is recorded only as an unidentified/mixed-source historical comparator. No UI or game change is justified. Continue from current GitHub heads by searching only new public routes for a build-linked frame; retain regional/source separation, preserve the production save and keep the status “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.
+
+## Xian screenshot-guide route — 28 November 2026
+
+A new Indonesian community route dated 7 January 2016 was inspected. Its embedded illustration is a Windows Explorer view of a Xian/TGM client folder, not an in-game frame, so it cannot support an interface comparison or narrow the client build. The article date is publication metadata only. Continue with new public routes only, maintain regional/source separation, preserve the production save, and keep “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.

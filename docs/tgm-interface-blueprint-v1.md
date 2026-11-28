@@ -162,3 +162,7 @@ A newly inspected YouTube archive with Xian Episode 2 branding exposes tutorial 
 ### Historical inventory-crop comparator — 28 November 2026
 
 A new Indonesian Xian community-guide route exposes an inventory-window crop, not a full client screen. The article is dated 6 October 2017, but the image-specific source, capture date, server and build/patch are unverified; classify the crop as a historical comparator only. Do not derive layout, controls, stats or game rules from it. The eight-item fidelity gate and all prototype measurements remain unchanged.
+
+### Non-qualifying screenshot-guide route — 28 November 2026
+
+The 7 January 2016 Indonesian Xian community post was inspected. Its embedded example is a Windows Explorer view of a Xian/TGM folder rather than a game frame; it yields no interface, server or build evidence. It does not affect the blueprint or its open fidelity gate.

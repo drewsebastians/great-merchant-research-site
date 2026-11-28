@@ -168,3 +168,7 @@ The newly found YouTube channel archive is branded “The Great Merchant(TGM)-Xi
 ### Xian community-guide image — 28 November 2026
 
 The dated Xian TGM Indonesia community guide contains an inspectable 328×188 inventory crop. Its post date does not identify the screenshot capture date, and the blog’s mixed-source bibliography does not attribute this image specifically. Keep it as an unidentified/mixed-source historical comparator attached to Indonesian Episode 2 guide context. It establishes no full-screen layout, geometry, control, stat or rule. The fidelity gate remains open; no implementation change is supported. See the ledger.
+
+### Xian screenshot-instructions route — 28 November 2026
+
+The dated Indonesian community post embeds a Windows Explorer folder view rather than an in-game image. The article date is not a capture date, and the route does not identify a server or client build/patch. Exclude it from interface comparison; no UI change is supported and the fidelity gate remains open.

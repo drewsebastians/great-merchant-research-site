@@ -173,3 +173,7 @@ A newly inspected YouTube archive presents itself as “The Great Merchant(TGM)-
 ## Continued Xian community-image search — 28 November 2026
 
 A new public route yielded an inspectable 328×188 inventory-window crop embedded in a Xian TGM Indonesia guide post dated 6 October 2017. The blog’s mixed-source bibliography does not identify this specific image’s origin, capture date, server or build. It is logged only as an unidentified/mixed-source historical comparator; it does not support a UI change or close the fidelity gate. Details and limits are in [the evidence ledger](hud-readability-evidence-2026-11-28.md).
+
+## Continued Xian screenshot-guide search — 28 November 2026
+
+A newly checked Indonesian Xian community post dated 7 January 2016 embeds a Windows Explorer view of a client folder, not an in-game frame. It does not link gameplay imagery to a capture date, server, build or patch. No visual change is supported; the fidelity gate remains open. The source classification is recorded in the evidence ledger.
