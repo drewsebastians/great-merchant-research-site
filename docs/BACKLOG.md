@@ -173,6 +173,13 @@ No gameplay, save schema, source asset or encrypted vault changed. Physical Andr
 - [x] Add keyboard focus placement to client-window open/front/close and Escape flows; bump the service-worker cache to v26.
 - [x] Validate candidate `f272f5ee567d3659da16822ddfe32b45cb1fb8a8`: run `46095629624` passed 43/43 tests and Chromium checks at 1363×936, 390×844 and 340×740, including bilingual labels, save preservation, reload and offline PWA behavior.
 - [x] Promote the validated candidate to `main` and `development/v5-first-playable-slice`; Pages run `46095920214` succeeded and the live v26 service worker/game were checked read-only.
-- [ ] Continue searching for an inspectable Xian frame paired with a known or narrowed client build. The 8ternals V2.5404 homepage card, separate V2.6019 notice and historical Feature guide do not identify any frame's build; the `[2.52GS] / TW2` stream remains a Taiwan/private-server cover-only lead. The Software Informer 2.5221 login screen remains unidentified. Keep these source groups separate; see [the evidence ledger](hud-readability-evidence-2026-11-28.md).
+- [ ] Continue searching for an inspectable Xian frame paired with a known or narrowed client build. The 28 Nov follow-up added a 2022 Xian Indonesia-labelled RepeatLoop video, but its player stayed black at 0:00 after one reload and showed no footage build. Wayback availability metadata identifies a 30 Apr 2016 capture for the 8ternals V2.6019 notice, but direct replay says the URL is not archived; the notice does not tie its label to a frame. Exact-version search also found a third-party USA-version V2.6019 reference, which remains separate. The V2.5404 banner, Feature guide, `[2.52GS] / TW2` Taiwan/private-server cover and Software Informer login screen remain nonqualifying. Preserve all source categories; see [the evidence ledger](hud-readability-evidence-2026-11-28.md).
 
 The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28` at base `251fee77588cd8432c86bde12a0b1af167472b4f`. Research remains read-only; the encrypted vault is unchanged. Keep physical Android/iOS, broader keyboard/accessibility checks and direct offline testing in the user's production browser open. The TGM fidelity gate remains open.
+
+
+### Continued source-search record — 28 November 2026
+
+- [x] Recheck the 8ternals patch-notice availability record and try its returned Wayback capture URL. The API reports the 30 April 2016 snapshot, but the direct replay says the URL is not archived.
+- [x] Search exact V2.6019 references, Xian Indonesia page/video leads and indexed images. The RepeatLoop video metadata is dated 24 August 2022, but the player stayed black after one reload; a third-party USA-version V2.6019 mention is excluded as non-Xian. No qualifying gameplay frame/build link was found.
+- [ ] Continue the version-identifiable Xian frame search. Do not retune geometry, controls or gameplay based on these leads.

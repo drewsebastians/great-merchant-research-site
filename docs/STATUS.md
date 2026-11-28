@@ -3,7 +3,7 @@
 > Current verified release: PWA shell v26. Historical release notes below are retained for the record; see the keyboard-focus release entry at the end.
 
 **Updated:** 28 November 2026
-**Task:** V5.1 — keyboard focus pass released; version-identifiable Xian comparison remains open
+**Task:** V5.1 — v26 deployed; continued Xian source search remains open
 **Plan:** Development Plan v5.1
 
 ## Current state
@@ -149,3 +149,8 @@ The 28 Nov source search found no inspectable Xian frame tied to a capture build
 - Live production reloaded read-only in Indonesian with the day 05 / 102-mark save visible; the deployed `sw.js` reports `wayfarers-ledger-shell-v26`. Offline was tested in disposable CI only, not in the user's production browser.
 - Source search added a version-labelled 2.5221 login-screen image, but Software Informer does not identify it as Xian Episode 2 or give its capture date. Keep it in the unidentified/mixed-source ledger; it closes no fidelity item.
 - Research main remains `f52446e6a8f25a9cff4fe15a21e63b976df85317`; vault blob `748f8863212c1a2911c53569e7c934293c5e4205` remains unchanged. Physical Android/iOS, broader keyboard/accessibility checks and direct offline testing in the user's production browser remain open.
+
+
+## Continued Xian evidence search — 28 November 2026
+
+The follow-up search added a RepeatLoop video titled “XIAN THE GREAT MERCHANT INDONESIA,” published 24 August 2022, but the player stayed black at 0:00 after one reload; no footage frame, server identity or build was inspectable. The Wayback availability API still reports the 30 April 2016 capture for the 8ternals notice, while direct replay now says the URL is not archived. The V2.6019 notice remains publisher metadata only and is not linked to any screenshot build. Exact-version searches also found a third-party USA-version reference using V2.6019; keep it separate and do not infer regional equivalence. No qualifying Xian frame appeared, no code or assets changed, and the fidelity gate remains open. See [the evidence ledger](hud-readability-evidence-2026-11-28.md).

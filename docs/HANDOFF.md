@@ -3,7 +3,7 @@
 > Current verified release: PWA shell v26. Earlier candidate notes are historical; see the current handoff at the end.
 
 **Updated:** 28 November 2026
-**Next task:** P0 — find a version-identifiable Xian field/window frame; keep the fidelity gate open
+**Next task:** P0 — continue searching for an inspectable Xian frame tied to a known or narrowed build; fidelity gate stays open
 
 ## Start here
 
@@ -97,3 +97,10 @@ The screenshot search still has no inspectable Xian frame tied to a capture buil
 Implementation commit `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` is included in the aligned `main` and `development/v5-first-playable-slice` heads. Rollback is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28` at base `251fee77588cd8432c86bde12a0b1af167472b4f`. Validation run `46095629624` passed all 43 tests and hosted Chromium checks at 1363×936, 390×844 and 340×740, including focus recovery, localization, save preservation, reload and v26 offline reload. Pages run `46095920214` succeeded.
 
 The live production service worker reports cache v26; the read-only game view showed the Indonesian HUD and existing day 05 / 102-mark save. The research repository and encrypted vault remain untouched. Do not test offline by changing the user's production browser. Keep physical Android/iOS and broader keyboard/accessibility checks open. Continue sourcing Xian screenshots with a known or narrowed build; the Software Informer 2.5221 login screen is unidentified/mixed-source, not Xian gameplay evidence. Keep the TGM fidelity gate open.
+
+
+## Continued Xian evidence search — 28 November 2026
+
+The latest search did not find a qualifying frame. A RepeatLoop video with an Indonesia-labelled Xian title is dated 24 Aug 2022, but its player remained black at 0:00 after one reload, with no inspectable frame or build. The Wayback availability API reports a 30 Apr 2016 capture for the 8ternals V2.6019 notice; direct replay now displays “The Wayback Machine has not archived that URL.” Do not link that notice or the separate V2.5404 marketing banner to any screenshot build. Exact-version search found a third-party USA-version V2.6019 reference, which remains outside Xian evidence. The evidence ledger records URLs and limits. No implementation is supported by this search.
+
+Continue from current GitHub heads. Keep the research repo and encrypted vault read-only, preserve all source categories, and maintain “playable prototype; TGM interface fidelity in progress.” Physical Android/iOS, broader accessibility and direct offline checks in the user's production browser remain open.

@@ -49,3 +49,20 @@ Keep “playable prototype; TGM interface fidelity in progress.” The blueprint
 Implementation `f272f5ee567d3659da16822ddfe32b45cb1fb8a8` adds focus placement when a contextual client window opens or comes to the front, restores focus to the remaining window or originating menu control after close, and prevents the browser's default Escape action while the game closes its active window. The only PWA update is the cache name bump from v25 to v26; no game rules, save fields, art or evidence-derived geometry changed.
 
 Isolated Actions run `46095629624` passed 43/43 existing tests, syntax/content/diff checks, baseline stylesheet/worker checks and actual Chromium scenarios at 1363×936, 390×844 and 340×740. The browser checks covered English/Indonesian labels, focus/open/front/Escape/close paths, unchanged day 05 / 102-mark saves, reload and v26 offline reload in disposable contexts. Pages run `46095920214` deployed the code; the live service worker reports v26, and a read-only production review showed the Indonesian game with day 05 / 102 marks. The run's screenshots are retained as its Actions artifact. The encrypted research repository and vault were not changed. Direct offline testing in the user's production browser remains open.
+
+
+## Continued source-search pass — 28 November 2026
+
+A follow-up search targeted the archived 8ternals patch record, exact version labels, Indonesian Xian pages, video metadata and indexed images. It produced new leads, but no inspectable field/window frame linked to a known or reasonably narrowed client build.
+
+### Indonesian Episode 2 archive lead
+
+- The [Wayback availability API record for the 20 April 2016 8ternals notice](https://archive.org/wayback/available?url=http%3A%2F%2Ftgm.8ternals.com%2Fblog%2Fblog%2Fq2w3e4r51qw2%2FwAIMqCsOcLMXvKg160419203148&timestamp=20160430) returned `available: true`, status `200`, timestamp `20160430083031` (30 April 2016, 08:30:31 UTC). Opening the returned archived URL directly in this pass displayed “The Wayback Machine has not archived that URL.” Keep the API availability metadata separate from the unavailable replay body. Earlier retrieved notice text labels the page V2.6019; that page still does not link its version to a gameplay frame.
+- A [RepeatLoop video titled “AKHIRNYA PENSIUN DIA - XIAN THE GREAT MERCHANT INDONESIA”](https://www.youtube.com/watch?v=WaEp-C710D0) is listed as published 24 August 2022 and is 10:16 long. The page exposed the title and channel metadata, but the player remained black/buffering at 0:00 after one reload. No gameplay frame, server identity for the footage, or client build was inspectable. Treat “Indonesia” in the title as a lead label, not proof of the footage’s server/build.
+
+### Regional/version-label exclusion
+
+- An exact V2.6019 search also surfaced a third-party Japanese blog post that explicitly labels its 20 April 2016 reference as the USA version: [巨商伝 USA version, V2.6019](https://ameblo.jp/kazudenrou/entry-12151385318.html). This is not a primary source and is not Xian evidence. It does not reconcile the Indonesian publisher’s V2.6019 notice with any other regional client; it reinforces that a shared version string alone is insufficient to identify a frame’s server/build.
+- Targeted image searches surfaced no new Xian Episode 2 PC gameplay frame. Results included the previously recorded Software Informer 2.5221 login screen and an unrelated modern mobile Great Merchant image; neither adds Xian field/window evidence.
+
+The research repository and its encrypted vault were not accessed or changed. No implementation change is justified by this search; the next task remains finding an inspectable frame with a source that narrows its client build while preserving the Indonesian Episode 2, Global Server, HK/TW and unidentified/mixed-source categories.
