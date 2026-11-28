@@ -146,3 +146,7 @@ A new KotakGame search result lists a 27 July 2015 “Screenshot Update” for X
 ## RepeatLoop image-source follow-up — 28 November 2026
 
 A new dated RepeatLoop article exposes two inspectable Xian-labelled images, but their server, capture date and build/patch are unverified. The page mixes Indonesian Episode 2 history with a separate official-version context, so the images remain unidentified/mixed-source comparators. No UI or code change is supported. Continue only through new public routes; keep the research repository read-only, preserve the production save, and retain “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.
+
+## New public-route search — 28 November 2026
+
+The latest public-source sweep found publisher/community dates and server-scope metadata but no qualifying image-to-build link. No code or UI changed. Keep searching only genuinely new public routes; do not retry blocked routes unless a new public access path appears. Keep Indonesian Episode 2, Global/International, HK/TW, Korea, USA and unidentified/mixed-source evidence separate. See the evidence ledger for exact routes and limits.

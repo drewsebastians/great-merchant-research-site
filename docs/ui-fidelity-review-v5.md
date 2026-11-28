@@ -180,3 +180,7 @@ The indexed game listing shows a 27 July 2015 “Screenshot Update” entry, but
 ### RepeatLoop image-source review — 28 November 2026
 
 The newly inspected [16 September 2018 article](https://repeatloop.blogspot.com/2018/09/xian-great-merchant-game-lawas-yang-menarik.html) embeds a character-selection screen and a tall partial field crop showing portraits, lower status/currency and chat. The article links them to its Xian discussion but provides no image-specific provenance, capture date, server, build or patch; its text also distinguishes Indonesian history from a different current official-version context. Keep both images as unidentified/mixed-source historical comparators. They establish no current-Xian geometry or controls, so the deployed layout and fidelity status remain unchanged.
+
+### New public-route search — 28 November 2026
+
+The new public routes yielded dated publisher/community text and archive entries but no inspectable gameplay frame with a known or reasonably narrowed client build. No new comparator was visually inspected, and no interface claim or implementation change is supported. Keep regional evidence separate and leave the visual acceptance check open. See the evidence ledger.

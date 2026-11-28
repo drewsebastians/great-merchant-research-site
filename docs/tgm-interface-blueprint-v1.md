@@ -174,3 +174,7 @@ The KotakGame catalog search result labels an Xian Episode 2 listing with a 27 J
 ### RepeatLoop community images — 28 November 2026
 
 A new dated community article exposes two inspectable images: a character-selection screen and a partial field/HUD/chat crop. The images are not tied individually to a capture date, server, build or patch, and the article contains separate Indonesian and Global context. Keep them in the unidentified/mixed-source comparator set. They do not change any screen requirement, prototype measurement or item in the eight-part fidelity gate.
+
+### Public-route search update — 28 November 2026
+
+The latest sweep found no inspectable frame-to-build link. New article dates, patch-update metadata and archive image placeholders do not establish capture dates, server scope or client builds. No screen requirement or prototype measurement changes; keep the fidelity gate open. See the evidence ledger.

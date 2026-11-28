@@ -136,3 +136,7 @@ A new KotakGame result lists an Xian Episode 2 “Screenshot Update” dated 27 
 ### RepeatLoop image-source follow-up — 28 November 2026
 
 A newly inspected 16 September 2018 community article embeds a character-selection image and a partial field/HUD/chat crop. The article does not attribute either image or connect it to a capture date, server, client build or patch; the surrounding page also references separate Indonesian and Global contexts. Classify both as unidentified/mixed-source historical comparators. The evidence does not satisfy the visual-fidelity gate or justify a prototype change. See the ledger.
+
+### New public-route search — 28 November 2026
+
+A fresh sweep of Duniaku, Lasthero, XianTGMIndo and RepeatLoop public pages found no inspectable original gameplay frame tied to a known or reasonably narrowed client build. Publication dates and patch metadata alone do not close the comparison gate. No implementation change is justified; keep the fidelity gate open. See the evidence ledger.

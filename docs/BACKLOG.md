@@ -223,3 +223,7 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Record the visible character-selection screen and partial field/HUD/chat crop without treating article date as capture date.
 - [x] Keep both images unidentified/mixed-source; neither is tied to a server, capture build or patch.
 - [ ] Continue only with new public routes that can link an inspectable frame to a known or reasonably narrowed build. Do not change UI from these comparators; keep the fidelity gate open.
+
+### New public-route search — 28 November 2026
+
+The newly inspected Duniaku, Lasthero and XianTGMIndo routes did not expose an inspectable frame linked to a known or reasonably narrowed build. A RepeatLoop patch article is explicitly International-context and text-only. No interface change is supported; keep the evidence task open and preserve the region categories. Details and access limits are in the [evidence ledger](hud-readability-evidence-2026-11-28.md).

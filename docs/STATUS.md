@@ -185,3 +185,7 @@ A KotakGame search result lists a 27 July 2015 “Screenshot Update” for Xian 
 ## Continued Xian image-source search — 28 November 2026
 
 A newly inspected RepeatLoop article dated 16 September 2018 contains two inspectable game images: a character-selection screen and a partial field/party/HUD/chat crop. Neither image has an individual source, capture date, server or build/patch, and the article includes separate Indonesian and Global-era context. They remain unidentified/mixed-source historical comparators. Additional guide routes supplied no image-to-build link. No implementation, UI or asset changed; the TGM fidelity gate remains open. Continue with genuinely new public routes only. See [the evidence ledger](hud-readability-evidence-2026-11-28.md). Keep “playable prototype; TGM interface fidelity in progress,” and keep physical-device, broader accessibility and direct production-browser offline checks open.
+
+## Continued Xian public-route search — 28 November 2026
+
+A fresh search of new public publisher and community routes found no inspectable gameplay frame linked to a known or reasonably narrowed build. The sources add only publication and server-scope metadata; the TGM fidelity gate and prototype remain unchanged. See [the evidence ledger](hud-readability-evidence-2026-11-28.md). Continue only through genuinely new routes, and keep the status “playable prototype; TGM interface fidelity in progress.”

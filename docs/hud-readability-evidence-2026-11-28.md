@@ -287,3 +287,38 @@ The article associates these images with its Xian discussion, but does not indiv
 - **Unverified or unavailable:** each image’s provenance, capture date, server, client build and patch; the body of the linked MMOiNdo and Astagames routes.
 - **Assumptions:** none. The article date, its service-closure statement and approximate upload or update labels do not identify the screenshots’ build.
 - **Conclusion:** no frame was linked to a known or reasonably narrowed Xian build. No UI, code, asset, geometry, control, stats, formula or game-rule change is supported. The research repository remains read-only; no source-client or private-research material was copied.
+
+## New public-route sweep — 28 November 2026
+
+### Result
+
+No newly inspected original gameplay frame could be linked to a known or reasonably narrowed client build. The new routes below provided text or archive metadata only; no image pixels were visually inspected. No new comparator is added, no implementation change is supported, and no capture date, build, server, geometry, control, stat, formula or game rule is inferred. Search-result snippets were treated as leads only. Access redirects and throttling are not evidence of site status.
+
+### New routes inspected
+
+- The [Duniaku article about 2015 online-game releases](https://duniaku.idntimes.com/game/konsol-pc/game-online-terbaru-indonesia-2015-00-hjc4x-jycfg7/amp), published 26 March 2015, identifies The Great Merchant (Xian Episode 2), names 8ternals, and lists an OBT date of 13 February 2015. The accessible article section is text-only; it supplies no gameplay frame, patch label or image-to-build link. These dates are publication/release metadata, not screenshot capture metadata.
+- The [Lasthero 2015 archive](https://lasthero-xian2.blogspot.com/2015/) exposes dated post summaries including an event post and an “after maintenance” equipment-upgrade post, with image placeholders. The linked 24 December event post redirected the approved reader to a Google interstitial. No detail-page body or image was inspected, and no patch/build identifier is shown in the accessible archive text. Do not treat “after maintenance” or the post date as a build or capture date.
+- The [XianTGMIndo 2016 archive](https://xiantgmindo.blogspot.com/2016/) and [2017 archive](https://xiantgmindo.blogspot.com/2017/) expose dated community-guide summaries and image placeholders. The 2017 archive mentions changes “after patches” without naming a patch. The blog bibliography lists material from Indonesian, Global, Korean and Chinese sites plus player contributions; the blog’s Episode 2 framing does not establish the scope or build of each embedded image. No individual image was opened.
+- The [XianTGMIndo game page](https://xiantgmindo.blogspot.com/p/xian-great-merchant.html) displays a client/patch label dated 28 April 2021 and community comments that distinguish a Global client from HK private-server play. It contains no inspectable gameplay frame or image-to-build link. Treat this as community metadata for Global/HK scope only, not as Indonesian Episode 2 evidence; no client download was accessed.
+- The [RepeatLoop international patch article](https://repeatloop.blogspot.com/2019/03/download-xian-great-merchant-server-international.html) is dated 26 March 2019 and says the administrator last updated its client link on 25 March. The article identifies its subject as the International server, but contains no inspectable gameplay frame or exact client-build identifier. Keep it in the Global/International evidence bucket, separate from Indonesian Episode 2.
+- Direct reader opens of the new [RepeatLoop January 2020 patch page](https://repeatloop.blogspot.com/2020/01/download-xian-great-merchant-patch-januari-2020.html) and [October 2019 patch page](https://repeatloop.blogspot.com/2019/10/download-xian-online-patch-terbaru.html) redirected to a Google interstitial. Their bodies and images were not inspected; make no site-status inference.
+- A direct open of the [XianTGM Gallery root](https://xiantgmgalery.blogspot.com/) returned HTTP 429 from the approved reader. No page body or image was inspected; do not infer site status or retry without a new public access path.
+
+No direct page was reopened for the previously blocked KotakGame catalog route. Search results surfaced its metadata again, but it was filtered without another page-access attempt. Previously inspected routes, including the RepeatLoop article images, were not re-opened.
+
+### Search strings used
+
+- `"Xian The Great Merchant Indonesia" screenshot patch update 8ternals`
+- `site:tgm.8ternals.com/blog "screenshot" "patch" The Great Merchant Xian`
+- `site:xianindo.blogspot.com "Episode 2" "patch" "screenshot" game Xian`
+- `"syw000" "Xian" "version" "The Great Merchant Indonesia"`
+- `"The Great Merchant Xian Episode 2" "V2." Indonesia 8ternals community screenshot`
+- `"The Great Merchant" "Xian Episode 2" screenshots gameplay 8ternals Indonesia 2015`
+- `"Xian The Great Merchant" "Update" "2016" patch gameplay screenshot Indonesia`
+- `"Xian Indonesia" "Patch" "Version" 8ternals game screenshot blog`
+- `site:xiantgmgalery.blogspot.com "screenshot" Xian TGM`
+- `site:xiantgmgalery.blogspot.com/2017 Xian screenshot interface`
+
+### Classification and decision
+
+No new visual comparator was established in this pass. Keep Indonesian Episode 2, Global/International, HK/TW, Korea, USA and unidentified/mixed-source evidence separate. Do not infer image scope from a blog label, shared version string, patch date, archive placeholder or article date. Continue only with genuinely new public routes that expose an original inspectable gameplay frame and independently link that specific frame to a known or reasonably narrowed build. No source image, client asset or private research material was copied. The research repository remains read-only; this pass did not open its contents.
