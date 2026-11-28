@@ -128,3 +128,7 @@ The newly inspected [Xian TGM Indonesia herding guide](https://xiantgmindo.blogs
 ### Xian screenshot-instructions route — 28 November 2026
 
 The newly checked Indonesian community post dated 7 January 2016 shows a Windows Explorer view of a Xian/TGM folder, not gameplay. It provides no inspectable frame or build link, so it does not satisfy the visual-fidelity evidence gate and does not justify an implementation change. Keep the interface measurements unchanged; see the evidence ledger.
+
+### KotakGame catalog metadata — 28 November 2026
+
+A new KotakGame result lists an Xian Episode 2 “Screenshot Update” dated 27 July 2015, but the page fetch returned HTTP 403 and no image or build link was exposed. This is Indonesian catalog metadata only; it does not satisfy the visual-evidence gate or justify an implementation change.

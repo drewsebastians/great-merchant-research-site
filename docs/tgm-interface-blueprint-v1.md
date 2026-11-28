@@ -166,3 +166,7 @@ A new Indonesian Xian community-guide route exposes an inventory-window crop, no
 ### Non-qualifying screenshot-guide route — 28 November 2026
 
 The 7 January 2016 Indonesian Xian community post was inspected. Its embedded example is a Windows Explorer view of a Xian/TGM folder rather than a game frame; it yields no interface, server or build evidence. It does not affect the blueprint or its open fidelity gate.
+
+### KotakGame metadata lead — 28 November 2026
+
+The KotakGame catalog search result labels an Xian Episode 2 listing with a 27 July 2015 “Screenshot Update.” The page was not retrievable (HTTP 403), and no frame or build link is available from the search result. This metadata-only lead does not affect the blueprint or its open fidelity gate.

@@ -222,3 +222,29 @@ The date belongs to the article, not to a gameplay capture. The post is on a com
 - **Classification:** checked, non-qualifying source route; it is not an interface comparator and supplies no build-linked frame.
 
 No image was copied. No UI, geometry, control, stats, formulas or game rules change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”
+
+## KotakGame Xian catalog lead — 28 November 2026
+
+### Search and source metadata
+
+New searches returned the [KotakGame Gamebox page for The Great Merchant: Xian Episode 2](https://www.kotakgame.com/gamebox/detail/20/4623/). The search-result text identifies the game, lists 8ternals as publisher and AK Interactive as developer, and shows a latest-update entry dated 27 July 2015 labelled “Screenshot Update.” Direct page retrieval returned HTTP 403; the available search result exposes no screenshot, image source or client-build link. No image or game frame was inspected.
+
+Queries used:
+
+- `"Xian TGM" screenshot "version" update site:facebook.com`
+- `"The Great Merchant Xian" gameplay screenshot patch notes build`
+- `"Xian Episode 2" client screenshot forum patch`
+- `"Xian TGM" "screenshot" community blog`
+- `site:kotakgame.com/gamebox/detail/20/4623 "Screenshot Update" "Xian Episode 2" images`
+- `site:kotakgame.com "The Great Merchant Xian Episode 2" screenshot 27-07-2015`
+- `"The Great Merchant: Xian Episode 2" "Screenshot Update"`
+- Image search: `site:kotakgame.com/gamebox/detail/20/4623 The Great Merchant Xian Episode 2 screenshots`
+
+### Classification and result
+
+- **Source metadata:** Indonesian game-catalog listing and search-result text; its “Screenshot Update” label is not an inspected image.
+- **Unavailable:** page contents beyond the search snippet, any screenshot, image provenance, capture date, server, client build and patch.
+- **Assumptions:** none. Do not infer a frame or build from the catalog label.
+- **Classification:** Indonesian publisher/catalog metadata lead only; not visual evidence or a historical image comparator.
+
+No retry or alternate route was used after the 403 response. No UI or code change is supported; keep the fidelity gate open and the product status “playable prototype; TGM interface fidelity in progress.”

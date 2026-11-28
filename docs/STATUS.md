@@ -177,3 +177,7 @@ A new public route yielded an inspectable 328×188 inventory-window crop embedde
 ## Continued Xian screenshot-guide search — 28 November 2026
 
 A newly checked Indonesian Xian community post dated 7 January 2016 embeds a Windows Explorer view of a client folder, not an in-game frame. It does not link gameplay imagery to a capture date, server, build or patch. No visual change is supported; the fidelity gate remains open. The source classification is recorded in the evidence ledger.
+
+## KotakGame metadata-only lead — 28 November 2026
+
+A KotakGame search result lists a 27 July 2015 “Screenshot Update” for Xian Episode 2, but direct page retrieval returned HTTP 403 and the result exposes no image or build link. It is recorded only as Indonesian catalog metadata, not visual evidence; no UI change is supported. The search and access limit are in the evidence ledger.

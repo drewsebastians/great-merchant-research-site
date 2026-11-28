@@ -172,3 +172,7 @@ The dated Xian TGM Indonesia community guide contains an inspectable 328×188 in
 ### Xian screenshot-instructions route — 28 November 2026
 
 The dated Indonesian community post embeds a Windows Explorer folder view rather than an in-game image. The article date is not a capture date, and the route does not identify a server or client build/patch. Exclude it from interface comparison; no UI change is supported and the fidelity gate remains open.
+
+### KotakGame catalog result — 28 November 2026
+
+The indexed game listing shows a 27 July 2015 “Screenshot Update” entry, but the page returned HTTP 403 and no screenshot or build link was inspectable. Treat this as metadata only; it contributes no visual comparison and does not change the open fidelity gate.

@@ -210,3 +210,9 @@ The rollback checkpoint is `checkpoint/pre-keyboard-window-focus-pass-2026-11-28
 - [x] Inspect the new 7 January 2016 Indonesian Xian screenshot-instructions post and its embedded example; it shows a Windows Explorer folder view, not a game frame.
 - [x] Keep the article date separate from any screenshot capture date; no server/build/patch can be identified from this route.
 - [ ] Continue searching only new public routes for an inspectable frame tied to a known or reasonably narrowed Xian build. Keep the fidelity gate open and do not change UI from this non-qualifying route.
+
+### KotakGame catalog route — 28 November 2026
+
+- [x] Check the newly found KotakGame Xian Episode 2 catalog result. It lists a 27 July 2015 “Screenshot Update,” but direct page retrieval returned HTTP 403 and no image/build link was inspectable.
+- [x] Classify it as Indonesian catalog metadata only; do not treat the label as a screenshot or infer a build.
+- [ ] Continue searching only new public routes for an inspectable frame linked to a known or reasonably narrowed Xian build. Keep UI and fidelity status unchanged.

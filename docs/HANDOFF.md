@@ -138,3 +138,7 @@ A new route on the Xian TGM Indonesia community guide page dated 6 October 2017 
 ## Xian screenshot-guide route — 28 November 2026
 
 A new Indonesian community route dated 7 January 2016 was inspected. Its embedded illustration is a Windows Explorer view of a Xian/TGM client folder, not an in-game frame, so it cannot support an interface comparison or narrow the client build. The article date is publication metadata only. Continue with new public routes only, maintain regional/source separation, preserve the production save, and keep “playable prototype; TGM interface fidelity in progress.” See the evidence ledger.
+
+## KotakGame catalog lead — 28 November 2026
+
+A new KotakGame search result lists a 27 July 2015 “Screenshot Update” for Xian Episode 2, with 8ternals/AK Interactive catalog metadata. Fetching the page returned HTTP 403; no image or build link was visible in the result. Record it only as Indonesian catalog metadata, do not retry this route without a genuinely new public access path, and continue the search with new routes. No implementation change is justified.
